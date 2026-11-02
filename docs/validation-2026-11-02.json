@@ -1,0 +1,145 @@
+{
+  "checked": "2026-11-02",
+  "scope": "Standalone project extraction and selected existing-patch validation; not new upstream-main validation",
+  "source_commit": "45b8aeb44e594b75480b97d1cb8d9f1793d57503",
+  "python_tests": 25,
+  "javascript_tests": 3,
+  "clean_checkout": [
+    {
+      "command": [
+        "uv",
+        "sync",
+        "--frozen",
+        "--all-extras"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "bundles/kartoza-geoserver-affine-fix/tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "bundles/kartoza-geoserver-2.28.0-affine-fix/tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "viewer/tests/adapter.test.mjs"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "fixture_equivalence": {
+    "fixtures": 14,
+    "geometry_equal": true,
+    "base_and_overview_arrays_equal": 42,
+    "identical_file_hashes": 7,
+    "note": "Seven no-overview TIFFs match historical bytes; overview TIFF metadata/layout differs, with identical pixels and transforms."
+  },
+  "stock_reproduction": {
+    "wms_missing_pixels": 29022,
+    "gwc_missing_pixels": 29022
+  },
+  "patched_quick_matrix": {
+    "wms": {
+      "successful_requests": 224,
+      "errors": 0,
+      "missing_pixels": 0,
+      "interior_requests": 224,
+      "interior_missing_pixels": 0,
+      "north_up_missing_pixels": 0,
+      "cache_headers": {
+        "null": 224
+      }
+    },
+    "gwc": {
+      "successful_requests": 224,
+      "errors": 0,
+      "missing_pixels": 0,
+      "interior_requests": 224,
+      "interior_missing_pixels": 0,
+      "north_up_missing_pixels": 0,
+      "cache_headers": {
+        "MISS": 224
+      }
+    }
+  },
+  "gutter": 1,
+  "selected_rendering_regression": {
+    "passed": true,
+    "failures": []
+  },
+  "build": {
+    "image": "docker.io/kartoza/geoserver@sha256:a500f30ec973014be203851290e89996cfccfe4335b1b4345047f64eda05521d",
+    "custom_image_built": false,
+    "java": "javac 17.0.20",
+    "libraries": {
+      "gt-render-34.5.jar": {
+        "original_sha256": "00f70a023e0c8fad7e2ed94d3a968288e5cdeb94647d35467ac30627094086a0",
+        "patched_sha256": "efa974514e8d6855afcb877ec24885dfdc16a3c2a94b5205c81057e8c3099a42",
+        "changed_entries": [
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class"
+        ],
+        "bytes": 613226
+      },
+      "affine-0.9.1.jar": {
+        "original_sha256": "ea17734a50db1d2b4c2fd3c072dd93a30b4d5edcdc77da82ed9a14f3fedfa30b",
+        "patched_sha256": "0ad0ec10f39b1d382e83ea18c4128a707f6f66234326d37d1f13d90acf642ab7",
+        "changed_entries": [
+          "org/eclipse/imagen/media/affine/AffineOpImage.class"
+        ],
+        "bytes": 123488
+      }
+    },
+    "original_regression_exit": 1,
+    "patched_regression_exit": 0
+  },
+  "limitations": [
+    "Full 1180-request-per-route edge matrix not rerun",
+    "Six-version compatibility matrix not rerun",
+    "Browser UI and Windows-native acceptance not rerun",
+    "Current upstream main branches not built or tested",
+    "No upstream publication or GitHub CI run"
+  ],
+  "test_containers_stopped": true
+}

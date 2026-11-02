@@ -1,0 +1,943 @@
+{
+  "source_repository": "https://github.com/AShapira/small-gis-demos",
+  "source_commit": "45b8aeb44e594b75480b97d1cb8d9f1793d57503",
+  "import_date": "2026-11-02",
+  "note": "Source hashes describe the original import; project adaptations are recorded in Git history. Historical evidence is not a new validation run.",
+  "files": [
+    {
+      "source_path": "LICENSE",
+      "project_path": "LICENSE",
+      "source_sha256": "b9682636054cebb07e6f12d5f1eadeab6da128db4b5f42955cae40b325e42fc8"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/.gitignore",
+      "project_path": "viewer/.gitignore",
+      "source_sha256": "b5978b28dcef5f256004cb5ed6ade9276697106d4808c7dd9f25c59fbb6da845"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/README.md",
+      "project_path": "viewer/README.md",
+      "source_sha256": "2354d4f45602f06551d94e19a83864770a5a5631069b8b029071238b73cdcb83"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/RESULTS.md",
+      "project_path": "viewer/RESULTS.md",
+      "source_sha256": "5965092782b9dcf56411e7d8e4ba30fdc92cd86b7d226f8457e157fedcf6e82f"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/adapter.js",
+      "project_path": "viewer/adapter.js",
+      "source_sha256": "c6ddc1b126c6ea7339330efb1b49d300555fa307cee78caea74baddf77c4689a"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/app.js",
+      "project_path": "viewer/app.js",
+      "source_sha256": "668613b709ae63d78259b751dc8a2e62a2478dee5c653531a0c900c2f1ddb2b4"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/cases.json",
+      "project_path": "viewer/cases.json",
+      "source_sha256": "9a056dfa7c6be5ee509f8379b1d5fca0fc2a5aac63301627a7b7287d98ec280f"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/browser.json",
+      "project_path": "viewer/evidence/browser.json",
+      "source_sha256": "1ded228759118c886d72c48a73484b90a2fce7385c32c1c3486c14ce0b44dd30"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/cesium-all-gutters-results.png",
+      "project_path": "viewer/evidence/cesium-all-gutters-results.png",
+      "source_sha256": "1a02e274c90ca6cdfc8ab135e299cb2d4c41ac1b4ff87a51810dbfd71ee50ea2"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/cesium-checkerboard.png",
+      "project_path": "viewer/evidence/cesium-checkerboard.png",
+      "source_sha256": "f556930d2faab96aa915112d18f4d8615ed86a6b1984e23742750180a4c46e68"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/cesium-footprint.png",
+      "project_path": "viewer/evidence/cesium-footprint.png",
+      "source_sha256": "10c4147ed7e1e002dc9645ba4d4cdea732e5f8cd0ea6d4f605ec0a2430ad0b65"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/cesium-gutter-selectors.png",
+      "project_path": "viewer/evidence/cesium-gutter-selectors.png",
+      "source_sha256": "ab124feb0d4f199bd65305739ff216b8fbb34f3436639239f22fd136cc5a89ae"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/cesium-results.png",
+      "project_path": "viewer/evidence/cesium-results.png",
+      "source_sha256": "fbf2b43c30f1c98420b7997d3be332ea254f209eb4b302aa9f8e099fe745bb3d"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/cesium-triangles.png",
+      "project_path": "viewer/evidence/cesium-triangles.png",
+      "source_sha256": "c3ecd94eaeaf0a2a5c2211d9e9e0d68d7c9ccd55e58a0fbde38f5d366756e3a2"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/fixture-checksums.json",
+      "project_path": "viewer/evidence/fixture-checksums.json",
+      "source_sha256": "781fd0ea526edf40cc85a2e832465172bb22e9ef82b74327ef65b315d7d4992b"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/gutter-0.png",
+      "project_path": "viewer/evidence/gutter-0.png",
+      "source_sha256": "a31ac690cd5547262759df40208ad84b7813975af3a358ac3060fb220522be8b"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/gutter-128.png",
+      "project_path": "viewer/evidence/gutter-128.png",
+      "source_sha256": "b9b5540a4de98a96a7dc0dc81fb9aa6e317ee3842b833c9d104d2648dbe7a5d0"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/gutter-20.png",
+      "project_path": "viewer/evidence/gutter-20.png",
+      "source_sha256": "50d087bc2201da6833eb8372b13fec3a336bca6590656782b47484b6d7d1ede2"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/gutter-256.png",
+      "project_path": "viewer/evidence/gutter-256.png",
+      "source_sha256": "b9b5540a4de98a96a7dc0dc81fb9aa6e317ee3842b833c9d104d2648dbe7a5d0"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/gutter-64.png",
+      "project_path": "viewer/evidence/gutter-64.png",
+      "source_sha256": "978dc38dd4450699e54d72fb4827bb16f648629c732e5be0ed14d0be3e4e8b9e"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/gutter-selectors.json",
+      "project_path": "viewer/evidence/gutter-selectors.json",
+      "source_sha256": "7b188a445cfaa266d7e35e232eea4250989d0f583919a6622504895f4826edd0"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/initial-state.json",
+      "project_path": "viewer/evidence/initial-state.json",
+      "source_sha256": "a829344870237914b1a367fb181d6d080b626eed232a44d33e16137fced46cb3"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/performance-all-gutters.json",
+      "project_path": "viewer/evidence/performance-all-gutters.json",
+      "source_sha256": "c9e1a9c5bcdd861816cdbaa4e3975509c436ff0d0bf0f79e9f069b2773679e87"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/performance.json",
+      "project_path": "viewer/evidence/performance.json",
+      "source_sha256": "fdef93557b9fe33191862018c450f58a973452b282d5f8c1152e05a366439a8f"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/restoration.json",
+      "project_path": "viewer/evidence/restoration.json",
+      "source_sha256": "79204323dd313be5718d61cfbde4604911fd27dcf1300e83cbde0c7c8aa45c59"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/server-after.json",
+      "project_path": "viewer/evidence/server-after.json",
+      "source_sha256": "7481597fa8532776231702bdf4928efeaea1817239eb1349aa15db343a1c4098"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/server-before.json",
+      "project_path": "viewer/evidence/server-before.json",
+      "source_sha256": "7481597fa8532776231702bdf4928efeaea1817239eb1349aa15db343a1c4098"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/smoke.json",
+      "project_path": "viewer/evidence/smoke.json",
+      "source_sha256": "34aff43b4598a77b19ebaf41ecd58ee3ec79bde4cf2a8184bf213677d292e85b"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/evidence/validation.json",
+      "project_path": "viewer/evidence/validation.json",
+      "source_sha256": "4cfadc703578469951015f965a5b550dbe192b4bdaf44ed81cd3d4766ddcc9b0"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/fixtures.json",
+      "project_path": "viewer/fixtures.json",
+      "source_sha256": "1eb235e97ed8d58aecd8aeed0593231b70883e0c14ed6694d1cae771054c4140"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/index.html",
+      "project_path": "viewer/index.html",
+      "source_sha256": "debbd359e049d1aeeda743304609ff320fdc77ad9101bebe956322f112fc12c0"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/package-lock.json",
+      "project_path": "viewer/package-lock.json",
+      "source_sha256": "0edf6eebddbf4246089ac3e4225a6cdf99fea4562a7faa44ee03990041999648"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/package.json",
+      "project_path": "viewer/package.json",
+      "source_sha256": "284a53beb73a990d97a057c613735a3eb24dd3422975af778cbdda5d0d3c4092"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/server.mjs",
+      "project_path": "viewer/server.mjs",
+      "source_sha256": "e9b8b5249844e5a6c475dde37636ea693175adece9fd39fa6070c71c4c2399ad"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/style.css",
+      "project_path": "viewer/style.css",
+      "source_sha256": "6e72cb0df8317e0aa1634a8d74652cbaf059c1d1a56475e35d52467c13ab55e8"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/tests/adapter.test.mjs",
+      "project_path": "viewer/tests/adapter.test.mjs",
+      "source_sha256": "61481118e73a252e73d04b9178e79ef4e7650fd41605a6abe076c42e0a8dfb18"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/tests/browser.mjs",
+      "project_path": "viewer/tests/browser.mjs",
+      "source_sha256": "c9ef2e57e369b6211654151c328a899c455670f6e5dc6d849c268725e6255985"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/tests/gutters.mjs",
+      "project_path": "viewer/tests/gutters.mjs",
+      "source_sha256": "86b733ae796cd77bf47efd32db1eca916b246ea12f012665c45e5e2020b7deeb"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/tests/prepare.py",
+      "project_path": "viewer/tests/prepare.py",
+      "source_sha256": "64c58510a46a605e42f8c00b2e24461a3b2ee255edacc290b68ca6ec6da54507"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/tests/requirements.txt",
+      "project_path": "viewer/tests/requirements.txt",
+      "source_sha256": "9db9faf213ecf9f2aea1446e25ddbead8c3157cbeb567fea9c10da978f776cfe"
+    },
+    {
+      "source_path": "cesium-wms-gutter-demo/tests/smoke.mjs",
+      "project_path": "viewer/tests/smoke.mjs",
+      "source_sha256": "f95fd59d159074ec8fc03ac53c92a4c2c8585ae5041654ed1342c0a635d60863"
+    },
+    {
+      "source_path": "geotiff-compression/docs/assets/rotated-geotiff-comparison.png",
+      "project_path": "docs/assets/rotated-geotiff-comparison.png",
+      "source_sha256": "637334dafbafdccc14762317ae146fa717195f65e80e63ef5052f67998178972"
+    },
+    {
+      "source_path": "geotiff-compression/docs/rotated-geotiff-study.md",
+      "project_path": "docs/rotated-geotiff-study.md",
+      "source_sha256": "d5e28bbc8a752f0411340211051b92098aec37a918598d56ec69a2b3465f75fe"
+    },
+    {
+      "source_path": "geotiff-compression/patches/affine-geotiff/geotools-35.1-affine-nearest.patch",
+      "project_path": "patches/geotools-35.1-affine-nearest.patch",
+      "source_sha256": "9c4d759d0749cb82dd815a43a8ded2e840ce0bff521ba764f5fb628577f69e26"
+    },
+    {
+      "source_path": "geotiff-compression/patches/affine-geotiff/imagen-0.9.2-affine-clip.patch",
+      "project_path": "patches/imagen-0.9.2-affine-clip.patch",
+      "source_sha256": "8f949790c847f68289106637684581f566a4c499a79ceead4ee6f7ffadd66631"
+    },
+    {
+      "source_path": "geotiff-compression/rasterbench/affine_analysis.py",
+      "project_path": "affine_fix/analysis.py",
+      "source_sha256": "53c992439d5645808642e0dbcc6188880c78344bfc0f2daa18e717e6361ef7ab"
+    },
+    {
+      "source_path": "geotiff-compression/rasterbench/affine_probe.py",
+      "project_path": "affine_fix/probe.py",
+      "source_sha256": "66323f15f9b8ca3c89c92a3f5763deb72fe45f4bda54fade72a9346f03e764ea"
+    },
+    {
+      "source_path": "geotiff-compression/tests/java/AffineScanlineRegression.java",
+      "project_path": "tests/java/AffineScanlineRegression.java",
+      "source_sha256": "e6843b5cb878a9cde7418c69aec55f4240ba2aa6e0dcff7e87a21fafbbb9243b"
+    },
+    {
+      "source_path": "geotiff-compression/tests/test_affine_probe.py",
+      "project_path": "tests/test_oracle.py",
+      "source_sha256": "26831366529c6a906d72ce2764c889cb2a76308ef285ed2a29027235a91f42e6"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/.gitattributes",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/.gitattributes",
+      "source_sha256": "72220d7e0f5fcdd8a63df1559d5db787b81f4b7d878f19219a27470f2e43f0c8"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/.gitignore",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/.gitignore",
+      "source_sha256": "170533c001467cc3984dacf3d99cd049852c01986cc0750288cbe9cc5edc6583"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/LICENSE",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/LICENSE",
+      "source_sha256": "b9682636054cebb07e6f12d5f1eadeab6da128db4b5f42955cae40b325e42fc8"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/LICENSES/geotools-LICENSE.md",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/LICENSES/geotools-LICENSE.md",
+      "source_sha256": "994ce1902a23c74519b5d118c6bbb657edabce91dd6b7cc825d86bb8f5c9780f"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/LICENSES/imagen-LICENSE.md",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/LICENSES/imagen-LICENSE.md",
+      "source_sha256": "2e1faa05bb91574fa388220185f57b3607701714053971f704a3b32bceb9851b"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/NOTICE.md",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/NOTICE.md",
+      "source_sha256": "ee84106c2b5984d23cef805eb3362477db78393f2b1c65a8877d7b0b1dd9af0d"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/README.md",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/README.md",
+      "source_sha256": "3e389417e611d6d738b0b8361d67fa0d34d96aac4269f3e2e01ea267e4aa619f"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/VALIDATION.md",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/VALIDATION.md",
+      "source_sha256": "8e5585a6646d82776b61109b7ece859d6e2eb7cc5451a4225b5e1c8a4a534cad"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/apply-affine-fix.sh",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/apply-affine-fix.sh",
+      "source_sha256": "24312033740d37449ab618b489acb98237c89eb019a57ca7cb2e98b7a0fb6648"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/build-lock.json",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/build-lock.json",
+      "source_sha256": "e6d7ab8011b04c9ef18ddd788f0f0313898370218856812157b93ac91c80dd64"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/build.py",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/build.py",
+      "source_sha256": "73a52808ecb00a211736985580d00f2f56c4a98897a731e3d566f511dcfecd0f"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/compose.override.yaml",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/compose.override.yaml",
+      "source_sha256": "6eafae853661f3cd5279647b7aacfafe69d430ef5b16db1c65363b61e7d52d9a"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-inspection.json",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-inspection.json",
+      "source_sha256": "249253f4e3012164b17b3cc46db411ac30c3680428a257872cf566a40b1b28da"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-patched-g1.jsonl.gz",
+      "source_sha256": "6bb5ab48800f0929ee08bc571b59c34b6f93cec1e844174cb06e3b7bfa180f0c"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-patched.json",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-patched.json",
+      "source_sha256": "74a548a9e354b91131b2bc6bc1a4cf51f3ef138a33b7be1d18ba342368dae17a"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-regression.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-regression.jsonl.gz",
+      "source_sha256": "19d389a2679eac34e56f68bf3bf9513d388df3f56f8e814d377339ff40838447"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-stock.json",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/2.28.0-stock.json",
+      "source_sha256": "1cfbe1299e06019a8bcb7a2aef2d0aee12398f5decd275a32b2eaeb8b98d42cf"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/build.json",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/build.json",
+      "source_sha256": "6bcf43d115313d18f1c1fead53ef8beac989d00a93b1699fb5a3363bbee3068f"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/package-install.json",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/package-install.json",
+      "source_sha256": "61662274330dc94b7f33b0f282a2d6fe7c68317fe65fe3ad9252e27000ed54e2"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/regression-original.txt",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/regression-original.txt",
+      "source_sha256": "926451ebfb636cc421af4b55d1c0535181792b1bd783f477c7912669c8287f58"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/evidence/regression-patched.txt",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/evidence/regression-patched.txt",
+      "source_sha256": "db3d3feca5dea57d4ab46b7dfd35395fad0e11629bb674a1bd1ee61086da8c29"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/jars.sha256.tsv",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/jars.sha256.tsv",
+      "source_sha256": "e233a314efbecbb3e364af2f9969b47851504a698db86094b031159642baddd9"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/package.py",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/package.py",
+      "source_sha256": "dff60681796b80278bfb15b6f9726f1c7d974158f2cf6f1ae51fdee7b04a326a"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/AffineOpImage.java",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/AffineOpImage.java",
+      "source_sha256": "271baa590c01cf89a8cfee6a0f21478b52bf419422315434f6f2a52f022044a8"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/AffineOpImage.java.original",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/AffineOpImage.java.original",
+      "source_sha256": "0a6530156ac4f00b40fcb272c3c950ffbc4e024a05562b4502122028308b24d4"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/GridCoverageReaderHelper.java",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/GridCoverageReaderHelper.java",
+      "source_sha256": "bb6a72f0aad070f6767287a18a7fc69d05919a635f2896ef7e17a5bd4c712268"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/GridCoverageReaderHelper.java.original",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/GridCoverageReaderHelper.java.original",
+      "source_sha256": "ba519cd66c5cef7c3a23a2a4e2a17b11ec6688702a3fe7f0e7767509b24de7b2"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/README.md",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/README.md",
+      "source_sha256": "daf38330389294fc5dc99bbaf6ac4935f3d1667d50e6f3317c06f1b0c6906d6f"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/affine-0.9.0-sources.jar",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/affine-0.9.0-sources.jar",
+      "source_sha256": "41586fc84392293f02fbcbaf7ae3894eb465aa4756ae15e0f59555f6d8226526"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/geotools-34.0.patch",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/geotools-34.0.patch",
+      "source_sha256": "e479bca5f957d90eb9090858c02f0ca0bf61c93c6a252b4d34281c5ed8b3f9cf"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/gt-render-34.0-sources.jar",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/gt-render-34.0-sources.jar",
+      "source_sha256": "5b16af107c13e4cdee8b3399616333be056161a5eccff3a932437a9f033e1320"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/imagen-0.9.0.patch",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/imagen-0.9.0.patch",
+      "source_sha256": "11c84087bd0b457686633bb7d2685330272b78b415cfa983c656ab9064673ff7"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/source/project-MIT.txt",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/source/project-MIT.txt",
+      "source_sha256": "b9682636054cebb07e6f12d5f1eadeab6da128db4b5f42955cae40b325e42fc8"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/start-with-affine-fix.sh",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/start-with-affine-fix.sh",
+      "source_sha256": "26978acbd130d97e178acddf41fe9a67cb57e6c9a7416bfb911b7ea1bf8b715d"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/tests/AffineScanlineRegression.java",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/tests/AffineScanlineRegression.java",
+      "source_sha256": "e6843b5cb878a9cde7418c69aec55f4240ba2aa6e0dcff7e87a21fafbbb9243b"
+    },
+    {
+      "source_path": "kartoza-geoserver-2.28.0-affine-fix/tests/test_startup.py",
+      "project_path": "bundles/kartoza-geoserver-2.28.0-affine-fix/tests/test_startup.py",
+      "source_sha256": "cbf9944c8ece6a74e013e993a9aaec38fc3653ad7b97ad8a68cc386dd4838b1f"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/.gitignore",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/.gitignore",
+      "source_sha256": "170533c001467cc3984dacf3d99cd049852c01986cc0750288cbe9cc5edc6583"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/COMPATIBILITY.md",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/COMPATIBILITY.md",
+      "source_sha256": "679e67d8073bb81eed6c83eea2e22daf97ed807886118e990f9c67a42d064524"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/LICENSE",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/LICENSE",
+      "source_sha256": "b9682636054cebb07e6f12d5f1eadeab6da128db4b5f42955cae40b325e42fc8"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/README.md",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/README.md",
+      "source_sha256": "45265df68cd4e4d4b5aa14c757d2dcfd0601781c55407d5fdc02399144741c28"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/RESULTS.md",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/RESULTS.md",
+      "source_sha256": "1bdf0aaac3af590e737c1c4062d3a055f62f5202d973a6378d25a3c946ac3453"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/apply-affine-fix.sh",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/apply-affine-fix.sh",
+      "source_sha256": "6eba2af0ae8890fe5fe20701aeecbd7eaa792f0a2388dc779b15b25628a390f7"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/build-lock.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/build-lock.json",
+      "source_sha256": "c8ba0c47087c186da18bd3c4c4b440919d65937006055299a73029a317418acb"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/build.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/build.py",
+      "source_sha256": "dcd1913ed332b8cd495627ac12fd47fdebabaf022f08b0da996bfd16eac9c8a0"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/README.md",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/README.md",
+      "source_sha256": "6cbb8e92b6aed6266d6e025761b2aecd7d7c50f1884146dcf00e726d7944173b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/analyze_versions.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/analyze_versions.py",
+      "source_sha256": "6feb20b2271dad47f0bced3e4cc2efd4ca7a195567b67d2e4f8845db638966ed"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-inspection.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-inspection.json",
+      "source_sha256": "249253f4e3012164b17b3cc46db411ac30c3680428a257872cf566a40b1b28da"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-patched-g1.jsonl.gz",
+      "source_sha256": "6bb5ab48800f0929ee08bc571b59c34b6f93cec1e844174cb06e3b7bfa180f0c"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-patched.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-patched.json",
+      "source_sha256": "74a548a9e354b91131b2bc6bc1a4cf51f3ef138a33b7be1d18ba342368dae17a"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-regression.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-regression.jsonl.gz",
+      "source_sha256": "19d389a2679eac34e56f68bf3bf9513d388df3f56f8e814d377339ff40838447"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-stock.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.0-stock.json",
+      "source_sha256": "1cfbe1299e06019a8bcb7a2aef2d0aee12398f5decd275a32b2eaeb8b98d42cf"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-inspection.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-inspection.json",
+      "source_sha256": "bdb61d29f3c33b42211a3e4d4e92697b970146720f9bc1447148e69717d515ca"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-patched-g1.jsonl.gz",
+      "source_sha256": "8c8980ef17be0b52470c67e7c1a683e172be12b47656da53e8e76c6f95da9f09"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-patched.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-patched.json",
+      "source_sha256": "bc7edffd49067700ace98fd69c5323d4f318092293d552f79a75f593424febed"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-regression.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-regression.jsonl.gz",
+      "source_sha256": "bf8012dc9f1bbac4d87a9f5adaa066e776465a816e0b862f59d6f9ba527c81f0"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-stock.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.1-stock.json",
+      "source_sha256": "26d107b5ad591aecf682d75f7e16a07102802df0377dcc7b2182b01b6501f1a2"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-inspection.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-inspection.json",
+      "source_sha256": "b0b8eab71a9804ec9a55b055b82b8f8641b93fcf827469cd857613bf59194f65"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-patched-g1.jsonl.gz",
+      "source_sha256": "4f739515da8a422a2c79471a8e6377ffd4b5f310720a9364a367232eba228d15"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-patched.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-patched.json",
+      "source_sha256": "7e5816d43604a506ff500a847479d5c1d9aa67efbe65b0910003fcfb9c3bdd68"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-regression.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-regression.jsonl.gz",
+      "source_sha256": "d9cdee7deb2784a94651a1a30093d28a3c7cacae48bd08843a6ea816d12661f6"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-stock.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.2-stock.json",
+      "source_sha256": "a7568f4df072185f15a0e7fa9f6c1d9c3e2361a3e319b8087ac0c3102561bcce"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-inspection.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-inspection.json",
+      "source_sha256": "948c5e7006e1a67eec7d939737ceb499d8535652b860960fcdca4e92d86078d2"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-patched-g1.jsonl.gz",
+      "source_sha256": "335c5e811b4883ddce7823cace8445c10488fd0d6cc656b6cbaee9e41fff140b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-patched.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-patched.json",
+      "source_sha256": "74e0195e02ae1b2d386cbfd6f8df18ca51493f83a08cd9389723f9a3ad4e995e"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-regression.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-regression.jsonl.gz",
+      "source_sha256": "e44d10ecad4f31f4d5ed011123dc2f14778a9be3ca4993bde86454d9abc17c60"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-stock.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.3-stock.json",
+      "source_sha256": "33273f20471fd4be993b6f43ec97ddc6b15b9c6cf5e7a93feb377555a0e7e262"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-inspection.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-inspection.json",
+      "source_sha256": "f3e236a2af9797a946d6fdb7412adeacf6cfd75adfa1cef9c66f7c404b4e150a"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-patched-g1.jsonl.gz",
+      "source_sha256": "9ebca4eac71761d4d9e55cb72be27642f2f3cdf4d2e3184bb6d16df880d5d2db"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-patched.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-patched.json",
+      "source_sha256": "53deba09c95eedba936cf1577686b902c1455592e5900c171235587e2f17d639"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-regression.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-regression.jsonl.gz",
+      "source_sha256": "83c85c92674dcaa5b15accc4caedf979975d1888c2c80c938f75438ff6aec6f1"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-stock.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.4-stock.json",
+      "source_sha256": "5a5e5b2727a4af1751d7f267fae25e1ff75d93a999223d9b45ef389154a0c718"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-inspection.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-inspection.json",
+      "source_sha256": "1ec930f1649b4407bcbbe478a27fcae2a1daa7d04ede2b1d08ef1d7adb0cf78d"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-patched-g1.jsonl.gz",
+      "source_sha256": "155018b3bb0ab205a7b120c7cbf08b8b6447bec279799f6c63233f37cd0894bb"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-patched.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-patched.json",
+      "source_sha256": "4ddcffed53648fb415f92df55e0c0fa75c02ed80cc16977bd896cb4c38ab1558"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-regression.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-regression.jsonl.gz",
+      "source_sha256": "acbd5e54bc2188054a0830989125ba512ecb50056802460b7e227e2bd4a4903d"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-stock.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/2.28.5--v2026.08.27-stock.json",
+      "source_sha256": "26b7a33c23d62c86608518ed55e3866ac029b9762bc623062e249d711fd48f48"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/comparison.png",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/comparison.png",
+      "source_sha256": "5dcfa8ca79cde34806aa6ac54e3a906e7a4c6e5ca7347de98df8ca715df4c4c9"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/final-state.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/final-state.json",
+      "source_sha256": "bc3d26fe97763d65703089263ee7399e40f481ebf2236f60ca95baa8469b54b6"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/geotools-class-differences.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/geotools-class-differences.json",
+      "source_sha256": "2ee18752203d8d5791a245cdd1665a15cce726f27688ae1c110eb4cf3cf4525c"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/published-tags.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/published-tags.json",
+      "source_sha256": "27909ec735cad28ebf12ec91a54dcd625945f0b10900cd4a29bf8439cad1723e"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/evidence/summary.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/evidence/summary.json",
+      "source_sha256": "9fe747b65a88a50e4b3a495f0e59bc770c4e82d883a8a9cd353cd00c88604d71"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/inspect_versions.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/inspect_versions.py",
+      "source_sha256": "9b6780f4cdbe34fd7d3b57ddde1797e9909ce7b73260a1021fc3ab81b05a39d4"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compatibility/render_versions.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compatibility/render_versions.py",
+      "source_sha256": "e953e330f67bce823d1b12bbc83adbc3b127a97a697dd056d0e76de1d2883069"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/compose.override.yaml",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/compose.override.yaml",
+      "source_sha256": "92c1ac777b28e4e83868d45a33dffc00d30d707a00800a12e3cb7f74af4ed9d8"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/build.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/build.json",
+      "source_sha256": "0f8bae3a4b534d84e611c3eca182d3c6cf64eb330e67910035cea37c2b895483"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/comparison.png",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/comparison.png",
+      "source_sha256": "bda37933db5e684e6fc82073fc2dfbeb43a81cc571b66ecb1d1347fa4ccbcb6c"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/controlflow-test.properties",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/controlflow-test.properties",
+      "source_sha256": "33a7889a5433030791e41e1656a478381287556708ede1fa4cea914f8d713106"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/edge-loss.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/edge-loss.json",
+      "source_sha256": "2013b0feccfaef5195c850a7171eb6245709788f435d4b091f1746c1a87fc987"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/final-state.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/final-state.json",
+      "source_sha256": "78918601ad089eb28232f85c54bdcb4e8fb56aa82c19fab392b6fb02bcf856b7"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/fixture-checksums-after.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/fixture-checksums-after.json",
+      "source_sha256": "781fd0ea526edf40cc85a2e832465172bb22e9ef82b74327ef65b315d7d4992b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/patched-container.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/patched-container.json",
+      "source_sha256": "0af138ac256fe87caca3ea0f5bb462b4adb058bcb67965cb43d7f6e714d2cf3b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/patched-g0.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/patched-g0.json",
+      "source_sha256": "720c59cf8ebab232ae695ab2db492ef36cc9d50b0a0b8b0f4071b6cbcafbdfe7"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/patched-g0.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/patched-g0.jsonl.gz",
+      "source_sha256": "307360644e0d30e7d4c0d7976825fa4f258efffb1f814368b98c106d2deabc7b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/patched-g1-cache.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/patched-g1-cache.json",
+      "source_sha256": "9770235df4c881f36608a4d16b864f17aab29bf6e987faea28ce82b5e2d96845"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/patched-g1.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/patched-g1.json",
+      "source_sha256": "ec5b52e45501dc8fc30367b5e015f4f3edf644dcb4d315fadec937db59a0a5ef"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/patched-g1.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/patched-g1.jsonl.gz",
+      "source_sha256": "c2e5f007e41886c8802368e4b203eafc959f1bcca810a7d5aa20b139241cd4de"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/patched-version.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/patched-version.json",
+      "source_sha256": "308a7d90410760d01bfedc4052c37fd561e91cb7603fef3b96cbe07336761e13"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/read-only-hook-mount-failure.txt",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/read-only-hook-mount-failure.txt",
+      "source_sha256": "08cc11573c7d6fbd0014a499d373d35993cb0ff43ca90ca7bc3f75dbdf27e9bd"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/real-jar-hook-tests.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/real-jar-hook-tests.json",
+      "source_sha256": "5f58f1192e8d50c2dbb38c0c416a7275c8b1fd14139a03c59634b95c847d4360"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/recreated-version.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/recreated-version.json",
+      "source_sha256": "308a7d90410760d01bfedc4052c37fd561e91cb7603fef3b96cbe07336761e13"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/recreation.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/recreation.json",
+      "source_sha256": "ab6125ec824d4b09f6059948120dc658d6291a6feb0aa4c9ad5d61f2f7166f20"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/regression-original.txt",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/regression-original.txt",
+      "source_sha256": "926451ebfb636cc421af4b55d1c0535181792b1bd783f477c7912669c8287f58"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/regression-patched.txt",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/regression-patched.txt",
+      "source_sha256": "db3d3feca5dea57d4ab46b7dfd35395fad0e11629bb674a1bd1ee61086da8c29"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/rendering-regression.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/rendering-regression.json",
+      "source_sha256": "f89a21df157ae1c1e0c79da911bf96c8e5c2378155cfa462537116f10fbbefd6"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/restart.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/restart.json",
+      "source_sha256": "e12f8661235dc801a6a494def7e4e1cb625d70ea57f0767f3fd324ea3c98f91b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/restarted-version.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/restarted-version.json",
+      "source_sha256": "308a7d90410760d01bfedc4052c37fd561e91cb7603fef3b96cbe07336761e13"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/rollback-stock-version.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/rollback-stock-version.json",
+      "source_sha256": "308a7d90410760d01bfedc4052c37fd561e91cb7603fef3b96cbe07336761e13"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/rollback-stock.png",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/rollback-stock.png",
+      "source_sha256": "b02827d49f2fbb174722c8740f84e46b79f91bb372be6afdd23790b94fcce7ae"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/rollback.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/rollback.json",
+      "source_sha256": "8b3788efee00654905d03581ab9c80a47a4f6604e0fa7201e4b83bdac5310a6c"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/sample-requests.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/sample-requests.json",
+      "source_sha256": "709dc5150573692dc20da267422d696c647df6599ae9c90235a1559deaaff6d0"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/sharpness.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/sharpness.json",
+      "source_sha256": "9c87cbe8083ff71a925474d9b20137394188c9a857bc513a72421f87efb4ec19"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/startup-hook.txt",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/startup-hook.txt",
+      "source_sha256": "d0d0bb804d0b998c4c80f3ad5a1eea362f2442b80e61c6ae594347bb9321f99f"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/stock-container.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/stock-container.json",
+      "source_sha256": "ab223c7d41e85b538ae4f6fc58d7a2034c4e92ac7af87a0bd359bce1d50c32b8"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/stock-g0-unthrottled-errors.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/stock-g0-unthrottled-errors.jsonl.gz",
+      "source_sha256": "2046ecfb76e4f9200489a4541ce4487728f1ff730b357fa50b56fadda1ef73a3"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/stock-g0-unthrottled.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/stock-g0-unthrottled.json",
+      "source_sha256": "978769732d8eb4fe03c107ad60e4348728f1752cc3a8b7ee07adaa798ccb0494"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/stock-g0-unthrottled.jsonl.gz",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/stock-g0-unthrottled.jsonl.gz",
+      "source_sha256": "cffe19c74b15d17f718a1df283d9ce9096973dcc5a957d573ed74f9e89d2ab17"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/stock-g0.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/stock-g0.json",
+      "source_sha256": "1cd431ed043ece3dc70cac5d591e9a307ef1b89901aecdad3d4229d798e8a1d1"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/stock-unthrottled-version.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/stock-unthrottled-version.json",
+      "source_sha256": "308a7d90410760d01bfedc4052c37fd561e91cb7603fef3b96cbe07336761e13"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/evidence/stock-version.json",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/evidence/stock-version.json",
+      "source_sha256": "308a7d90410760d01bfedc4052c37fd561e91cb7603fef3b96cbe07336761e13"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/jars.sha256.tsv",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/jars.sha256.tsv",
+      "source_sha256": "e4ada8cfed3d7ee57a28dfc952b736229ca7d8c3eea968960d84aff210795329"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/package.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/package.py",
+      "source_sha256": "8df185f064bc913bad55e14b28dd0b48ad79e3a80a2df569a8e56b25d7a4913d"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/AffineOpImage.java",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/AffineOpImage.java",
+      "source_sha256": "271baa590c01cf89a8cfee6a0f21478b52bf419422315434f6f2a52f022044a8"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/AffineOpImage.java.original",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/AffineOpImage.java.original",
+      "source_sha256": "0a6530156ac4f00b40fcb272c3c950ffbc4e024a05562b4502122028308b24d4"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/GridCoverageReaderHelper.java",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/GridCoverageReaderHelper.java",
+      "source_sha256": "6e0f27275f683c6da6f14f82e2b6b7859714b72129321df896a9c6e1d5752f98"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/GridCoverageReaderHelper.java.original",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/GridCoverageReaderHelper.java.original",
+      "source_sha256": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/README.md",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/README.md",
+      "source_sha256": "78ac26d24eb0dccc5493b6c14c34d2b61c441f4a918a5fd06a3f84537d08cb5a"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/affine-0.9.1-sources.jar",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/affine-0.9.1-sources.jar",
+      "source_sha256": "af6a18c7610d590fb633c3d27ef9758def8f729cac7efed7c7ab5622e2a56310"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/geotools-34.5.patch",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/geotools-34.5.patch",
+      "source_sha256": "9dc28d7e8228e2108be83f699582338539c97dba77bb950038756ba66670d3c4"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/geotools-LICENSE.md",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/geotools-LICENSE.md",
+      "source_sha256": "994ce1902a23c74519b5d118c6bbb657edabce91dd6b7cc825d86bb8f5c9780f"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/gt-render-34.5-sources.jar",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/gt-render-34.5-sources.jar",
+      "source_sha256": "cc3a950573d4322c21c3d3705cc6d3218d580f2917c5a930dc2e66581aeb7245"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/imagen-0.9.1.patch",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/imagen-0.9.1.patch",
+      "source_sha256": "11c84087bd0b457686633bb7d2685330272b78b415cfa983c656ab9064673ff7"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/source/imagen-LICENSE.md",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/source/imagen-LICENSE.md",
+      "source_sha256": "2e1faa05bb91574fa388220185f57b3607701714053971f704a3b32bceb9851b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/start-with-affine-fix.sh",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/start-with-affine-fix.sh",
+      "source_sha256": "26978acbd130d97e178acddf41fe9a67cb57e6c9a7416bfb911b7ea1bf8b715d"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/tests/AffineScanlineRegression.java",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/tests/AffineScanlineRegression.java",
+      "source_sha256": "e6843b5cb878a9cde7418c69aec55f4240ba2aa6e0dcff7e87a21fafbbb9243b"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/tests/analyze.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/tests/analyze.py",
+      "source_sha256": "d913b6c47a65d15e972b827ea25bcb518e28e6d793f85e70ec40dc941c187a13"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/tests/requirements.txt",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/tests/requirements.txt",
+      "source_sha256": "9db9faf213ecf9f2aea1446e25ddbead8c3157cbeb567fea9c10da978f776cfe"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/tests/test_startup.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/tests/test_startup.py",
+      "source_sha256": "db31e124becab80b7277ea76e9f5810e60fbf2b37eae74426b530c54a13ac3cf"
+    },
+    {
+      "source_path": "kartoza-geoserver-affine-fix/tests/validate.py",
+      "project_path": "bundles/kartoza-geoserver-affine-fix/tests/validate.py",
+      "source_sha256": "7638bfe8cb460a4058d309c0ec5b6f9b47cdb4cf6ae15f85a8787efbf2f36149"
+    }
+  ]
+}

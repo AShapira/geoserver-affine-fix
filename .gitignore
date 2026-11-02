@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.runs/
+.artifacts/
+.env
+node_modules/
+upstream/
+bundles/*/jars/
+*.zip
+*.zip.sha256
+bundles/*/SHA256SUMS
+bundles/*/SOURCE_SHA256SUMS

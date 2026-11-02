@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "geoserver-affine-fix"
+version = "0.1.0"
+description = "Reproductions, regression evidence and experimental fixes for rotated GeoTIFF rendering"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3", "Pillow>=10,<13", "requests>=2.31,<3"]
+
+[project.optional-dependencies]
+fixtures = ["rasterio>=1.4,<2"]
+analysis = ["matplotlib>=3.8,<4"]
+
+[project.scripts]
+affine-probe = "affine_fix.probe:main"
+affine-validate = "affine_fix.validate:main"
+affine-lab = "affine_fix.lab:main"
+
+[tool.setuptools]
+packages = ["affine_fix"]
