@@ -108,7 +108,7 @@ def jobs_for(item, validity=False):
     return [dict(name=item['name'], tile=list(t)) for t in sorted({probe.tile_at(z,*probe.world(item['gt'],px*SIZE,py*SIZE)) for z in zooms for px,py in points})]
 
 
-def validity(session, item, job, root, variant, gutter):
+def validity(session, item, job, root, variant, gutter, *, save_images=False):
     bbox = probe.tile(*job['tile']); res = (bbox[2]-bbox[0])/256
     expanded = [bbox[0]-gutter*res,bbox[1]-gutter*res,bbox[2]+gutter*res,bbox[3]+gutter*res]
     params = probe.wms(item['name'],expanded,width=256+2*gutter,height=256+2*gutter)
@@ -134,7 +134,7 @@ def validity(session, item, job, root, variant, gutter):
     result=dict(row,alpha_mismatch=int(alpha_error.sum()),color_mismatch=int(color_error.sum()),
                 missing=int(((actual[...,3]==0)&visible).sum()),
                 spurious=int(((actual[...,3]>0)&(expected[...,3]==0)).sum()))
-    if result['alpha_mismatch'] or result['color_mismatch']:
+    if save_images or result['alpha_mismatch'] or result['color_mismatch']:
         directory=root/'images'/variant/item['name'];directory.mkdir(parents=True,exist_ok=True)
         stem='_'.join(map(str,job['tile']))+f'_g{gutter}'
         image.save(directory/(stem+'.png'));Image.fromarray(expected).save(directory/(stem+'-expected.png'))

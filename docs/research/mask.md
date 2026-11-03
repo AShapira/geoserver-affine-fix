@@ -1,3 +1,5 @@
+> Historical experiment. For the integrated implementation on this repository’s `main`, see [current validation](../validation.md) and [current performance](../performance.md).
+
 # Mask-preserving crop experiment
 
 Branch: `codex/mask-preserving-crop`. Baseline: `fcbf811`.

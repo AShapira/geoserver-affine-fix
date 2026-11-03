@@ -36,7 +36,7 @@ def main():
     lines = ['# Combined affine candidate', '',
         'Branch: `codex/affine-complete-candidate`. Published baseline: `fcbf811`. '
         'This integrates the mask and precision experiments, with additional fixes found during integration. '
-        '**Experimental; not merged to main or submitted upstream.**', '',
+        '**Historical integration stage; incorporated into the optimized fix on this repository’s main. Not accepted upstream.**', '',
         '## Changes', '',
         '1. Preserve a source-grid footprint mask while bypassing the premature map-space crop.',
         '2. Add a NoData-validity mask before affine background substitution, preserving valid zero elevations.',

@@ -1,3 +1,5 @@
+> Historical experiment. For the integrated implementation on this repository’s `main`, see [current validation](../validation.md) and [current performance](../performance.md).
+
 # Affine boundary precision experiment
 
 Branch: `codex/affine-boundary-precision`. Baseline: `fcbf811`.

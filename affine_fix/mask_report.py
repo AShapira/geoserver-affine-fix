@@ -93,9 +93,9 @@ def main():
     probe.write_json(a.output/'mask-optimized-verdict.json', verdict)
     shutil.copyfile(a.performance/'requests.jsonl.gz', a.output/'mask-optimized-requests.jsonl.gz')
     lines = ['# Mask processing optimization', '',
-        'Branch: `codex/mask-performance`, based on the correct combined candidate '
+        'Implementation incorporated into this repository’s `main` from `codex/mask-performance`, based on the correctness-validated combined candidate '
         f'[`{BASELINE[:7]}`](https://github.com/AShapira/geoserver-affine-fix/commit/{BASELINE}). '
-        '**Experimental; not merged to main or submitted upstream.**', '',
+        '**Experimental; not accepted or shipped upstream.**', '',
         '## What changed', '',
         '- NoData validity is calculated lazily into a byte image using direct buffer writes. A primitive range test replaces '
         'the generic range lookup, boxed values, temporary band images and band reduction. '
@@ -198,6 +198,9 @@ def main():
         'bilinear/bicubic rendering, projection-domain clipping, real ImageMosaic datasets and all TIFF '
         'layouts still need upstream testing. Direct multi-band NoData unit tests do not replace '
         'end-to-end tests of every GeoServer style. The finite scanline precision limit is unchanged.', '',
+        'Additional documentation captures subsequently found zoom-15/16 alpha-boundary mismatches, '
+        'identical to the previous candidate. Those low zooms were timed here but were outside this run’s '
+        'typed validity checks at zooms 20/22/24. See [current validation](../validation.md#additional-wide-view-checks).', '',
         '[Validity](mask-optimized-quality.json) · [Rendering](mask-optimized-rendering.json) · '
         '[Performance](mask-optimized-performance.json) · [Request timings](mask-optimized-requests.jsonl.gz) · '
         '[Verdict](mask-optimized-verdict.json) · [Profile](mask-optimized-profile.json)', '',
@@ -209,7 +212,7 @@ def main():
         '[ROI binarization](https://github.com/eclipse-imagen/imagen/blob/0.9.3/modules/core/src/main/java/org/eclipse/imagen/ROI.java). '
         'Those exploratory runs are not included in the final paired results.', '',
         '## Reproduce', '', '```bash',
-        'git switch codex/mask-performance',
+        'git switch main',
         'git worktree add --detach /tmp/affine-correct-baseline ' + BASELINE,
         '(cd /tmp/affine-correct-baseline && uv run python -m affine_fix.build --output .runs/patch)',
         'uv run python -m affine_fix.typed_suite --root .runs/optimized-quality --quality-only --variants both',

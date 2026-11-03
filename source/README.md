@@ -26,10 +26,18 @@ other archive entries are unchanged, and keeps generated binaries outside Git. D
 matching upstream source archives and these modifications with any derived
 binaries, respecting the [license scope](../LICENSING.md).
 
-On the combined research branch, additional files come from the same locked ImageN 0.9.3 source archive:
+The integrated fix on this repository's `main` also uses these files from the same locked ImageN 0.9.3 source archive:
 
-- `AffineNearestOpImage.java` and `AffineGeneralOpImage.java`: retain double coordinates, including binary masks.
+- `AffineNearestOpImage.java` and `AffineGeneralOpImage.java`: retain double coordinates, including binary masks; the general operator also samples pure nearest binary masks directly.
 - `AffineDescriptor.java`: initialize transformed masks with zero outside their valid domain.
 - `AffineBicubicOpImage.java` and `AffineBilinearOpImage.java`: unchanged source, recompiled against the updated fraction constant.
 
-The additional `patches/imagen-*.patch` files describe each modification. Adjacent `.original` files preserve upstream source. The build manifest lists every replaced class; all other archive entries remain unchanged. The wider interpolation impact still needs upstream testing.
+`GridCoverageReaderHelper.java` now includes the additional `NoDataMaskOpImage`
+helper class. It computes byte validity masks with primitive comparisons and
+preserves unsigned NoData ranges. The coverage reader also skips a synthetic footprint
+mask only for requests entirely inside the read image with a one-source-pixel guard.
+
+The additional `patches/imagen-*.patch` files describe each modification. Adjacent
+`.original` files preserve upstream source. The build manifest lists every replaced
+and added class; all other archive entries remain unchanged. The wider interpolation
+impact still needs upstream testing. See [current validity and limits](../docs/validation.md).

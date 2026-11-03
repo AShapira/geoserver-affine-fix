@@ -1,6 +1,8 @@
+> Historical experiment. For the integrated implementation on this repository’s `main`, see [current validation](../validation.md) and [current performance](../performance.md).
+
 # Combined affine candidate
 
-Branch: `codex/affine-complete-candidate`. Published baseline: `fcbf811`. This integrates the mask and precision experiments, with additional fixes found during integration. **Experimental; not merged to main or submitted upstream.**
+Branch: `codex/affine-complete-candidate`. Published baseline: `fcbf811`. This integrates the mask and precision experiments, with additional fixes found during integration. **Historical integration stage; incorporated into the optimized fix on this repository’s main. Not accepted upstream.**
 
 ## Changes
 

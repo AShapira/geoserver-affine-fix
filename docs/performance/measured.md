@@ -1,3 +1,5 @@
+> Historical experiment. For the integrated implementation on this repository’s `main`, see [current validation](../validation.md) and [current performance](../performance.md).
+
 # Generated performance measurements
 
 Completed 2026-11-03T07:54:55.243979+00:00. 232,704 timed requests; 0 errors.

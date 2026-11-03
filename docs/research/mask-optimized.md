@@ -1,6 +1,6 @@
 # Mask processing optimization
 
-Branch: `codex/mask-performance`, based on the correct combined candidate [`c9aff37`](https://github.com/AShapira/geoserver-affine-fix/commit/c9aff37f393feb0638add12a2ce63d67f0f00d84). **Experimental; not merged to main or submitted upstream.**
+Implementation incorporated into this repository’s `main` from `codex/mask-performance`, based on the correctness-validated combined candidate [`c9aff37`](https://github.com/AShapira/geoserver-affine-fix/commit/c9aff37f393feb0638add12a2ce63d67f0f00d84). **Experimental; not accepted or shipped upstream.**
 
 ## What changed
 
@@ -78,6 +78,8 @@ See the [profile summary](mask-optimized-profile.json) for leaf and inclusive st
 
 The results apply to this synthetic, nearest-neighbor, same-CRS workload on Linux/WSL. They are not a throughput guarantee for production data. Arbitrary reprojection, bilinear/bicubic rendering, projection-domain clipping, real ImageMosaic datasets and all TIFF layouts still need upstream testing. Direct multi-band NoData unit tests do not replace end-to-end tests of every GeoServer style. The finite scanline precision limit is unchanged.
 
+Additional documentation captures subsequently found zoom-15/16 alpha-boundary mismatches, identical to the previous candidate. Those low zooms were timed here but were outside this run’s typed validity checks at zooms 20/22/24. See [current validation](../validation.md#additional-wide-view-checks).
+
 [Validity](mask-optimized-quality.json) · [Rendering](mask-optimized-rendering.json) · [Performance](mask-optimized-performance.json) · [Request timings](mask-optimized-requests.jsonl.gz) · [Verdict](mask-optimized-verdict.json) · [Profile](mask-optimized-profile.json)
 
 In raw files, `stock` is the **correct patched baseline**, and `both` is the **optimized candidate**. The baseline lock and both build manifests identify the exact libraries. JARs, TIFFs, credentials, JFR recordings and raw image responses remain ignored.
@@ -87,7 +89,7 @@ Per-pixel and batched direct one-bit NoData outputs were also tried. Preliminary
 ## Reproduce
 
 ```bash
-git switch codex/mask-performance
+git switch main
 git worktree add --detach /tmp/affine-correct-baseline c9aff37f393feb0638add12a2ce63d67f0f00d84
 (cd /tmp/affine-correct-baseline && uv run python -m affine_fix.build --output .runs/patch)
 uv run python -m affine_fix.typed_suite --root .runs/optimized-quality --quality-only --variants both
