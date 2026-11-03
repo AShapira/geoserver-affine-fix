@@ -1,0 +1,12 @@
+{
+  "quality_checks": 1320,
+  "response_errors": 0,
+  "missing": 0,
+  "spurious": 0,
+  "alpha_mismatch": 0,
+  "color_mismatch": 0,
+  "repeated_checks": 1320,
+  "repeated_failed_checks": 0,
+  "typed_passed": true,
+  "original_rendering_passed": true
+}

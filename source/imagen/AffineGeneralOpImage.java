@@ -492,8 +492,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int dstOffset = 0;
 
         // Destination and source point stored as point2D object
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         // destination data arrays
         byte[][] dstDataArrays = dst.getByteDataArrays();
@@ -546,8 +546,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // As per definition of bilinear or bicubic interpolation
             if (interpN == null || !(interp instanceof InterpolationNearest)) {
@@ -560,8 +560,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             int s_iy = (int) Math.floor(s_y);
 
             // Calculation of the fractional values
-            float fracx = s_x - (float) s_ix;
-            float fracy = s_y - (float) s_iy;
+            double fracx = s_x - s_ix;
+            double fracy = s_y - s_iy;
             // Get the new frac values
             xfrac = (int) (fracx * shiftvalue);
             yfrac = (int) (fracy * shiftvalue);
@@ -790,8 +790,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         byte[] destData = destDB.getData();
         int destDBOffset = destDB.getOffset();
 
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         int dst_min_x = destRect.x;
         int dst_min_y = destRect.y;
@@ -841,8 +841,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // Floor to get the integral coordinate
             int s_ix = (int) Math.floor(s_x);
@@ -1014,8 +1014,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int dstOffset = 0;
 
         // Destination and source point stored as point2D object
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         // destination data arrays
         short[][] dstDataArrays = dst.getShortDataArrays();
@@ -1068,8 +1068,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // As per definition of bilinear or bicubic interpolation
             if (interpN == null || !(interp instanceof InterpolationNearest)) {
@@ -1082,8 +1082,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             int s_iy = (int) Math.floor(s_y);
 
             // Calculation of the fractional values
-            float fracx = s_x - (float) s_ix;
-            float fracy = s_y - (float) s_iy;
+            double fracx = s_x - s_ix;
+            double fracy = s_y - s_iy;
             // Get the new frac values
             xfrac = (int) (fracx * shiftvalue);
             yfrac = (int) (fracy * shiftvalue);
@@ -1313,8 +1313,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         short[] destData = destDB.getData();
         int destDBOffset = destDB.getOffset();
 
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         int dst_min_x = destRect.x;
         int dst_min_y = destRect.y;
@@ -1364,8 +1364,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // Floor to get the integral coordinate
             int s_ix = (int) Math.floor(s_x);
@@ -1539,8 +1539,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int dstOffset = 0;
 
         // Destination and source point stored as point2D object
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         // destination data arrays
         short[][] dstDataArrays = dst.getShortDataArrays();
@@ -1593,8 +1593,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // As per definition of bilinear or bicubic interpolation
             if (interpN == null || !(interp instanceof InterpolationNearest)) {
@@ -1607,8 +1607,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             int s_iy = (int) Math.floor(s_y);
 
             // Calculation of the fractional values
-            float fracx = s_x - (float) s_ix;
-            float fracy = s_y - (float) s_iy;
+            double fracx = s_x - s_ix;
+            double fracy = s_y - s_iy;
             // Get the new frac values
             xfrac = (int) (fracx * shiftvalue);
             yfrac = (int) (fracy * shiftvalue);
@@ -1817,8 +1817,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int dstOffset = 0;
 
         // Destination and source point stored as point2D object
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         // destination data arrays
         int[][] dstDataArrays = dst.getIntDataArrays();
@@ -1871,8 +1871,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // As per definition of bilinear or bicubic interpolation
             if (interpN == null || !(interp instanceof InterpolationNearest)) {
@@ -1885,8 +1885,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             int s_iy = (int) Math.floor(s_y);
 
             // Calculation of the fractional values
-            float fracx = s_x - (float) s_ix;
-            float fracy = s_y - (float) s_iy;
+            double fracx = s_x - s_ix;
+            double fracy = s_y - s_iy;
             // Get the new frac values
             xfrac = (int) (fracx * shiftvalue);
             yfrac = (int) (fracy * shiftvalue);
@@ -2111,8 +2111,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int[] destData = destDB.getData();
         int destDBOffset = destDB.getOffset();
 
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         int dst_min_x = destRect.x;
         int dst_min_y = destRect.y;
@@ -2161,8 +2161,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // Floor to get the integral coordinate
             int s_ix = (int) Math.floor(s_x);
@@ -2336,8 +2336,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int dstOffset = 0;
 
         // Destination and source point stored as point2D object
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         // destination data arrays
         float[][] dstDataArrays = dst.getFloatDataArrays();
@@ -2390,8 +2390,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // As per definition of bilinear or bicubic interpolation
             if (interpN == null || !(interp instanceof InterpolationNearest)) {
@@ -2404,8 +2404,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             int s_iy = (int) Math.floor(s_y);
 
             // Calculation of the fractional values
-            float fracx = s_x - (float) s_ix;
-            float fracy = s_y - (float) s_iy;
+            double fracx = s_x - s_ix;
+            double fracy = s_y - s_iy;
 
             // Get the new frac values
             xfrac = (int) (fracx * shiftvalue);
@@ -2510,7 +2510,7 @@ public class AffineGeneralOpImage extends AffineOpImage {
                             }
 
                             // Do the interpolation
-                            s = interp.interpolate(samples, fracx, fracy);
+                            s = interp.interpolate(samples, (float) fracx, (float) fracy);
                         }
                         // Write the result
                         dstDataArrays[k2][dstPixelOffset + dstBandOffsets[k2]] = (float) s;
@@ -2601,8 +2601,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int dstOffset = 0;
 
         // Destination and source point stored as point2D object
-        Point2D dst_pt = new Point2D.Float();
-        Point2D src_pt = new Point2D.Float();
+        Point2D dst_pt = new Point2D.Double();
+        Point2D src_pt = new Point2D.Double();
 
         // destination data arrays
         double[][] dstDataArrays = dst.getDoubleDataArrays();
@@ -2655,8 +2655,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             mapDestPoint(dst_pt, src_pt);
 
             // Get the mapped source coordinates
-            float s_x = (float) src_pt.getX();
-            float s_y = (float) src_pt.getY();
+            double s_x = src_pt.getX();
+            double s_y = src_pt.getY();
 
             // As per definition of bilinear or bicubic interpolation
             if (interpN == null || !(interp instanceof InterpolationNearest)) {
@@ -2669,8 +2669,8 @@ public class AffineGeneralOpImage extends AffineOpImage {
             int s_iy = (int) Math.floor(s_y);
 
             // Calculation of the fractional values
-            float fracx = s_x - (float) s_ix;
-            float fracy = s_y - (float) s_iy;
+            double fracx = s_x - s_ix;
+            double fracy = s_y - s_iy;
 
             // Get the new frac values
             xfrac = (int) (fracx * shiftvalue);
@@ -2775,7 +2775,7 @@ public class AffineGeneralOpImage extends AffineOpImage {
                             }
 
                             // Do the interpolation
-                            s = interp.interpolate(samples, fracx, fracy);
+                            s = interp.interpolate(samples, (float) fracx, (float) fracy);
                         }
                         // Write the result
                         dstDataArrays[k2][dstPixelOffset + dstBandOffsets[k2]] = s;

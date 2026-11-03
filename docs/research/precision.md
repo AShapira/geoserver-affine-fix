@@ -20,3 +20,5 @@ Reproduce:
 uv sync --frozen --all-extras
 uv run python -m affine_fix.typed_suite --root .runs/precision-check --quality-only --variants both --kinds rgb rgba
 ```
+
+The full 9,440-request original grayscale rendering reproduction also completes. At gutter 1, missing footprint pixels fall from 16 to 8 per route; at gutter 0, 1,536 missing interior pixels remain. Thus this branch alone does not remove the need for request padding. [Measurements](precision-rendering.json).

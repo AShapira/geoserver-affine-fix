@@ -9,6 +9,15 @@
  
      double m00, m10, flr_m00, flr_m10;
      double fracdx, fracdx1, fracdy, fracdy1;
+@@ -196,7 +196,7 @@
+         }
+     }
+ 
+-    private static ImageLayout layoutHelper(ImageLayout layout, RenderedImage source, AffineTransform forward_tr) {
++    private static ImageLayout layoutHelper(ImageLayout layout, RenderedImage source, AffineTransform forward_tr, Interpolation interpolation) {
+ 
+         ImageLayout newLayout;
+         if (layout != null) {
 @@ -208,10 +208,10 @@
          //
          // Get sx0,sy0 coordinates and width & height of the source
@@ -56,7 +65,33 @@
  
              dx0 = Math.min(dx0, px);
              dy0 = Math.min(dy0, py);
-@@ -345,18 +345,18 @@
+@@ -273,6 +273,16 @@
+         //
+         // Create the layout
+         //
++        if (interpolation instanceof InterpolationNearest
++                || interpolation instanceof org.eclipse.imagen.InterpolationNearest) {
++            // Include destination pixels by their centers in the half-open footprint.
++            // Rounding the origin and truncating the width independently can lose
++            // the last column (or row) even though its center is inside the image.
++            lx0 = (int) Math.ceil(dx0 - 0.5);
++            ly0 = (int) Math.ceil(dy0 - 0.5);
++            lw = (int) Math.ceil(dx1 - 0.5) - lx0;
++            lh = (int) Math.ceil(dy1 - 0.5) - ly0;
++        }
+         newLayout.setMinX(lx0);
+         newLayout.setMinY(ly0);
+         newLayout.setWidth(lw);
+@@ -302,7 +312,7 @@
+             double[] backgroundValues) {
+         super(
+                 vectorize(source),
+-                layoutHelper(layout, source, transform),
++                layoutHelper(layout, source, transform, interp),
+                 config,
+                 true,
+                 extender,
+@@ -345,18 +355,18 @@
              //
              // Get sx0,sy0 coordinates and width & height of the source
              //
@@ -83,7 +118,7 @@
  
              //
              // As per pixel defined to be at (0.5, 0.5)
-@@ -382,21 +382,21 @@
+@@ -382,21 +392,21 @@
              // (x0+w, y0+h), (x0, y0+h)
              //
              Point2D[] pts = new Point2D[4];
@@ -115,7 +150,21 @@
  
                  dx0 = Math.min(dx0, px);
                  dy0 = Math.min(dy0, py);
-@@ -559,26 +559,26 @@
+@@ -416,6 +426,13 @@
+             int lx1 = (int) Math.floor(dx1);
+             int ly1 = (int) Math.floor(dy1);
+ 
++            if (interp instanceof InterpolationNearest
++                    || interp instanceof org.eclipse.imagen.InterpolationNearest) {
++                lx0 = (int) Math.ceil(dx0 - 0.5);
++                ly0 = (int) Math.ceil(dy0 - 0.5);
++                lx1 = (int) Math.ceil(dx1 - 0.5);
++                ly1 = (int) Math.ceil(dy1 - 0.5);
++            }
+             theDest = new Rectangle(lx0, ly0, lx1 - lx0, ly1 - ly0);
+         } else {
+             theDest = getBounds();
+@@ -559,26 +576,26 @@
          // Backward map the destination to get the corresponding
          // source Rectangle
          //
@@ -156,7 +205,7 @@
  
              f_sx0 = Math.min(f_sx0, px);
              f_sy0 = Math.min(f_sy0, py);
-@@ -741,7 +741,7 @@
+@@ -741,7 +758,7 @@
          int clipMinX = dst_min_x;
          int clipMaxX = dst_max_x;
  
@@ -165,7 +214,7 @@
          if (xdenom != 0) {
              long clipx1 = (long) src_rect_x1 + lpad;
              long clipx2 = (long) src_rect_x2 - rpad;
-@@ -756,10 +756,10 @@
+@@ -756,10 +773,10 @@
                  x2 = tmp;
              }
  
@@ -178,7 +227,7 @@
              clipMaxX = Math.min(clipMaxX, dx2);
          } else {
              // xdenom == 0, all points have same x coordinate as the first
-@@ -769,7 +769,7 @@
+@@ -769,7 +786,7 @@
              }
          }
  
@@ -187,7 +236,7 @@
          if (ydenom != 0) {
              long clipy1 = (long) src_rect_y1 + tpad;
              long clipy2 = (long) src_rect_y2 - bpad;
-@@ -784,10 +784,10 @@
+@@ -784,10 +801,10 @@
                  y2 = tmp;
              }
  
@@ -200,7 +249,7 @@
              clipMaxX = Math.min(clipMaxX, dx2);
          } else {
              // ydenom == 0, all points have same y coordinate as the first
-@@ -798,6 +798,7 @@
+@@ -798,6 +815,7 @@
  
          if (clipMinX > dst_max_x) clipMinX = dst_max_x;
          if (clipMaxX < dst_min_x) clipMaxX = dst_min_x;

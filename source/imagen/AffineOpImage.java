@@ -196,7 +196,7 @@ abstract class AffineOpImage extends GeometricOpImage {
         }
     }
 
-    private static ImageLayout layoutHelper(ImageLayout layout, RenderedImage source, AffineTransform forward_tr) {
+    private static ImageLayout layoutHelper(ImageLayout layout, RenderedImage source, AffineTransform forward_tr, Interpolation interpolation) {
 
         ImageLayout newLayout;
         if (layout != null) {
@@ -273,6 +273,16 @@ abstract class AffineOpImage extends GeometricOpImage {
         //
         // Create the layout
         //
+        if (interpolation instanceof InterpolationNearest
+                || interpolation instanceof org.eclipse.imagen.InterpolationNearest) {
+            // Include destination pixels by their centers in the half-open footprint.
+            // Rounding the origin and truncating the width independently can lose
+            // the last column (or row) even though its center is inside the image.
+            lx0 = (int) Math.ceil(dx0 - 0.5);
+            ly0 = (int) Math.ceil(dy0 - 0.5);
+            lw = (int) Math.ceil(dx1 - 0.5) - lx0;
+            lh = (int) Math.ceil(dy1 - 0.5) - ly0;
+        }
         newLayout.setMinX(lx0);
         newLayout.setMinY(ly0);
         newLayout.setWidth(lw);
@@ -302,7 +312,7 @@ abstract class AffineOpImage extends GeometricOpImage {
             double[] backgroundValues) {
         super(
                 vectorize(source),
-                layoutHelper(layout, source, transform),
+                layoutHelper(layout, source, transform, interp),
                 config,
                 true,
                 extender,
@@ -416,6 +426,13 @@ abstract class AffineOpImage extends GeometricOpImage {
             int lx1 = (int) Math.floor(dx1);
             int ly1 = (int) Math.floor(dy1);
 
+            if (interp instanceof InterpolationNearest
+                    || interp instanceof org.eclipse.imagen.InterpolationNearest) {
+                lx0 = (int) Math.ceil(dx0 - 0.5);
+                ly0 = (int) Math.ceil(dy0 - 0.5);
+                lx1 = (int) Math.ceil(dx1 - 0.5);
+                ly1 = (int) Math.ceil(dy1 - 0.5);
+            }
             theDest = new Rectangle(lx0, ly0, lx1 - lx0, ly1 - ly0);
         } else {
             theDest = getBounds();

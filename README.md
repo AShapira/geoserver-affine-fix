@@ -1,6 +1,6 @@
 # GeoServer affine-raster fixes
 
-**Research branch:** see the [boundary precision experiment](docs/research/precision.md).
+**Research branch:** see the [combined affine candidate and new validation](docs/research/combined.md).
 The published baseline report below is retained for comparison.
 
 Reproduce two raster-rendering defects on **official GeoServer 3.0.2** and test
