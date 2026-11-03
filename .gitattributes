@@ -1,3 +1,7 @@
 # Preserve upstream source bytes and unified-diff context lines.
 *.patch -whitespace
 source/*/* -whitespace
+
+# Keep generated measurements collapsible in GitHub reviews.
+docs/performance/* linguist-generated=true
+docs/assets/performance.png linguist-generated=true

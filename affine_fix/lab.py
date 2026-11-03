@@ -76,8 +76,18 @@ def patch_payload(directory, lock):
     return files
 
 
-def install_patch(engine, container, directory, lock):
+def selected_libraries(lock, components='both'):
+    """Select an ablation without weakening validation of the complete build."""
+    packages = {'geotools': 'org/geotools/', 'imagen': 'org/eclipse/imagen/'}
+    if components not in ('both', *packages):
+        raise ValueError('Unknown patch components: ' + str(components))
+    return {jar: spec for jar, spec in lock['libraries'].items()
+            if components == 'both' or spec['class'].startswith(packages[components])}
+
+
+def install_patch(engine, container, directory, lock, components='both'):
     files = patch_payload(directory, lock)
+    selected = selected_libraries(lock, components)
     lib = lock['library_directory']
     for jar, spec in lock['libraries'].items():
         data = call(engine, 'cp', container + ':' + lib + '/' + jar, '-').stdout
@@ -85,7 +95,20 @@ def install_patch(engine, container, directory, lock):
             members = [m for m in tar.getmembers() if m.isfile()]
             if len(members) != 1 or hashlib.sha256(tar.extractfile(members[0]).read()).hexdigest() != spec['sha256']:
                 raise RuntimeError('Refusing to replace a different original JAR: ' + jar)
-    call(engine, 'cp', '-', container + ':' + lib, data=archive(files))
+    call(engine, 'cp', '-', container + ':' + lib,
+         data=archive({name: files[name] for name in selected}))
+
+
+def validate_fixture_set(entries, fixture_set='standard'):
+    names = {prefix + suffix: 4096 for prefix in
+             ('rot0', 'rot15', 'rot30', 'rot45', 'rot75', 'rotm30', 'shear')
+             for suffix in ('_base', '_ovr')}
+    if fixture_set == 'benchmark':
+        names.update({name: 16384 for name in ('large_rot0_base', 'large_rot30_base', 'large_rot30_ovr')})
+    elif fixture_set != 'standard':
+        raise ValueError('Unknown fixture set')
+    if len(entries) != len(names) or {e['name']: e['size'] for e in entries} != names:
+        raise RuntimeError('Generate the complete ' + fixture_set + ' fixture set before starting a lab')
 
 
 def up(args):
@@ -97,13 +120,13 @@ def up(args):
         raise RuntimeError('This lab already exists; use a different --root')
     probe.FIXTURE_ROOT = None
     entries = probe.verify(args.fixtures)
-    if len(entries) != 14 or any(e['size'] != 4096 for e in entries):
-        raise RuntimeError('Generate the full 4096-pixel fixtures before starting a lab')
+    validate_fixture_set(entries, getattr(args, 'fixture_set', 'standard'))
     engine = [args.engine] + (['--connection', args.connection] if args.connection else [])
     lock = load_lock()
     selected_image = lock['image']
     if args.patch:
         patch_payload(args.patch, lock)
+        selected_libraries(lock, getattr(args, 'components', 'both'))
     if args.pull:
         call(engine, 'pull', selected_image)
     config = json.loads(call(engine, 'image', 'inspect', selected_image).stdout)[0]
@@ -127,13 +150,14 @@ def up(args):
              'engine': engine, 'image': selected_image, 'image_id': config['Id'],
              'url': f'http://127.0.0.1:{args.port}/geoserver',
              'fixtures': str(args.fixtures.resolve()), 'server_fixture_dir': SERVER_FIXTURES,
-             'password_file': str(password_file), 'patch': str(args.patch.resolve()) if args.patch else None}
+             'password_file': str(password_file), 'patch': str(args.patch.resolve()) if args.patch else None,
+             'components': getattr(args, 'components', 'both') if args.patch else None}
     probe.write_json(state_file, state)
     state_file.chmod(0o600)
     try:
         files = {'affine-fixtures/' + Path(e['path']).name: Path(e['path']) for e in entries}
         if args.patch:
-            install_patch(engine, container_id, args.patch, lock)
+            install_patch(engine, container_id, args.patch, lock, state['components'])
         call(engine, 'cp', '-', container_id + ':/opt', data=archive(files))
         call(engine, 'start', container_id)
         session = requests.Session()
@@ -175,6 +199,9 @@ def main():
     parser.add_argument('--port', type=int, default=18096)
     parser.add_argument('--pull', action='store_true', help='Fetch the selected image before creation')
     parser.add_argument('--patch', type=Path, help='Output directory from affine-build')
+    parser.add_argument('--components', choices=['both', 'geotools', 'imagen'], default='both',
+                        help='Install both corrections or one independently (requires --patch)')
+    parser.add_argument('--fixture-set', choices=['standard', 'benchmark'], default='standard')
     args = parser.parse_args()
     if args.port < 1024 or args.port > 65535:
         parser.error('--port must be between 1024 and 65535')

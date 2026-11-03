@@ -88,6 +88,51 @@ To regenerate the README figures and compact evidence from a completed run:
 uv run affine-report --run .runs/geoserver-3.0.2 --output docs
 ```
 
+## Performance tests
+
+The performance suite compares stock code, each correction independently, and
+both corrections on the same official image. The published run completed
+**232,704 timed requests across 12 fresh JVMs, with zero timed-response errors**.
+It uses three fresh JVMs per
+variant, repeated measurements, 1/6/12 clients, WMS and verified GWC MISS/HIT
+responses, 4096- and 16,384-pixel sources, interpolation controls and larger
+output images. Separate pixel checks and JVM profiles accompany the timings.
+
+For the core workload with one client and a one-pixel gutter:
+
+| Request path | Stock median | Both corrections |
+|---|---:|---:|
+| Direct WMS | 8.75 ms | 4.66 ms |
+| GWC cache MISS | 9.70 ms | 5.74 ms |
+| GWC cache HIT | 1.22 ms | 1.14 ms |
+
+Across paired fresh-JVM runs, WMS latency fell **44–49%** and cache-MISS latency
+fell **37–44%**. Cache-HIT differences changed direction between runs, so there
+is no consistent cache-HIT improvement to attribute to the patch. Table cells
+are medians across JVMs; percentage changes compare corresponding JVMs.
+
+**Why it is faster:** the GeoTools correction avoids the premature crop and
+its extra mask processing while preserving the source pixels. Independent-fix
+tests identify it as the main gain, and JVM profiles show the expensive binary
+mask path disappearing from the hot methods. Sampled allocation per request
+fell from about **22.8 MB to 8.8 MB**. The ImageN correction fixes scanline bounds;
+it does not account for the large speedup. Larger-source and interpolation
+controls have different results, detailed in the report.
+
+![Measured latency across stock code, each correction separately, and both corrections](docs/assets/performance.png)
+
+```bash
+uv run affine-benchmark --pull --root .runs/benchmark-3.0.2
+uv run affine-benchmark-report --run .runs/benchmark-3.0.2 --output docs
+```
+
+See the [performance analysis and method](docs/performance.md),
+[all measured conditions](docs/performance/measured.md) and
+[downloadable samples](docs/performance/requests.jsonl.gz). The test uses four
+localhost ports starting at 18106 and removes its own containers when finished.
+GitHub CI runs the benchmark's accounting/workload tests; full container timing
+and profiling are explicit local runs, not noisy CI speed thresholds.
+
 ## Work on one server
 
 For an interactive lab and the optional [Cesium gutter viewer](viewer/README.md):

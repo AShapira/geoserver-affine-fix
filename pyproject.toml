@@ -20,6 +20,8 @@ affine-lab = "affine_fix.lab:main"
 affine-build = "affine_fix.build:main"
 affine-reproduce = "affine_fix.reproduce:main"
 affine-report = "affine_fix.report:main"
+affine-benchmark = "affine_fix.benchmark:main"
+affine-benchmark-report = "affine_fix.performance_report:main"
 
 [tool.setuptools]
 packages = ["affine_fix"]

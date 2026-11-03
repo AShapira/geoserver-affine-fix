@@ -10,6 +10,11 @@ builds have been created by this project. Check current upstream main and
 existing issues before preparing contributions; release validation does not
 establish the behavior of a newer development branch.
 
+The [performance suite](performance.md) separately tests each correction on the
+release, with fresh JVM replicates, larger sources, interpolation controls and
+JFR profiles. Include its measured gains, variation and limitations in the
+submission evidence; it does not replace upstream-main correctness tests.
+
 ## Two independent contributions
 
 1. ImageN `AffineOpImage.performScanlineClipping`: exclusive upper-bound rounding
