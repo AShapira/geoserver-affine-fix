@@ -33,6 +33,19 @@ def replace_class(original, entry, compiled):
     return result
 
 
+def append_class(original, entry, compiled):
+    """Add only a class explicitly declared in the lock; preserve the existing archive."""
+    output = io.BytesIO()
+    with zipfile.ZipFile(io.BytesIO(original)) as source, zipfile.ZipFile(output, 'w') as target:
+        if entry in source.namelist():
+            raise RuntimeError('Added class already exists: ' + entry)
+        target.comment = source.comment
+        for info in source.infolist():
+            target.writestr(info, source.read(info.filename))
+        target.writestr(zipfile.ZipInfo(entry), compiled)
+    return output.getvalue()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--engine', default='podman')
@@ -61,35 +74,42 @@ def main():
             if digest(data) != spec['sha256']:
                 raise RuntimeError('Image library checksum mismatch: ' + jar)
             originals[jar] = data
-        files = {Path(spec['source']).name: ROOT / spec['source'] for spec in lock['libraries'].values()}
+        sources = [name for spec in lock['libraries'].values() for name in [spec['source'], *spec.get('additional_sources', [])]]
+        files = {Path(name).name: ROOT / name for name in sources}
         files['AffineScanlineRegression.java'] = ROOT / 'tests/java/AffineScanlineRegression.java'
         call(engine, 'exec', container, 'mkdir', '-p', '/tmp/affine-build/classes', '/tmp/affine-build/tests')
         call(engine, 'exec', '-i', container, 'tar', '-xf', '-', '-C', '/tmp/affine-build', data=archive(files))
         call(engine, 'exec', container, 'javac', '--release', str(lock['java_release']), '-proc:none',
              '-cp', lib + '/*', '-d', '/tmp/affine-build/classes',
-             *['/tmp/affine-build/' + Path(spec['source']).name for spec in lock['libraries'].values()])
+             *['/tmp/affine-build/' + Path(name).name for name in sources])
         call(engine, 'exec', container, 'javac', '--release', str(lock['java_release']), '-proc:none',
              '-cp', lib + '/*', '-d', '/tmp/affine-build/tests', '/tmp/affine-build/AffineScanlineRegression.java')
         test = 'org.eclipse.imagen.media.affine.AffineScanlineRegression'
         baseline = call(engine, 'exec', container, 'java', '-cp', '/tmp/affine-build/tests:' + lib + '/*', test, check=False)
         if baseline.returncode == 0 or b'Expected [0,2) but got RangeInt[0, 3]' not in baseline.stderr:
             raise RuntimeError('Official library did not fail the expected regression')
+        call(engine, 'exec', container, 'javac', '--release', str(lock['java_release']), '-proc:none',
+             '-cp', '/tmp/affine-build/classes:' + lib + '/*', '-d', '/tmp/affine-build/tests', '/tmp/affine-build/AffineScanlineRegression.java')
         corrected = call(engine, 'exec', container, 'java', '-cp',
                          '/tmp/affine-build/tests:/tmp/affine-build/classes:' + lib + '/*', test)
         data = call(engine, 'exec', container, 'tar', '-cf', '-', '-C', '/tmp/affine-build/classes', '.').stdout
         with tarfile.open(fileobj=io.BytesIO(data)) as tar:
             classes = {m.name.removeprefix('./'): tar.extractfile(m).read() for m in tar.getmembers() if m.isfile()}
-        if set(classes) != {spec['class'] for spec in lock['libraries'].values()}:
+        if set(classes) != {name for spec in lock['libraries'].values() for name in [spec['class'], *spec.get('additional_classes', []), *spec.get('added_classes', [])]}:
             raise RuntimeError('Unexpected compiler output: ' + repr(list(classes)))
         args.output.mkdir(parents=True, exist_ok=True)
         results = {}
         for jar, spec in lock['libraries'].items():
-            data = replace_class(originals[jar], spec['class'], classes[spec['class']])
+            entries = [spec['class'], *spec.get('additional_classes', []), *spec.get('added_classes', [])]
+            data = originals[jar]
+            for entry in entries:
+                data = (append_class if entry in spec.get('added_classes', []) else replace_class)(data, entry, classes[entry])
             (args.output / jar).write_bytes(data)
             results[jar] = {'original_sha256': digest(originals[jar]), 'patched_sha256': digest(data),
-                            'changed_entries': [spec['class']], 'bytes': len(data)}
+                            'changed_entries': entries, 'bytes': len(data)}
         write_json(args.output / 'build.json', {
             'image': lock['image'], 'geoserver': lock['geoserver'], 'custom_image_built': False,
+            'source_sha256': lock['source_sha256'],
             'java': call(engine, 'exec', container, 'javac', '-version').stdout.decode().strip(),
             'libraries': results, 'original_regression_exit': baseline.returncode,
             'patched_regression_exit': corrected.returncode,

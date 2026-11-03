@@ -11,22 +11,51 @@
     "gt-render-35.2.jar": {
       "sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
       "source": "source/geotools/GridCoverageReaderHelper.java",
-      "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class"
+      "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class",
+      "added_classes": [
+        "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper$NoDataMaskOpImage.class"
+      ]
     },
     "imagen-affine-0.9.3.jar": {
       "sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
       "source": "source/imagen/AffineOpImage.java",
-      "class": "org/eclipse/imagen/media/affine/AffineOpImage.class"
+      "class": "org/eclipse/imagen/media/affine/AffineOpImage.class",
+      "additional_sources": [
+        "source/imagen/AffineGeneralOpImage.java",
+        "source/imagen/AffineBicubicOpImage.java",
+        "source/imagen/AffineNearestOpImage.java",
+        "source/imagen/AffineBilinearOpImage.java",
+        "source/imagen/AffineDescriptor.java"
+      ],
+      "additional_classes": [
+        "org/eclipse/imagen/media/affine/AffineGeneralOpImage.class",
+        "org/eclipse/imagen/media/affine/AffineBicubicOpImage.class",
+        "org/eclipse/imagen/media/affine/AffineNearestOpImage.class",
+        "org/eclipse/imagen/media/affine/AffineBilinearOpImage.class",
+        "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+        "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+      ]
     }
   },
   "source_sha256": {
-    "patches/geotools.patch": "9c4d759d0749cb82dd815a43a8ded2e840ce0bff521ba764f5fb628577f69e26",
-    "patches/imagen.patch": "8f949790c847f68289106637684581f566a4c499a79ceead4ee6f7ffadd66631",
-    "source/geotools/GridCoverageReaderHelper.java": "8d38d7f996b4e1233a76d76dbddc99a27ff5eddabf9a4921687ff9fc30a6631a",
+    "patches/geotools.patch": "e9c2d698eeae202f4bb3bd54dad88d6934264b25e000c00ab7389e85b3c6be85",
+    "patches/imagen.patch": "6f48f67bfe7719e652cf67e3ad6c6306546f9049c0b7518f63dec26af6f7ac17",
+    "source/geotools/GridCoverageReaderHelper.java": "70167a17f7581410c74d44265d54db66769e334eef64ccbd7aa61c28a3d127e8",
     "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
-    "source/imagen/AffineOpImage.java": "09d15b6b1293863f13657984b2690ddda062263f681d5761538a13415c3eeedc",
+    "source/imagen/AffineOpImage.java": "a9f045daff27801584ab41633296046dbcb0a59a401fcdc549699b604bdfd050",
     "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
-    "tests/java/AffineScanlineRegression.java": "085b1e2d7c6e1a1460067e0ef2ffe9f45edd9c3f6b94402c10c6bdea32bbc9ca"
+    "tests/java/AffineScanlineRegression.java": "529ecaaa63c340317d39e9d34b6371524731da9aae3e49709e293a4309b745fc",
+    "source/imagen/AffineGeneralOpImage.java": "97ce6c3c4a3e323ee3136a24541eceb45123e9ec9d5d8a894b72c5228df7a934",
+    "source/imagen/AffineBicubicOpImage.java": "3bb4daaf6d5f0b39641f7fad7927ee8dda8199a23c5cd2dd8c564222a818e838",
+    "source/imagen/AffineNearestOpImage.java": "45c001f940fdab8ddf9926f5974f16c14a32b75f9f04e28c7d04b42a33710b96",
+    "source/imagen/AffineBilinearOpImage.java": "4ed33dba3cb732d7ba79cffe6c2ff843dd028541ecc55cb60c5670249b0d80ce",
+    "source/imagen/AffineNearestOpImage.java.original": "b933d624fc9230e7d62ddd19366b1b912fc089feb7b570166706df467f20b35a",
+    "patches/imagen-nearest.patch": "596b6a3d3311f56b5ea6f9e56856cf35c60ce58813f15b0df6a9eb3dd4c5d855",
+    "source/imagen/AffineDescriptor.java": "b3953397769ce2e46ac570727515c2bd9fa79f9a2db36e44fffbbe8a2507d8a8",
+    "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
+    "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504",
+    "source/imagen/AffineGeneralOpImage.java.original": "639d91047d7fe8766cbf673bb4563d733710303274fb137896492bacd363c240",
+    "patches/imagen-general.patch": "c3bb1156b50ad4aeb40b4694bdb8b1cb2cdde10705828f72959f1467378e6326"
   },
   "source_archives": [
     {

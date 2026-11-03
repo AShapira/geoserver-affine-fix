@@ -123,7 +123,7 @@ abstract class AffineOpImage extends GeometricOpImage {
     /** Scanline walking : variables & constants */
 
     /** The fixed-point denominator of the fractional offsets. */
-    protected static final int GEOM_FRAC_MAX = 0x100000;
+    protected static final int GEOM_FRAC_MAX = 0x10000000;
 
     double m00, m10, flr_m00, flr_m10;
     double fracdx, fracdx1, fracdy, fracdy1;
@@ -196,7 +196,7 @@ abstract class AffineOpImage extends GeometricOpImage {
         }
     }
 
-    private static ImageLayout layoutHelper(ImageLayout layout, RenderedImage source, AffineTransform forward_tr) {
+    private static ImageLayout layoutHelper(ImageLayout layout, RenderedImage source, AffineTransform forward_tr, Interpolation interpolation) {
 
         ImageLayout newLayout;
         if (layout != null) {
@@ -208,10 +208,10 @@ abstract class AffineOpImage extends GeometricOpImage {
         //
         // Get sx0,sy0 coordinates and width & height of the source
         //
-        float sx0 = (float) source.getMinX();
-        float sy0 = (float) source.getMinY();
-        float sw = (float) source.getWidth();
-        float sh = (float) source.getHeight();
+        double sx0 = (double) source.getMinX();
+        double sy0 = (double) source.getMinY();
+        double sw = (double) source.getWidth();
+        double sh = (double) source.getHeight();
 
         //
         // The 4 points (clockwise order) are
@@ -219,21 +219,21 @@ abstract class AffineOpImage extends GeometricOpImage {
         // (sx0, sy0+sh), (sx0+sw, sy0+sh)
         //
         Point2D[] pts = new Point2D[4];
-        pts[0] = new Point2D.Float(sx0, sy0);
-        pts[1] = new Point2D.Float((sx0 + sw), sy0);
-        pts[2] = new Point2D.Float((sx0 + sw), (sy0 + sh));
-        pts[3] = new Point2D.Float(sx0, (sy0 + sh));
+        pts[0] = new Point2D.Double(sx0, sy0);
+        pts[1] = new Point2D.Double((sx0 + sw), sy0);
+        pts[2] = new Point2D.Double((sx0 + sw), (sy0 + sh));
+        pts[3] = new Point2D.Double(sx0, (sy0 + sh));
 
         // Forward map
         forward_tr.transform(pts, 0, pts, 0, 4);
 
-        float dx0 = Float.MAX_VALUE;
-        float dy0 = Float.MAX_VALUE;
-        float dx1 = -Float.MAX_VALUE;
-        float dy1 = -Float.MAX_VALUE;
+        double dx0 = Double.MAX_VALUE;
+        double dy0 = Double.MAX_VALUE;
+        double dx1 = -Double.MAX_VALUE;
+        double dy1 = -Double.MAX_VALUE;
         for (int i = 0; i < 4; i++) {
-            float px = (float) pts[i].getX();
-            float py = (float) pts[i].getY();
+            double px = (double) pts[i].getX();
+            double py = (double) pts[i].getY();
 
             dx0 = Math.min(dx0, px);
             dy0 = Math.min(dy0, py);
@@ -273,6 +273,16 @@ abstract class AffineOpImage extends GeometricOpImage {
         //
         // Create the layout
         //
+        if (interpolation instanceof InterpolationNearest
+                || interpolation instanceof org.eclipse.imagen.InterpolationNearest) {
+            // Include destination pixels by their centers in the half-open footprint.
+            // Rounding the origin and truncating the width independently can lose
+            // the last column (or row) even though its center is inside the image.
+            lx0 = (int) Math.ceil(dx0 - 0.5);
+            ly0 = (int) Math.ceil(dy0 - 0.5);
+            lw = (int) Math.ceil(dx1 - 0.5) - lx0;
+            lh = (int) Math.ceil(dy1 - 0.5) - ly0;
+        }
         newLayout.setMinX(lx0);
         newLayout.setMinY(ly0);
         newLayout.setWidth(lw);
@@ -302,7 +312,7 @@ abstract class AffineOpImage extends GeometricOpImage {
             double[] backgroundValues) {
         super(
                 vectorize(source),
-                layoutHelper(layout, source, transform),
+                layoutHelper(layout, source, transform, interp),
                 config,
                 true,
                 extender,
@@ -345,18 +355,18 @@ abstract class AffineOpImage extends GeometricOpImage {
             //
             // Get sx0,sy0 coordinates and width & height of the source
             //
-            float sx0 = (float) srcimg.x;
-            float sy0 = (float) srcimg.y;
-            float sw = (float) srcimg.width;
-            float sh = (float) srcimg.height;
+            double sx0 = (double) srcimg.x;
+            double sy0 = (double) srcimg.y;
+            double sw = (double) srcimg.width;
+            double sh = (double) srcimg.height;
 
             //
             // get padding amounts as per interpolation
             //
-            float f_lpad = (float) lpad;
-            float f_rpad = (float) rpad;
-            float f_tpad = (float) tpad;
-            float f_bpad = (float) bpad;
+            double f_lpad = (double) lpad;
+            double f_rpad = (double) rpad;
+            double f_tpad = (double) tpad;
+            double f_bpad = (double) bpad;
 
             //
             // As per pixel defined to be at (0.5, 0.5)
@@ -382,21 +392,21 @@ abstract class AffineOpImage extends GeometricOpImage {
             // (x0+w, y0+h), (x0, y0+h)
             //
             Point2D[] pts = new Point2D[4];
-            pts[0] = new Point2D.Float(sx0, sy0);
-            pts[1] = new Point2D.Float((sx0 + sw), sy0);
-            pts[2] = new Point2D.Float((sx0 + sw), (sy0 + sh));
-            pts[3] = new Point2D.Float(sx0, (sy0 + sh));
+            pts[0] = new Point2D.Double(sx0, sy0);
+            pts[1] = new Point2D.Double((sx0 + sw), sy0);
+            pts[2] = new Point2D.Double((sx0 + sw), (sy0 + sh));
+            pts[3] = new Point2D.Double(sx0, (sy0 + sh));
 
             // Forward map
             transform.transform(pts, 0, pts, 0, 4);
 
-            float dx0 = Float.MAX_VALUE;
-            float dy0 = Float.MAX_VALUE;
-            float dx1 = -Float.MAX_VALUE;
-            float dy1 = -Float.MAX_VALUE;
+            double dx0 = Double.MAX_VALUE;
+            double dy0 = Double.MAX_VALUE;
+            double dx1 = -Double.MAX_VALUE;
+            double dy1 = -Double.MAX_VALUE;
             for (int i = 0; i < 4; i++) {
-                float px = (float) pts[i].getX();
-                float py = (float) pts[i].getY();
+                double px = (double) pts[i].getX();
+                double py = (double) pts[i].getY();
 
                 dx0 = Math.min(dx0, px);
                 dy0 = Math.min(dy0, py);
@@ -416,6 +426,13 @@ abstract class AffineOpImage extends GeometricOpImage {
             int lx1 = (int) Math.floor(dx1);
             int ly1 = (int) Math.floor(dy1);
 
+            if (interp instanceof InterpolationNearest
+                    || interp instanceof org.eclipse.imagen.InterpolationNearest) {
+                lx0 = (int) Math.ceil(dx0 - 0.5);
+                ly0 = (int) Math.ceil(dy0 - 0.5);
+                lx1 = (int) Math.ceil(dx1 - 0.5);
+                ly1 = (int) Math.ceil(dy1 - 0.5);
+            }
             theDest = new Rectangle(lx0, ly0, lx1 - lx0, ly1 - ly0);
         } else {
             theDest = getBounds();
@@ -559,26 +576,26 @@ abstract class AffineOpImage extends GeometricOpImage {
         // Backward map the destination to get the corresponding
         // source Rectangle
         //
-        float dx0 = (float) destRect.x;
-        float dy0 = (float) destRect.y;
-        float dw = (float) (destRect.width);
-        float dh = (float) (destRect.height);
+        double dx0 = (double) destRect.x;
+        double dy0 = (double) destRect.y;
+        double dw = (double) (destRect.width);
+        double dh = (double) (destRect.height);
 
         Point2D[] pts = new Point2D[4];
-        pts[0] = new Point2D.Float(dx0, dy0);
-        pts[1] = new Point2D.Float((dx0 + dw), dy0);
-        pts[2] = new Point2D.Float((dx0 + dw), (dy0 + dh));
-        pts[3] = new Point2D.Float(dx0, (dy0 + dh));
+        pts[0] = new Point2D.Double(dx0, dy0);
+        pts[1] = new Point2D.Double((dx0 + dw), dy0);
+        pts[2] = new Point2D.Double((dx0 + dw), (dy0 + dh));
+        pts[3] = new Point2D.Double(dx0, (dy0 + dh));
 
         i_transform.transform(pts, 0, pts, 0, 4);
 
-        float f_sx0 = Float.MAX_VALUE;
-        float f_sy0 = Float.MAX_VALUE;
-        float f_sx1 = -Float.MAX_VALUE;
-        float f_sy1 = -Float.MAX_VALUE;
+        double f_sx0 = Double.MAX_VALUE;
+        double f_sy0 = Double.MAX_VALUE;
+        double f_sx1 = -Double.MAX_VALUE;
+        double f_sy1 = -Double.MAX_VALUE;
         for (int i = 0; i < 4; i++) {
-            float px = (float) pts[i].getX();
-            float py = (float) pts[i].getY();
+            double px = (double) pts[i].getX();
+            double py = (double) pts[i].getY();
 
             f_sx0 = Math.min(f_sx0, px);
             f_sy0 = Math.min(f_sy0, py);
@@ -741,7 +758,7 @@ abstract class AffineOpImage extends GeometricOpImage {
         int clipMinX = dst_min_x;
         int clipMaxX = dst_max_x;
 
-        long xdenom = incx * GEOM_FRAC_MAX + ifracdx;
+        long xdenom = (long) incx * GEOM_FRAC_MAX + ifracdx;
         if (xdenom != 0) {
             long clipx1 = (long) src_rect_x1 + lpad;
             long clipx2 = (long) src_rect_x2 - rpad;
@@ -769,7 +786,7 @@ abstract class AffineOpImage extends GeometricOpImage {
             }
         }
 
-        long ydenom = incy * GEOM_FRAC_MAX + ifracdy;
+        long ydenom = (long) incy * GEOM_FRAC_MAX + ifracdy;
         if (ydenom != 0) {
             long clipy1 = (long) src_rect_y1 + tpad;
             long clipy2 = (long) src_rect_y2 - bpad;

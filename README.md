@@ -1,179 +1,158 @@
 # GeoServer affine-raster fixes
 
-Reproduce two raster-rendering defects on **official GeoServer 3.0.2** and test
-candidate source fixes in **GeoTools 35.2** and **Eclipse ImageN 0.9.3**.
-GeoServer 3.0.2 is the [current stable release](https://geoserver.org/download/),
-verified on 2026-11-03. The test runtime uses the project's
-[official container image](https://github.com/geoserver/docker), pinned by digest
-in [runtime/lock.json](runtime/lock.json).
+Reproduce and fix missing pixels, footprint-edge errors and transparency handling
+when serving rotated or sheared GeoTIFFs with **official GeoServer 3.0.2**.
+`main` contains the integrated, optimized candidate for **GeoTools 35.2** and
+**Eclipse ImageN 0.9.3**, pinned to the official image in [runtime/lock.json](runtime/lock.json).
 
-These are experimental source corrections, **not an accepted upstream fix**.
-The tests preserve the TIFF's rotation/shear, source pixels and nearest-neighbour
-sampling. No north-up conversion, smoothing or resampling of the source is used.
+This is a project-maintained source fix, **not an accepted upstream change or a
+fixed official GeoServer release**. It preserves the source TIFF's transform and
+pixels; it does not convert the raster to a north-up image.
 
-**Extended validity tests found regressions:** rotated RGB and multispectral
-footprints gain opaque pixels where transparency is required, and rotated
-Float32 elevation loses NoData transparency. The earlier interior performance
-gains do not establish general correctness. See the
-[RGB, RGBA, UInt16 and Float32 test report](docs/typed-raster-tests/README.md).
+## RGB and multiple bands
 
-## The visible bug
+The stock renderer can discard valid pixels when it crops a rotated source grid
+in map coordinates before final rendering. The fix preserves the reader-selected
+source window and corrects affine bounds and sample precision.
 
-A rotated GeoTIFF contains valid data throughout this map tile, but the stock
-server drops triangular areas. White pixels inside this tile are missing output,
-not gaps in the source TIFF. Each row compares stock and patched code with the
-**same request gutter** and the same map extent. The right column is calculated
-independently from the source affine transform.
+![Real GeoServer responses for rotated RGB and four-band UInt16 rasters, compared with independent expected pixels](docs/assets/rgb-multiband.png)
 
-![Actual stock and patched GeoServer responses compared with independently expected pixels](docs/assets/triangles.png)
+These are synthetic GeoTIFFs served by two fresh instances of the same official
+GeoServer release. Every row uses the same source file, map extent, nearest-neighbor
+sampling and gutter 1. The UInt16 example selects bands **4/2/1**; its unused third
+band contains unrelated values. The right column is calculated independently
+from the original source transform.
 
-**GeoTools correction:** `GridCoverageReaderHelper.cropCoverage` crops a rotated
-source grid in map coordinates before final rendering. That crop can discard
-source pixels that the output still needs. For same-CRS rotated/sheared grids
-using nearest interpolation, the candidate change keeps the reader-selected
-pixels available to the renderer. See the [source diff](patches/geotools.patch).
+## Transparent pixels and the footprint
 
-The checkerboard example shows that the correction retains sharp source pixels:
+The source-grid validity mask remains false outside the raster. Native RGBA keeps
+its transparent holes and partially transparent pixels. Checkerboard areas below
+are intentionally transparent; faint checkerboard through color indicates partial alpha.
 
-![Checkerboard rendering before and after the source corrections](docs/assets/checkerboard.png)
+![Native RGBA transparency and the transparent exterior of an RGB footprint](docs/assets/rgba-transparency.png)
 
-## The separate clipping defect
+The RGBA example contains both alpha 0 and alpha 128 (about 50% opacity). This is
+also a preservation check: an already correct transparent area should stay correct.
+All selected current-fix panels match the independent oracle within the unchanged
+1/255 alpha and 2/255 color tolerances.
 
-ImageN's affine scanline clipping includes a sample at the exclusive upper source
-bound. This can select an invalid sample and cause an array-bounds exception.
-The second correction fixes endpoint rounding for both traversal directions and
-represents a disjoint intersection as empty. See the [source diff](patches/imagen.patch).
+## Elevation and NoData
 
-![Illustration of the exclusive source bound and the incorrect extra sample](docs/assets/scanline-bounds.png)
+NoData must be classified before rendering substitutes a background value.
+Otherwise a hole can become opaque, or valid zero elevation can disappear.
+The fix handles numeric and NaN NoData while preserving valid negative and zero values.
 
-This diagram is an illustration; the two comparisons above contain actual server
-responses. A direct Java regression fails against the original ImageN library
-and passes against the correction, including **32,448 enumerated scanlines**
-with positive, negative, fractional and zero increments.
+![Float32 elevation with numeric and NaN NoData, showing deliberately transparent holes](docs/assets/nodata-transparency.png)
 
-Across the original single-band Byte matrix, the patch with gutter 1 removed all
-rendering errors and missing interior pixels. **Sixteen outer-footprint pixels per route still remain
-missing**; this is a separate limitation. See the [measured results](docs/validation.md).
+Green represents **valid zero elevation** in this synthetic color map. The
+checkerboard is NoData. These selected views pass; wider downsampled views have
+an additional boundary limitation described below.
 
-## Reproduce the comparison
+The [image evidence](docs/assets/raster-comparisons.json) records request tiles,
+fixture/build hashes, measured mismatches and the selection behind each figure.
+The figures are composed from actual responses; raw responses remain outside Git.
 
-Requirements: Python 3.11+ (tested with 3.13), [uv](https://docs.astral.sh/uv/),
-and Podman or Docker. The pinned runtime was validated on Linux/WSL amd64.
-Rasterio supplies GDAL through its wheel; no host GDAL installation is required.
+## Validation and known limits
+
+The established validation on Linux/WSL includes:
+
+- **2,640 current-fix typed image checks:** RGB, native RGBA, four-band UInt16,
+  Float32 numeric/NaN NoData, north-up/30° grids, base images/nearest overviews,
+  gutters 0/1. Zero missing, spurious, alpha or color mismatches within the stated tolerances.
+- **4,720 current-fix grayscale requests:** WMS and GWC, negative rotation,
+  15°/30°/45°/75° rotation, shear and north-up. Zero response errors or missing
+  pixels at both gutters 0 and 1, including the outer footprint.
+- Java regressions cover **32,448 scanlines**, pixel-center bounds, mask borders,
+  six sample storage types, packed bits, multi-band validity and range endpoints.
+  Python and JavaScript checks also pass.
+
+**Known limit found while making these images:** additional zoomed-out RGBA and
+Float32 requests show small alpha/NoData-boundary mismatches at zooms 15–16.
+They are outside the earlier typed validity matrix at zooms 20/22/24. The
+[validation report](docs/validation.md) preserves these additional observations;
+the project does not claim exact output for every resolution.
+
+Arbitrary reprojection, bilinear/bicubic rendering, real ImageMosaic datasets,
+other TIFF layouts and native Windows/ARM execution still need validation.
+The finite affine scanline precision limit also remains. Source fixtures and
+validity tolerances are unchanged. See [full validation and scope](docs/validation.md).
+
+## Performance
+
+The optimized fix is compared with the **previous correctness-validated fix**,
+not with an incomplete patch that rendered fewer pixels. The run contains
+**62,640 timed requests across three fresh server pairs**.
+
+| Rotated raster | Median paired WMS latency reduction |
+|---|---:|
+| RGB | 71% |
+| RGBA | 65% |
+| Four-band UInt16 | 51% |
+| Float32 numeric / NaN NoData | 49% |
+
+North-up controls change little. At six clients, WMS throughput rises from about
+**72 to 115 requests/second**. Sampled allocation falls from **58.6 to 27.5 MiB/request**.
+Cached tile hits bypass rendering and show no consistent mask-processing benefit.
+
+The optimized run has **zero timed response errors**. The comparison baseline
+has **one intermittent invalid response**, retained in the results; its cause is
+not established. These measurements describe this synthetic workload, not a
+production capacity guarantee.
+
+The speedup comes from direct NoData mask writes, direct packed-bit sampling and
+omitting a synthetic footprint mask only when the entire request is safely inside
+the source image. Edge tiles and existing validity masks retain mask processing.
+See [performance results and reproduction](docs/performance.md) and the
+[detailed measured report](docs/research/mask-optimized.md).
+
+## Reproduce
+
+Requirements: Python 3.11+, [uv](https://docs.astral.sh/uv/), and Podman.
+The grayscale reproduction and image-capture command also support Docker through
+`--engine docker`. Rasterio supplies GDAL through its wheel.
 
 ```bash
 git clone https://github.com/AShapira/geoserver-affine-fix.git
 cd geoserver-affine-fix
 uv sync --frozen --all-extras
-uv run affine-reproduce --pull --root .runs/geoserver-3.0.2
+uv run affine-reproduce --pull --root .runs/rendering
+uv run python -m affine_fix.typed_suite --root .runs/typed --quality-only
 ```
 
-Use `--engine docker` for Docker. The command generates 14 immutable synthetic
-TIFFs, compiles the two corrected classes against the exact official libraries,
-and runs stock and patched servers sequentially. Each server gets a fresh
-catalog and is tested with gutters **0 and 1**, using direct WMS and GWC/WMTS.
-Caches are cleared between treatments and cache MISS responses are verified.
+Each command creates fresh localhost-only servers with copied synthetic fixtures
+and temporary catalogs. The sources and original JARs are checked against the
+runtime lock. Generated JARs, credentials, logs and raw responses stay in ignored
+run directories. Use a new `--root` each time. The typed runner removes its lab
+containers; `affine-reproduce` stops its containers, which can then be removed
+with `affine-lab down --root .runs/rendering/stock-lab` and the corresponding
+`patched-lab` command.
 
-The servers bind to localhost, copy fixtures into their containers and use
-temporary catalogs. They do not mount host directories. Generated credentials,
-logs, JARs and raw responses remain under the ignored run directory. Both test
-servers are stopped when their work finishes. Choose a new `--root` for each run;
-existing run directories are not silently reused. `--quick` runs an interior
-subset instead of the full matrix, and `--port` selects another localhost port.
-
-The selected rendering regression checks missing interior pixels, source values
-and the footprint-edge exception. The [validation report](docs/validation.md)
-records the full matrix and remaining limitations. **A gutter is still relevant
-at tile boundaries; the code changes alone are not a claim of seamless output.**
-For direct WMS the runner expands the request at unchanged resolution and crops
-the central tile; for GWC it configures the layer's gutter.
-
-To regenerate the README figures and compact evidence from a completed run:
-
-```bash
-uv run affine-report --run .runs/geoserver-3.0.2 --output docs
-```
-
-## Performance tests
-
-The performance suite compares stock code, each correction independently, and
-both corrections on the same official image. The published run completed
-**232,704 timed requests across 12 fresh JVMs, with zero timed-response errors**.
-It uses three fresh JVMs per
-variant, repeated measurements, 1/6/12 clients, WMS and verified GWC MISS/HIT
-responses, 4096- and 16,384-pixel sources, interpolation controls and larger
-output images. Separate pixel checks and JVM profiles accompany the timings.
-
-For the core workload with one client and a one-pixel gutter:
-
-| Request path | Stock median | Both corrections |
-|---|---:|---:|
-| Direct WMS | 8.75 ms | 4.66 ms |
-| GWC cache MISS | 9.70 ms | 5.74 ms |
-| GWC cache HIT | 1.22 ms | 1.14 ms |
-
-Across paired fresh-JVM runs, WMS latency fell **44–49%** and cache-MISS latency
-fell **37–44%**. Cache-HIT differences changed direction between runs, so there
-is no consistent cache-HIT improvement to attribute to the patch. Table cells
-are medians across JVMs; percentage changes compare corresponding JVMs.
-
-**Why it is faster:** the GeoTools correction avoids the premature crop and
-its extra mask processing while preserving the source pixels. Independent-fix
-tests identify it as the main gain, and JVM profiles show the expensive binary
-mask path disappearing from the hot methods. Sampled allocation per request
-fell from about **22.8 MB to 8.8 MB**. The ImageN correction fixes scanline bounds;
-it does not account for the large speedup. Larger-source and interpolation
-controls have different results, detailed in the report.
-
-![Measured latency across stock code, each correction separately, and both corrections](docs/assets/performance.png)
-
-```bash
-uv run affine-benchmark --pull --root .runs/benchmark-3.0.2
-uv run affine-benchmark-report --run .runs/benchmark-3.0.2 --output docs
-```
-
-See the [performance analysis and method](docs/performance.md),
-[all measured conditions](docs/performance/measured.md) and
-[downloadable samples](docs/performance/requests.jsonl.gz). The test uses four
-localhost ports starting at 18106 and removes its own containers when finished.
-GitHub CI runs the benchmark's accounting/workload tests; full container timing
-and profiling are explicit local runs, not noisy CI speed thresholds.
-
-## Work on one server
-
-For an interactive lab and the optional [Cesium gutter viewer](viewer/README.md):
-
-```bash
-uv run affine-probe prepare --root .runs/fixtures
-uv run affine-lab up --pull --root .runs/lab
-uv run affine-validate publish --password-file .runs/lab/admin-password
-# Inspect or test the stock server at http://127.0.0.1:18096/geoserver
-uv run affine-lab stop --root .runs/lab
-
-uv run affine-build
-uv run affine-lab up --root .runs/patched-lab --patch .artifacts/patch
-uv run affine-validate publish --password-file .runs/patched-lab/admin-password --output .runs/patched
-uv run affine-validate configure --password-file .runs/patched-lab/admin-password --output .runs/patched --gutter 1
-uv run affine-validate regression --password-file .runs/patched-lab/admin-password --output .runs/patched --gutter 1
-uv run affine-lab stop --root .runs/patched-lab
-```
-
-`affine-lab down --root …` removes only that lab's labelled container and keeps
-local evidence. The builder verifies source and JAR hashes and changes exactly
-one class per JAR. No custom server image is built.
-
-## Tests and contribution status
+For reproducible README images, including the additional downsampling checks and
+the comparison with the previous candidate, follow [the image workflow](docs/images.md).
+For timing and profiling, follow [the performance workflow](docs/research/mask-optimized.md#reproduce).
+The [Cesium viewer](viewer/README.md) provides an optional interactive lab.
 
 ```bash
 uv run python -m unittest discover -s tests -v
 node --test viewer/tests/adapter.test.mjs
 ```
 
-Node 22+ is only needed for the optional viewer and its tests. GitHub CI runs
-these lightweight tests; the container rendering matrix is a separate integration
-check. [docs/upstream.md](docs/upstream.md) describes the two upstream contribution
-paths and the additional current-main tests needed before submission.
+Node 22+ is needed for the viewer tests. GitHub CI runs the lightweight checks;
+container rendering, timing and profiling are explicit local runs.
 
-Matching source files, patches and license notices are under [source/](source/README.md).
-The original tooling is MIT licensed; GeoTools and ImageN code retain their
-upstream licenses. See [LICENSING.md](LICENSING.md).
+## Code and upstream work
+
+The [GeoTools diff](patches/geotools.patch) preserves the rotated source grid and
+its validity mask. The [ImageN diffs](source/README.md) correct exclusive clipping
+bounds, zero-outside mask behavior, pixel-center output bounds and affine precision,
+and optimize pure nearest-neighbor packed-mask sampling.
+
+The builder replaces or adds only the classes declared in the runtime lock;
+unrelated JAR entries retain their bytes and metadata. No custom server image
+is built. See [source provenance](source/README.md), [license scope](LICENSING.md)
+and the [upstream contribution plan](docs/upstream.md). Upstream-main tests and
+maintainer review remain necessary before submission.
+
+[Historical experiments](docs/history/README.md) retain earlier measurements,
+including the initial transparency regressions and 16-pixel edge omissions.
+Those historical limitations must not be confused with the current tested results.

@@ -10,25 +10,36 @@ builds have been created by this project. Check current upstream main and
 existing issues before preparing contributions; release validation does not
 establish the behavior of a newer development branch.
 
-The [performance suite](performance.md) separately tests each correction on the
-release, with fresh JVM replicates, larger sources, interpolation controls and
-JFR profiles. Include its measured gains, variation and limitations in the
-submission evidence; it does not replace upstream-main correctness tests.
+This repository's `main` now contains the integrated mask, precision and performance
+changes. The established release matrix passes, including its former footprint-edge
+omissions. Additional zoomed-out alpha-boundary mismatches remain, unchanged from
+the pre-optimization candidate; see [current validation](validation.md).
 
-## Two independent contributions
+The [current performance report](performance.md) compares the optimized code with
+the previous correctness-validated candidate. Earlier component ablations remain
+historical evidence. Include measured gains, variation and limitations in submission
+evidence; they do not replace upstream-main correctness tests.
+
+## Two upstream codebases
 
 1. ImageN `AffineOpImage.performScanlineClipping`: exclusive upper-bound rounding
    for forward/reverse increments and empty intersections. Convert the standalone
    Java regression to project tests and cover both axes, fractional/zero steps,
-   supported numeric types and interpolation callers.
+   supported numeric types and interpolation callers. The integrated candidate also
+   changes mask extension, pixel-center output bounds, coordinate/fraction precision
+   and packed nearest sampling; split these into reviewable changes and test the
+   wider interpolation impact.
 2. GeoTools `GridCoverageReaderHelper.cropCoverage`: same-CRS rotated/sheared
    nearest-neighbour premature cropping. Add a pixel-based renderer regression;
    preserve bounded reads, NoData/ROI and unaffected projection/interpolation paths.
+   Include the lazy NoData mask, unsigned-range handling and conservative interior
+   shortcut, with direct and end-to-end regressions.
 
 Each regression must fail on its unmodified upstream branch and pass with only
-the corresponding correction. Run normal Maven/QA checks. Keep remaining
-gutter-0 seams and any measured footprint-edge omissions separate; no public
-API changes or source TIFF transformations are intended.
+the corresponding correction. Run normal Maven/QA checks. Track the known
+downsampling alpha-boundary discrepancy explicitly; do not describe the release
+matrix as proof for all resolutions. No public API changes or source TIFF
+transformations are intended.
 
 ## Submission and human review
 

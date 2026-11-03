@@ -1,3 +1,5 @@
+> Historical experiment. For the integrated implementation on this repository’s `main`, see [current validation](../validation.md) and [current performance](../performance.md).
+
 # RGB, alpha, multispectral and elevation tests
 
 **The candidate fix fails broader transparency/NoData validity checks. It is not ready for general deployment.**

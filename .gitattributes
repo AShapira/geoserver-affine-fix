@@ -7,3 +7,8 @@ docs/performance/* linguist-generated=true
 docs/assets/performance.png linguist-generated=true
 docs/typed-raster-tests/*.json linguist-generated=true
 docs/typed-raster-tests/*.csv linguist-generated=true
+
+# Research evidence and unchanged source dependencies.
+docs/research/*.json linguist-generated=true
+source/imagen/AffineBicubicOpImage.java linguist-vendored=true
+source/imagen/AffineBilinearOpImage.java linguist-vendored=true

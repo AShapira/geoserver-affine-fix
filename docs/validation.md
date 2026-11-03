@@ -1,72 +1,56 @@
-# Official GeoServer 3.0.2 validation
+# Current GeoServer 3.0.2 validation
 
-Checked on **2026-11-03**, on Linux/WSL amd64 with local Podman. The source
-image is the official `docker.osgeo.org/geoserver:3.0.2` image, pinned by digest
-in [runtime/lock.json](../runtime/lock.json). Runtime REST metadata confirmed
-GeoServer 3.0.2, GeoTools 35.2 and GeoWebCache 2.0.2; the pinned affine library
-is ImageN 0.9.3. No optional server extensions were installed.
+The implementation on `main` is the integrated and optimized candidate, tested on Linux/WSL amd64 with the pinned official image, GeoTools 35.2 and ImageN 0.9.3. It is not an accepted upstream fix.
 
-## Full rendering matrix
+## Established validity matrix
 
-Each treatment attempted **1,180 requests per route**, for **9,440 requests**
-in total. Direct WMS and GWC/WMTS produced identical error and missing-pixel
-counts. Values below are **per route**, not combined totals. Missing-pixel
-counts cover successful responses; failed requests are counted separately.
+The optimized candidate passed 1,320 typed image checks, repeated on another 1,320 requests during the paired benchmark. RGB, native RGBA, four-band UInt16 and Float32 numeric/NaN NoData have zero missing, spurious, alpha or color mismatches within the unchanged tolerances (1/255 alpha; 2/255 color).
 
-| Code | Gutter | Successful requests | Rendering errors | Missing pixels | Missing interior pixels |
+This matrix covers north-up/30° rotation, base images/nearest overviews, gutters 0/1 and zooms 20/22/24. Expected values come from independent inverse-transform sampling, without excluding a footprint tolerance band. See the [typed evidence](research/mask-optimized-quality.json) and [paired-run evidence](research/mask-optimized-performance.json).
+
+## Broader grayscale matrix
+
+Fourteen 4096 × 4096 Byte fixtures include north-up, 15°, 30°, 45°, 75°, −30° and shear, with and without nearest overviews. Each treatment runs 1,180 WMS and 1,180 GWC requests across zooms 14–24. All fixture hashes remain unchanged. The full stock/current comparison contains 9,440 requests.
+
+Counts below combine WMS and GWC. This older oracle measures missing coverage rather than full RGBA equality.
+
+| Code | Gutter | Requests | Response errors | Missing pixels | Missing interior pixels |
 |---|---:|---:|---:|---:|---:|
-| Stock | 0 | 1,178 | 2 | 3,980,676 | 3,645,102 |
-| Stock | 1 | 1,178 | 2 | 3,646,979 | 3,389,890 |
-| Patched | 0 | 1,180 | 0 | 1,714 | 1,536 |
-| Patched | 1 | 1,180 | 0 | 16 | 0 |
+| Official stock | 0 | 2,360 | 4 | 7,961,352 | 7,290,204 |
+| Official stock | 1 | 2,360 | 4 | 7,293,958 | 6,779,780 |
+| Current fix | 0 | 2,360 | 0 | 0 | 0 |
+| Current fix | 1 | 2,360 | 0 | 0 | 0 |
 
-The patch with gutter 1 has no rendering errors and no missing interior pixels,
-but retains **16 isolated outer-footprint omissions per route**. Without a gutter,
-the patch still leaves tile-boundary rows. A gutter alone does not fix the stock
-renderer. The project does not claim seamless output for every raster or request.
+The current code has zero response errors and missing pixels at both gutters. The earlier 16-pixel outer-footprint exception is resolved in this matrix; it is retained only in the [historical report](history/initial-validation.md). All successful matrix WMTS responses are verified MISSes; a separate check verifies MISS followed by HIT. [Full machine-readable reproduction](validation.json).
 
-## Controls and independent checks
+## Additional wide-view checks
 
-- Fourteen immutable 4096 × 4096 Byte GeoTIFFs: north-up, rotations of 15°, 30°,
-  45°, 75° and −30°, and a sheared grid; each with and without nearest overviews.
-- Source and request CRS are EPSG:3857, using ordinary GeoTIFF stores and nearest
-  interpolation. The source transform and all fixture SHA-256 hashes remained
-  unchanged throughout the run. No source pixels were warped or resampled.
-- The matrix covers zooms 14–24 and interior/footprint-edge locations. The
-  independent oracle inversely maps output pixel centres through the TIFF's
-  affine transform. It does not erase a tolerance band around the footprint.
-- Fresh server catalogs isolate stock and patched treatments. Caches are cleared
-  for every gutter treatment; every successful WMTS matrix response was a cache
-  MISS. A separate repeated request verified MISS followed by HIT.
-- North-up controls had zero missing pixels in every treatment.
-- The selected ten-request rendering regression passed with the patch and gutter
-  1, checking interior gaps, source values and the footprint-edge exception.
-- The builder confirmed the clipping regression fails on the official ImageN
-  JAR and passes after correction, including 32,448 independently enumerated
-  positive, negative, fractional, zero-step and empty scanlines.
-- Exactly one class entry changed in each JAR; all other archive entries retained
-  their original bytes. Modified sources match the reviewable patches and the
-  build lock. The original source files also match their Maven source archives.
-- The Python suite passed 14 tests and the JavaScript adapter suite passed three
-  tests. Both integration servers were stopped at completion.
+The README image work adds 215 transparent WMS requests per variant on five rotated base-image fixtures, at gutter 1 and zooms 15/16/17/20/22/24. Three fresh servers run official stock, the previous candidate (`c9aff37`) and the optimized candidate: **645 additional requests**.
 
-## Images and reproducibility
+Of the 215 optimized requests, **197 pass** and **18 have boundary mismatches**. All 18 are zoom-15/16 views of RGBA or Float32 NoData. Their alpha and all visible RGB values are **pixel-for-pixel identical to the previous candidate**; this is an existing limitation, not a regression introduced by mask optimization. The exact root cause has not been established.
 
-[triangles.png](assets/triangles.png) and [checkerboard.png](assets/checkerboard.png)
-use actual WMS responses from this run, grouped by identical request gutter.
-The expected panels are independently calculated from the unchanged source.
-The [scanline-bounds diagram](assets/scanline-bounds.png) is explicitly illustrative.
+For each type, the table aggregates the six additional zoom-15/16 requests. Counts are output-pixel observations across requests, not unique source pixels.
 
-The [machine-readable report](validation.json) contains the exact runtime/source
-hashes, fixture hashes, aggregate counts, selected image measurements and cache
-check. Regenerate everything using the root [README](../README.md) commands.
-Full response PNGs, per-request logs, private credentials and build outputs remain
-in the ignored run directory; none are required from a previous checkout.
+| Type | Requests | Missing | Spurious | Alpha mismatches | Color mismatches |
+|---|---:|---:|---:|---:|---:|
+| rgb | 6 | 0 | 0 | 0 | 0 |
+| rgba | 6 | 89 | 88 | 300 | 89 |
+| multispectral | 6 | 0 | 0 | 0 | 0 |
+| dem | 6 | 89 | 88 | 177 | 89 |
+| dem_nan | 6 | 89 | 88 | 177 | 89 |
 
-## Limits
+RGB and UInt16 pass the additional wide-view cases. All types pass the additional zoom-17 requests and the captured zoom-20/22/24 requests. These findings qualify the performance workload, whose low-zoom requests were timed but were not part of its earlier typed validity matrix.
 
-This validates the release-pinned candidates and this defined nearest-neighbour
-matrix. Upstream main has not been built or tested. Broader interpolation,
-reprojection, NoData/ROI, numeric-type and bounded-read regressions are still
-needed for upstream review. Native Windows, ARM and browser UI acceptance were
-not run. The 16 remaining outer-footprint omissions are a separate open problem.
+The three README figures deliberately show passing current views. Every capture, including the 18 failures and the previous-candidate comparison, is retained in [image evidence](assets/raster-comparisons.json). See [image reproduction and selection](images.md).
+
+## Regression and build checks
+
+The official-image build demonstrates failure of the original clipping regression and success of the corrected Java tests: 32,448 scanline cases, precision and pixel-center boundaries, zero-outside masks, packed BYTE/USHORT/INT storage, six NoData sample types, multi-band validity, unsigned ranges and translated/padded raster layouts. Python oracle/build/report tests and JavaScript adapter tests pass.
+
+The runtime lock names every replaced and added class. The build preserves unrelated archive entries and metadata, and generated JARs remain outside Git. Fresh lab containers use copied fixtures and temporary catalogs; their credentials and raw responses are never published.
+
+## Remaining scope
+
+Exact output at arbitrary downsampled resolutions is not established: the wide-view alpha-boundary cases above are a known issue. Arbitrary reprojection, bilinear/bicubic rendering, real ImageMosaic datasets, every GeoTIFF layout, native Windows and ARM still require testing. The finite affine scanline precision limit remains. Upstream main has not been built or tested.
+
+Performance is separately documented in [the current performance report](performance.md), including one intermittent invalid response from the comparison baseline and zero timed-response errors from the optimized candidate.

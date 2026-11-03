@@ -1,0 +1,374 @@
+--- a/modules/affine/src/main/java/org/eclipse/imagen/media/affine/AffineGeneralOpImage.java
++++ b/modules/affine/src/main/java/org/eclipse/imagen/media/affine/AffineGeneralOpImage.java
+@@ -492,8 +492,8 @@
+         int dstOffset = 0;
+ 
+         // Destination and source point stored as point2D object
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         // destination data arrays
+         byte[][] dstDataArrays = dst.getByteDataArrays();
+@@ -546,8 +546,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // As per definition of bilinear or bicubic interpolation
+             if (interpN == null || !(interp instanceof InterpolationNearest)) {
+@@ -560,8 +560,8 @@
+             int s_iy = (int) Math.floor(s_y);
+ 
+             // Calculation of the fractional values
+-            float fracx = s_x - (float) s_ix;
+-            float fracy = s_y - (float) s_iy;
++            double fracx = s_x - s_ix;
++            double fracy = s_y - s_iy;
+             // Get the new frac values
+             xfrac = (int) (fracx * shiftvalue);
+             yfrac = (int) (fracy * shiftvalue);
+@@ -781,17 +781,23 @@
+         int destScanlineStride = destSM.getScanlineStride();
+ 
+         byte[] sourceData = sourceDB.getData();
+-        Number[] sourceDataNum = new Number[sourceData.length];
+-        for (int i = 0; i < sourceData.length; i++) {
+-            sourceDataNum[i] = sourceData[i];
++        // Pure nearest sampling of a validity bitmap needs neither boxed samples
++        // nor interpolation/ROI bookkeeping. Keep the generic path otherwise.
++        final boolean directNearest = interpN != null && !hasROI && !hasNoData;
++        Number[] sourceDataNum = null;
++        if (!directNearest) {
++            sourceDataNum = new Number[sourceData.length];
++            for (int i = 0; i < sourceData.length; i++) {
++                sourceDataNum[i] = sourceData[i];
++            }
+         }
+         int sourceDBOffset = sourceDB.getOffset();
+ 
+         byte[] destData = destDB.getData();
+         int destDBOffset = destDB.getOffset();
+ 
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         int dst_min_x = destRect.x;
+         int dst_min_y = destRect.y;
+@@ -841,8 +847,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // Floor to get the integral coordinate
+             int s_ix = (int) Math.floor(s_x);
+@@ -888,7 +894,10 @@
+ 
+                     int xNextBitNo = sourceDataBitOffset + (s_ix + 1 - sourceTransX);
+ 
+-                    if (interpN != null) {
++                    if (directNearest) {
++                        int bit = xNextBitNo - 1;
++                        s = (sourceData[sourceYOffset + (bit >> 3)] >>> (7 - (bit & 7))) & 1;
++                    } else if (interpN != null) {
+                         s = interpN.interpolateBinary(
+                                 xNextBitNo,
+                                 sourceDataNum,
+@@ -1014,8 +1023,8 @@
+         int dstOffset = 0;
+ 
+         // Destination and source point stored as point2D object
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         // destination data arrays
+         short[][] dstDataArrays = dst.getShortDataArrays();
+@@ -1068,8 +1077,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // As per definition of bilinear or bicubic interpolation
+             if (interpN == null || !(interp instanceof InterpolationNearest)) {
+@@ -1082,8 +1091,8 @@
+             int s_iy = (int) Math.floor(s_y);
+ 
+             // Calculation of the fractional values
+-            float fracx = s_x - (float) s_ix;
+-            float fracy = s_y - (float) s_iy;
++            double fracx = s_x - s_ix;
++            double fracy = s_y - s_iy;
+             // Get the new frac values
+             xfrac = (int) (fracx * shiftvalue);
+             yfrac = (int) (fracy * shiftvalue);
+@@ -1304,17 +1313,23 @@
+         int destScanlineStride = destSM.getScanlineStride();
+ 
+         short[] sourceData = sourceDB.getData();
+-        Number[] sourceDataNum = new Number[sourceData.length];
+-        for (int i = 0; i < sourceData.length; i++) {
+-            sourceDataNum[i] = sourceData[i];
++        // Pure nearest sampling of a validity bitmap needs neither boxed samples
++        // nor interpolation/ROI bookkeeping. Keep the generic path otherwise.
++        final boolean directNearest = interpN != null && !hasROI && !hasNoData;
++        Number[] sourceDataNum = null;
++        if (!directNearest) {
++            sourceDataNum = new Number[sourceData.length];
++            for (int i = 0; i < sourceData.length; i++) {
++                sourceDataNum[i] = sourceData[i];
++            }
+         }
+         int sourceDBOffset = sourceDB.getOffset();
+ 
+         short[] destData = destDB.getData();
+         int destDBOffset = destDB.getOffset();
+ 
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         int dst_min_x = destRect.x;
+         int dst_min_y = destRect.y;
+@@ -1364,8 +1379,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // Floor to get the integral coordinate
+             int s_ix = (int) Math.floor(s_x);
+@@ -1412,7 +1427,10 @@
+                     coordinates[1] = src.getY() + ((s_iy - srcRectY) * sourceScanlineStride) / sourceScanlineStride;
+ 
+                     int xNextBitNo = sourceDataBitOffset + (s_ix + 1 - sourceTransX);
+-                    if (interpN != null) {
++                    if (directNearest) {
++                        int bit = xNextBitNo - 1;
++                        s = (sourceData[sourceYOffset + (bit >> 4)] >>> (15 - (bit & 15))) & 1;
++                    } else if (interpN != null) {
+                         s = interpN.interpolateBinary(
+                                 xNextBitNo,
+                                 sourceDataNum,
+@@ -1539,8 +1557,8 @@
+         int dstOffset = 0;
+ 
+         // Destination and source point stored as point2D object
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         // destination data arrays
+         short[][] dstDataArrays = dst.getShortDataArrays();
+@@ -1593,8 +1611,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // As per definition of bilinear or bicubic interpolation
+             if (interpN == null || !(interp instanceof InterpolationNearest)) {
+@@ -1607,8 +1625,8 @@
+             int s_iy = (int) Math.floor(s_y);
+ 
+             // Calculation of the fractional values
+-            float fracx = s_x - (float) s_ix;
+-            float fracy = s_y - (float) s_iy;
++            double fracx = s_x - s_ix;
++            double fracy = s_y - s_iy;
+             // Get the new frac values
+             xfrac = (int) (fracx * shiftvalue);
+             yfrac = (int) (fracy * shiftvalue);
+@@ -1817,8 +1835,8 @@
+         int dstOffset = 0;
+ 
+         // Destination and source point stored as point2D object
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         // destination data arrays
+         int[][] dstDataArrays = dst.getIntDataArrays();
+@@ -1871,8 +1889,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // As per definition of bilinear or bicubic interpolation
+             if (interpN == null || !(interp instanceof InterpolationNearest)) {
+@@ -1885,8 +1903,8 @@
+             int s_iy = (int) Math.floor(s_y);
+ 
+             // Calculation of the fractional values
+-            float fracx = s_x - (float) s_ix;
+-            float fracy = s_y - (float) s_iy;
++            double fracx = s_x - s_ix;
++            double fracy = s_y - s_iy;
+             // Get the new frac values
+             xfrac = (int) (fracx * shiftvalue);
+             yfrac = (int) (fracy * shiftvalue);
+@@ -2102,17 +2120,23 @@
+         int destScanlineStride = destSM.getScanlineStride();
+ 
+         int[] sourceData = sourceDB.getData();
+-        Number[] sourceDataNum = new Number[sourceData.length];
+-        for (int i = 0; i < sourceData.length; i++) {
+-            sourceDataNum[i] = sourceData[i];
++        // Pure nearest sampling of a validity bitmap needs neither boxed samples
++        // nor interpolation/ROI bookkeeping. Keep the generic path otherwise.
++        final boolean directNearest = interpN != null && !hasROI && !hasNoData;
++        Number[] sourceDataNum = null;
++        if (!directNearest) {
++            sourceDataNum = new Number[sourceData.length];
++            for (int i = 0; i < sourceData.length; i++) {
++                sourceDataNum[i] = sourceData[i];
++            }
+         }
+         int sourceDBOffset = sourceDB.getOffset();
+ 
+         int[] destData = destDB.getData();
+         int destDBOffset = destDB.getOffset();
+ 
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         int dst_min_x = destRect.x;
+         int dst_min_y = destRect.y;
+@@ -2161,8 +2185,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // Floor to get the integral coordinate
+             int s_ix = (int) Math.floor(s_x);
+@@ -2209,7 +2233,10 @@
+                     coordinates[1] = src.getY() + ((s_iy - srcRectY) * sourceScanlineStride) / sourceScanlineStride;
+ 
+                     int xNextBitNo = sourceDataBitOffset + (s_ix + 1 - sourceTransX);
+-                    if (interpN != null) {
++                    if (directNearest) {
++                        int bit = xNextBitNo - 1;
++                        s = (sourceData[sourceYOffset + (bit >> 5)] >>> (31 - (bit & 31))) & 1;
++                    } else if (interpN != null) {
+                         s = interpN.interpolateBinary(
+                                 xNextBitNo,
+                                 sourceDataNum,
+@@ -2336,8 +2363,8 @@
+         int dstOffset = 0;
+ 
+         // Destination and source point stored as point2D object
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         // destination data arrays
+         float[][] dstDataArrays = dst.getFloatDataArrays();
+@@ -2390,8 +2417,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // As per definition of bilinear or bicubic interpolation
+             if (interpN == null || !(interp instanceof InterpolationNearest)) {
+@@ -2404,8 +2431,8 @@
+             int s_iy = (int) Math.floor(s_y);
+ 
+             // Calculation of the fractional values
+-            float fracx = s_x - (float) s_ix;
+-            float fracy = s_y - (float) s_iy;
++            double fracx = s_x - s_ix;
++            double fracy = s_y - s_iy;
+ 
+             // Get the new frac values
+             xfrac = (int) (fracx * shiftvalue);
+@@ -2510,7 +2537,7 @@
+                             }
+ 
+                             // Do the interpolation
+-                            s = interp.interpolate(samples, fracx, fracy);
++                            s = interp.interpolate(samples, (float) fracx, (float) fracy);
+                         }
+                         // Write the result
+                         dstDataArrays[k2][dstPixelOffset + dstBandOffsets[k2]] = (float) s;
+@@ -2601,8 +2628,8 @@
+         int dstOffset = 0;
+ 
+         // Destination and source point stored as point2D object
+-        Point2D dst_pt = new Point2D.Float();
+-        Point2D src_pt = new Point2D.Float();
++        Point2D dst_pt = new Point2D.Double();
++        Point2D src_pt = new Point2D.Double();
+ 
+         // destination data arrays
+         double[][] dstDataArrays = dst.getDoubleDataArrays();
+@@ -2655,8 +2682,8 @@
+             mapDestPoint(dst_pt, src_pt);
+ 
+             // Get the mapped source coordinates
+-            float s_x = (float) src_pt.getX();
+-            float s_y = (float) src_pt.getY();
++            double s_x = src_pt.getX();
++            double s_y = src_pt.getY();
+ 
+             // As per definition of bilinear or bicubic interpolation
+             if (interpN == null || !(interp instanceof InterpolationNearest)) {
+@@ -2669,8 +2696,8 @@
+             int s_iy = (int) Math.floor(s_y);
+ 
+             // Calculation of the fractional values
+-            float fracx = s_x - (float) s_ix;
+-            float fracy = s_y - (float) s_iy;
++            double fracx = s_x - s_ix;
++            double fracy = s_y - s_iy;
+ 
+             // Get the new frac values
+             xfrac = (int) (fracx * shiftvalue);
+@@ -2775,7 +2802,7 @@
+                             }
+ 
+                             // Do the interpolation
+-                            s = interp.interpolate(samples, fracx, fracy);
++                            s = interp.interpolate(samples, (float) fracx, (float) fracy);
+                         }
+                         // Write the result
+                         dstDataArrays[k2][dstPixelOffset + dstBandOffsets[k2]] = s;

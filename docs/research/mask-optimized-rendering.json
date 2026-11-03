@@ -1,0 +1,343 @@
+{
+  "checked_utc": "2026-11-03T11:10:34.311393+00:00",
+  "lock": {
+    "geoserver": "3.0.2",
+    "geotools": "35.2",
+    "imagen": "0.9.3",
+    "geowebcache": "2.0.2",
+    "image_tag": "docker.osgeo.org/geoserver:3.0.2",
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "java_release": 17,
+    "library_directory": "/usr/local/tomcat/webapps/geoserver/WEB-INF/lib",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "source": "source/geotools/GridCoverageReaderHelper.java",
+        "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class",
+        "added_classes": [
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper$NoDataMaskOpImage.class"
+        ]
+      },
+      "imagen-affine-0.9.3.jar": {
+        "sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "source": "source/imagen/AffineOpImage.java",
+        "class": "org/eclipse/imagen/media/affine/AffineOpImage.class",
+        "additional_sources": [
+          "source/imagen/AffineGeneralOpImage.java",
+          "source/imagen/AffineBicubicOpImage.java",
+          "source/imagen/AffineNearestOpImage.java",
+          "source/imagen/AffineBilinearOpImage.java",
+          "source/imagen/AffineDescriptor.java"
+        ],
+        "additional_classes": [
+          "org/eclipse/imagen/media/affine/AffineGeneralOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBicubicOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineNearestOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBilinearOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+          "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+        ]
+      }
+    },
+    "source_sha256": {
+      "patches/geotools.patch": "e9c2d698eeae202f4bb3bd54dad88d6934264b25e000c00ab7389e85b3c6be85",
+      "patches/imagen.patch": "6f48f67bfe7719e652cf67e3ad6c6306546f9049c0b7518f63dec26af6f7ac17",
+      "source/geotools/GridCoverageReaderHelper.java": "70167a17f7581410c74d44265d54db66769e334eef64ccbd7aa61c28a3d127e8",
+      "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
+      "source/imagen/AffineOpImage.java": "a9f045daff27801584ab41633296046dbcb0a59a401fcdc549699b604bdfd050",
+      "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
+      "tests/java/AffineScanlineRegression.java": "529ecaaa63c340317d39e9d34b6371524731da9aae3e49709e293a4309b745fc",
+      "source/imagen/AffineGeneralOpImage.java": "97ce6c3c4a3e323ee3136a24541eceb45123e9ec9d5d8a894b72c5228df7a934",
+      "source/imagen/AffineBicubicOpImage.java": "3bb4daaf6d5f0b39641f7fad7927ee8dda8199a23c5cd2dd8c564222a818e838",
+      "source/imagen/AffineNearestOpImage.java": "45c001f940fdab8ddf9926f5974f16c14a32b75f9f04e28c7d04b42a33710b96",
+      "source/imagen/AffineBilinearOpImage.java": "4ed33dba3cb732d7ba79cffe6c2ff843dd028541ecc55cb60c5670249b0d80ce",
+      "source/imagen/AffineNearestOpImage.java.original": "b933d624fc9230e7d62ddd19366b1b912fc089feb7b570166706df467f20b35a",
+      "patches/imagen-nearest.patch": "596b6a3d3311f56b5ea6f9e56856cf35c60ce58813f15b0df6a9eb3dd4c5d855",
+      "source/imagen/AffineDescriptor.java": "b3953397769ce2e46ac570727515c2bd9fa79f9a2db36e44fffbbe8a2507d8a8",
+      "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
+      "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504",
+      "source/imagen/AffineGeneralOpImage.java.original": "639d91047d7fe8766cbf673bb4563d733710303274fb137896492bacd363c240",
+      "patches/imagen-general.patch": "c3bb1156b50ad4aeb40b4694bdb8b1cb2cdde10705828f72959f1467378e6326"
+    },
+    "source_archives": [
+      {
+        "name": "gt-render-35.2-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/geotools/gt-render/35.2/gt-render-35.2-sources.jar",
+        "sha256": "f141caf5569e5be494c27dd3231cd9da92af74b4d7bbd1e81017d79c8ca62519"
+      },
+      {
+        "name": "imagen-affine-0.9.3-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/eclipse/imagen/imagen-affine/0.9.3/imagen-affine-0.9.3-sources.jar",
+        "sha256": "ee4fa05ae794650a573c72deb58be3a411db9ad2459bc67303e6a632d7085bed"
+      }
+    ],
+    "validated_platform": "linux/amd64"
+  },
+  "quick": false,
+  "requests_per_treatment_and_route": 1180,
+  "fixtures_unchanged": true,
+  "fixture_sha256": {
+    "rot0_base": "18f749604dc2e3dedeaa48e69fafdc65b118e6f1ed625a959a8fb8b9dc8b1441",
+    "rot0_ovr": "22a520a910491255c53ae2afc350e8d3285398e69422b03740a421cf9aeecadf",
+    "rot15_base": "e2e07ea835daf7e3ae727733d7010dcb0f957a868fca0c8845e64b1038e05a83",
+    "rot15_ovr": "f3ad03b9d057c057b3c1cbd5d0947bf54260819225189b7fb4f59a9ae4da3039",
+    "rot30_base": "8ef770c3cfe9aa115705f23cb033881f3471057ad9d633b00edf5a9352811c9f",
+    "rot30_ovr": "7da0e04b82fdb178bae53afeffbfea8e18bdc7708e24610c271aec2f2cb90270",
+    "rot45_base": "a2ba3126f3e71a035f5f9876343f3997739b981af6894297c99ee949a2b4123a",
+    "rot45_ovr": "24ba592f95aac756ab8892dad005dd136bd1c88a6dd3be87632217dbf7c9d935",
+    "rot75_base": "bdf27c39168d37a7ba2128a1469801e3ddbab0bb6d4e8a5f10877aa47433a3bb",
+    "rot75_ovr": "98c84b34ac35677053a83e5e3fefbc3b0d22f7083cd2e387da3028afb4dbe9e8",
+    "rotm30_base": "2c058c2c8a013e1941c95191c35d9e3045c8592123d290ffe94bea487451ac37",
+    "rotm30_ovr": "1ace31907b9dd57f38d074875c9a389daf14b3940d381496394a4dbedaddbb07",
+    "shear_base": "aee0633f6c37d88e5a2624e65f2f989848f164a9965a001fe72613c4fae0659f",
+    "shear_ovr": "2e22ee29865e3fb4b21ccca69559d231f056ccc9d7a219f0efab6f763cc854c1"
+  },
+  "versions": {
+    "stock": {
+      "about": {
+        "resource": [
+          {
+            "@name": "GeoServer",
+            "Build-Timestamp": "16-Oct-2026 15:07",
+            "Version": "3.0.2",
+            "Git-Revision": "61a96a7e1529141c6cad7d733628299aec4ea2fb"
+          },
+          {
+            "@name": "GeoTools",
+            "Build-Timestamp": "16-Oct-2026 01:58",
+            "Version": 35.2,
+            "Git-Revision": "b38c801a7c5aaa5755661c7b8cbef89430a4491d"
+          },
+          {
+            "@name": "GeoWebCache",
+            "Version": "2.0.2",
+            "Git-Revision": "2.0.x/3bcdd830d7f49b3e429a997a405d1ec9c8d5b9ca"
+          }
+        ]
+      }
+    },
+    "patched": {
+      "about": {
+        "resource": [
+          {
+            "@name": "GeoServer",
+            "Build-Timestamp": "16-Oct-2026 15:07",
+            "Version": "3.0.2",
+            "Git-Revision": "61a96a7e1529141c6cad7d733628299aec4ea2fb"
+          },
+          {
+            "@name": "GeoTools",
+            "Build-Timestamp": "16-Oct-2026 01:58",
+            "Version": 35.2,
+            "Git-Revision": "b38c801a7c5aaa5755661c7b8cbef89430a4491d"
+          },
+          {
+            "@name": "GeoWebCache",
+            "Version": "2.0.2",
+            "Git-Revision": "2.0.x/3bcdd830d7f49b3e429a997a405d1ec9c8d5b9ca"
+          }
+        ]
+      }
+    }
+  },
+  "build": {
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "geoserver": "3.0.2",
+    "custom_image_built": false,
+    "source_sha256": {
+      "patches/geotools.patch": "e9c2d698eeae202f4bb3bd54dad88d6934264b25e000c00ab7389e85b3c6be85",
+      "patches/imagen.patch": "6f48f67bfe7719e652cf67e3ad6c6306546f9049c0b7518f63dec26af6f7ac17",
+      "source/geotools/GridCoverageReaderHelper.java": "70167a17f7581410c74d44265d54db66769e334eef64ccbd7aa61c28a3d127e8",
+      "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
+      "source/imagen/AffineOpImage.java": "a9f045daff27801584ab41633296046dbcb0a59a401fcdc549699b604bdfd050",
+      "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
+      "tests/java/AffineScanlineRegression.java": "529ecaaa63c340317d39e9d34b6371524731da9aae3e49709e293a4309b745fc",
+      "source/imagen/AffineGeneralOpImage.java": "97ce6c3c4a3e323ee3136a24541eceb45123e9ec9d5d8a894b72c5228df7a934",
+      "source/imagen/AffineBicubicOpImage.java": "3bb4daaf6d5f0b39641f7fad7927ee8dda8199a23c5cd2dd8c564222a818e838",
+      "source/imagen/AffineNearestOpImage.java": "45c001f940fdab8ddf9926f5974f16c14a32b75f9f04e28c7d04b42a33710b96",
+      "source/imagen/AffineBilinearOpImage.java": "4ed33dba3cb732d7ba79cffe6c2ff843dd028541ecc55cb60c5670249b0d80ce",
+      "source/imagen/AffineNearestOpImage.java.original": "b933d624fc9230e7d62ddd19366b1b912fc089feb7b570166706df467f20b35a",
+      "patches/imagen-nearest.patch": "596b6a3d3311f56b5ea6f9e56856cf35c60ce58813f15b0df6a9eb3dd4c5d855",
+      "source/imagen/AffineDescriptor.java": "b3953397769ce2e46ac570727515c2bd9fa79f9a2db36e44fffbbe8a2507d8a8",
+      "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
+      "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504",
+      "source/imagen/AffineGeneralOpImage.java.original": "639d91047d7fe8766cbf673bb4563d733710303274fb137896492bacd363c240",
+      "patches/imagen-general.patch": "c3bb1156b50ad4aeb40b4694bdb8b1cb2cdde10705828f72959f1467378e6326"
+    },
+    "java": "javac 21.0.12.1",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "original_sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "patched_sha256": "93a58aafa698f868f4f03c79f3f24f5bb6d34f5703da3fdbaf90a19b5487cadb",
+        "changed_entries": [
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class",
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper$NoDataMaskOpImage.class"
+        ],
+        "bytes": 618429
+      },
+      "imagen-affine-0.9.3.jar": {
+        "original_sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "patched_sha256": "a2751b796510a29bb43ad970ac9c3a0c56976da9c325e9d5461b18bb1251110a",
+        "changed_entries": [
+          "org/eclipse/imagen/media/affine/AffineOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineGeneralOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBicubicOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineNearestOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBilinearOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+          "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+        ],
+        "bytes": 98104
+      }
+    },
+    "original_regression_exit": 1,
+    "patched_regression_exit": 0
+  },
+  "regression": {
+    "passed": true,
+    "failures": []
+  },
+  "cache": [
+    {
+      "valid_pixels": 65536,
+      "missing_pixels": 0,
+      "missing_fraction": 0.0,
+      "mae_valid_nonblank": 0.0,
+      "exact_fraction_nonblank": 1.0,
+      "name": "rot30_base",
+      "tile": [
+        24,
+        10021196,
+        6798186
+      ],
+      "route": "gwc",
+      "interpolation": "nearest neighbor",
+      "seconds": 0.005314242000167724,
+      "bytes": 2821,
+      "status": 200,
+      "cache": "MISS",
+      "pad": 0
+    },
+    {
+      "valid_pixels": 65536,
+      "missing_pixels": 0,
+      "missing_fraction": 0.0,
+      "mae_valid_nonblank": 0.0,
+      "exact_fraction_nonblank": 1.0,
+      "name": "rot30_base",
+      "tile": [
+        24,
+        10021196,
+        6798186
+      ],
+      "route": "gwc",
+      "interpolation": "nearest neighbor",
+      "seconds": 0.0023761070042382926,
+      "bytes": 2821,
+      "status": 200,
+      "cache": "HIT",
+      "pad": 0
+    }
+  ],
+  "treatments": {
+    "stock-g0": {
+      "wms": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3980676,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3645102,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1178
+        }
+      },
+      "gwc": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3980676,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3645102,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1178
+        }
+      }
+    },
+    "stock-g1": {
+      "wms": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3646979,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3389890,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1178
+        }
+      },
+      "gwc": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3646979,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3389890,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1178
+        }
+      }
+    },
+    "patched-g0": {
+      "wms": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 0,
+        "interior_requests": 658,
+        "interior_missing_pixels": 0,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1180
+        }
+      },
+      "gwc": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 0,
+        "interior_requests": 658,
+        "interior_missing_pixels": 0,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1180
+        }
+      }
+    },
+    "patched-g1": {
+      "wms": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 0,
+        "interior_requests": 658,
+        "interior_missing_pixels": 0,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1180
+        }
+      },
+      "gwc": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 0,
+        "interior_requests": 658,
+        "interior_missing_pixels": 0,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1180
+        }
+      }
+    }
+  },
+  "servers_stopped": true,
+  "passed": true,
+  "failures": []
+}

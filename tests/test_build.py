@@ -7,8 +7,8 @@ import tempfile
 import unittest
 import zipfile
 
-from affine_fix.build import replace_class
-from affine_fix.lab import patch_payload, load_lock, ROOT
+from affine_fix.build import append_class, replace_class
+from affine_fix.lab import compatible_patch_lock, patch_payload, load_lock, ROOT
 
 
 class BuildTests(unittest.TestCase):
@@ -26,6 +26,16 @@ class BuildTests(unittest.TestCase):
             expected = ''.join(difflib.unified_diff(original.read_text().splitlines(True),
                 source.read_text().splitlines(True), fromfile='a/' + target, tofile='b/' + target))
             self.assertEqual((ROOT / 'patches' / (project + '.patch')).read_text(), expected)
+
+    def test_additional_candidate_diffs_match_locked_sources(self):
+        for patch in (ROOT / 'patches').glob('imagen-*.patch'):
+            text = patch.read_text()
+            target = text.splitlines()[0].removeprefix('--- a/')
+            source = ROOT / 'source/imagen' / Path(target).name
+            original = Path(str(source) + '.original')
+            expected = ''.join(difflib.unified_diff(original.read_text().splitlines(True),
+                source.read_text().splitlines(True), fromfile='a/' + target, tofile='b/' + target))
+            self.assertEqual(text, expected)
 
     def test_replacement_preserves_other_entries_metadata_and_comment(self):
         source = io.BytesIO()
@@ -62,6 +72,36 @@ class BuildTests(unittest.TestCase):
             (root / 'test.jar').write_bytes(b'corrupted')
             with self.assertRaisesRegex(RuntimeError, 'checksum mismatch'):
                 patch_payload(root, lock)
+
+    def test_added_helper_preserves_archive_and_cannot_replace_a_class(self):
+        source = io.BytesIO()
+        info = zipfile.ZipInfo('META-INF/NOTICE', (2026, 1, 2, 3, 4, 6))
+        info.external_attr = 0o100644 << 16
+        with zipfile.ZipFile(source, 'w') as archive:
+            archive.comment = b'upstream archive'
+            archive.writestr(info, b'notice')
+            archive.writestr('Example.class', b'original')
+        result = append_class(source.getvalue(), 'Example$Helper.class', b'helper')
+        with zipfile.ZipFile(io.BytesIO(result)) as archive:
+            self.assertEqual(archive.namelist(), ['META-INF/NOTICE', 'Example.class', 'Example$Helper.class'])
+            self.assertEqual(archive.read('Example.class'), b'original')
+            self.assertEqual(archive.read('META-INF/NOTICE'), b'notice')
+            self.assertEqual(archive.read('Example$Helper.class'), b'helper')
+            self.assertEqual(archive.getinfo(info.filename).date_time, info.date_time)
+            self.assertEqual(archive.getinfo(info.filename).external_attr, info.external_attr)
+            self.assertEqual(archive.comment, b'upstream archive')
+        with self.assertRaisesRegex(RuntimeError, 'already exists'):
+            append_class(source.getvalue(), 'Example.class', b'wrong replacement')
+
+    def test_baseline_can_change_patch_classes_but_not_original_libraries(self):
+        lock = {'image': 'official@sha256:1', 'libraries': {'one.jar': {'sha256': 'original', 'class': 'One.class'}}}
+        baseline = {'image': lock['image'], 'libraries': {'one.jar': {'sha256': 'original', 'class': 'Other.class'}}}
+        self.assertEqual(compatible_patch_lock(lock, baseline), baseline)
+        for bad in ({'image': 'other', 'libraries': baseline['libraries']},
+                    {'image': lock['image'], 'libraries': {'one.jar': {'sha256': 'different'}}},
+                    {'image': lock['image'], 'libraries': {}}):
+            with self.assertRaisesRegex(RuntimeError, 'different official libraries'):
+                compatible_patch_lock(lock, bad)
 
 
 if __name__ == '__main__':

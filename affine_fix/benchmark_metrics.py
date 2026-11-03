@@ -80,6 +80,7 @@ def frames(event):
 def jfr_summary(events, requests):
     execution, allocations = Counter(), Counter()
     count = Counter()
+    leaf_execution, leaf_allocations = Counter(), Counter()
     crop_samples = 0
     crop_weight = 0
     total_weight = 0
@@ -89,10 +90,12 @@ def jfr_summary(events, requests):
         stack = frames(event)
         crop = any('CoverageCrop.' in f or 'GridCoverageReaderHelper.cropCoverage' in f for f in stack)
         if kind == 'jdk.ExecutionSample':
+            if stack: leaf_execution[stack[0]] += 1
             execution.update(set(stack))  # Inclusive stack samples, not additive CPU percentages.
             crop_samples += int(crop)
         elif kind == 'jdk.ObjectAllocationSample':
             weight = event['values']['weight']
+            if stack: leaf_allocations[stack[0]] += weight
             total_weight += weight
             crop_weight += weight if crop else 0
             for method in set(stack):
@@ -101,6 +104,8 @@ def jfr_summary(events, requests):
             'allocation_sample_weight_bytes': total_weight,
             'estimated_allocation_bytes_per_request': total_weight / max(1, requests),
             'crop_execution_samples': crop_samples, 'crop_allocation_sample_weight_bytes': crop_weight,
+            'leaf_execution_stacks': leaf_execution.most_common(50),
+            'leaf_allocation_stacks': leaf_allocations.most_common(50),
             'inclusive_execution_stacks': execution.most_common(50),
             'inclusive_allocation_stacks': allocations.most_common(50)}
 
@@ -123,7 +128,7 @@ def finish_profile(state, pid, directory, requests):
     lab.call(engine, 'exec', container, 'jcmd', pid, 'JFR.stop', 'name=affine')
     directory.mkdir(parents=True, exist_ok=True)
     lab.call(engine, 'cp', container + ':/tmp/affine.jfr', str(directory / 'recording.jfr'))
-    raw = lab.call(engine, 'exec', container, 'jfr', 'print', '--json', '--stack-depth', '128',
+    raw = lab.call(engine, 'exec', container, 'jfr', 'print', '--json', '--stack-depth', '32',
                    '--events', 'jdk.ExecutionSample,jdk.ObjectAllocationSample,jdk.GarbageCollection,jdk.GCPhasePause',
                    '/tmp/affine.jfr').stdout
     with gzip.open(directory / 'events.json.gz', 'wb') as output:

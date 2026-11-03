@@ -21,7 +21,23 @@ Complete matching source archives are available from OSGeo Maven:
 
 [runtime/lock.json](../runtime/lock.json) records the image digest, original JAR
 hashes, source archive hashes, modified source hashes and regression source hash.
-The builder changes exactly one class in each JAR, verifies all other archive
-entries are unchanged, and keeps generated binaries outside Git. Distribute the
+The builder replaces only the classes declared in the runtime lock, verifies all
+other archive entries are unchanged, and keeps generated binaries outside Git. Distribute the
 matching upstream source archives and these modifications with any derived
 binaries, respecting the [license scope](../LICENSING.md).
+
+The integrated fix on this repository's `main` also uses these files from the same locked ImageN 0.9.3 source archive:
+
+- `AffineNearestOpImage.java` and `AffineGeneralOpImage.java`: retain double coordinates, including binary masks; the general operator also samples pure nearest binary masks directly.
+- `AffineDescriptor.java`: initialize transformed masks with zero outside their valid domain.
+- `AffineBicubicOpImage.java` and `AffineBilinearOpImage.java`: unchanged source, recompiled against the updated fraction constant.
+
+`GridCoverageReaderHelper.java` now includes the additional `NoDataMaskOpImage`
+helper class. It computes byte validity masks with primitive comparisons and
+preserves unsigned NoData ranges. The coverage reader also skips a synthetic footprint
+mask only for requests entirely inside the read image with a one-source-pixel guard.
+
+The additional `patches/imagen-*.patch` files describe each modification. Adjacent
+`.original` files preserve upstream source. The build manifest lists every replaced
+and added class; all other archive entries remain unchanged. The wider interpolation
+impact still needs upstream testing. See [current validity and limits](../docs/validation.md).

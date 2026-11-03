@@ -150,6 +150,8 @@ class AccountingTests(unittest.TestCase):
         self.assertEqual(result['crop_execution_samples'], 1)
         self.assertEqual(result['estimated_allocation_bytes_per_request'], 100)
         self.assertEqual(result['inclusive_allocation_stacks'], [('org.geotools.CoverageCrop.execute', 1000)])
+        self.assertEqual(result['leaf_execution_stacks'], [('org.geotools.CoverageCrop.execute', 1)])
+        self.assertEqual(result['leaf_allocation_stacks'], [('org.geotools.CoverageCrop.execute', 1000)])
 
 
 if __name__ == '__main__':
