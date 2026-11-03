@@ -33,6 +33,19 @@ def replace_class(original, entry, compiled):
     return result
 
 
+def append_class(original, entry, compiled):
+    """Add only a class explicitly declared in the lock; preserve the existing archive."""
+    output = io.BytesIO()
+    with zipfile.ZipFile(io.BytesIO(original)) as source, zipfile.ZipFile(output, 'w') as target:
+        if entry in source.namelist():
+            raise RuntimeError('Added class already exists: ' + entry)
+        target.comment = source.comment
+        for info in source.infolist():
+            target.writestr(info, source.read(info.filename))
+        target.writestr(zipfile.ZipInfo(entry), compiled)
+    return output.getvalue()
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--engine', default='podman')
@@ -82,20 +95,21 @@ def main():
         data = call(engine, 'exec', container, 'tar', '-cf', '-', '-C', '/tmp/affine-build/classes', '.').stdout
         with tarfile.open(fileobj=io.BytesIO(data)) as tar:
             classes = {m.name.removeprefix('./'): tar.extractfile(m).read() for m in tar.getmembers() if m.isfile()}
-        if set(classes) != {name for spec in lock['libraries'].values() for name in [spec['class'], *spec.get('additional_classes', [])]}:
+        if set(classes) != {name for spec in lock['libraries'].values() for name in [spec['class'], *spec.get('additional_classes', []), *spec.get('added_classes', [])]}:
             raise RuntimeError('Unexpected compiler output: ' + repr(list(classes)))
         args.output.mkdir(parents=True, exist_ok=True)
         results = {}
         for jar, spec in lock['libraries'].items():
-            entries = [spec['class'], *spec.get('additional_classes', [])]
+            entries = [spec['class'], *spec.get('additional_classes', []), *spec.get('added_classes', [])]
             data = originals[jar]
             for entry in entries:
-                data = replace_class(data, entry, classes[entry])
+                data = (append_class if entry in spec.get('added_classes', []) else replace_class)(data, entry, classes[entry])
             (args.output / jar).write_bytes(data)
             results[jar] = {'original_sha256': digest(originals[jar]), 'patched_sha256': digest(data),
                             'changed_entries': entries, 'bytes': len(data)}
         write_json(args.output / 'build.json', {
             'image': lock['image'], 'geoserver': lock['geoserver'], 'custom_image_built': False,
+            'source_sha256': lock['source_sha256'],
             'java': call(engine, 'exec', container, 'javac', '-version').stdout.decode().strip(),
             'libraries': results, 'original_regression_exit': baseline.returncode,
             'patched_regression_exit': corrected.returncode,

@@ -67,7 +67,7 @@ def patch_payload(directory, lock):
     files = {}
     for jar, spec in lock['libraries'].items():
         details = manifest['libraries'][jar]
-        if details['original_sha256'] != spec['sha256'] or details['changed_entries'] != [spec['class'], *spec.get('additional_classes', [])]:
+        if details['original_sha256'] != spec['sha256'] or details['changed_entries'] != [spec['class'], *spec.get('additional_classes', []), *spec.get('added_classes', [])]:
             raise RuntimeError('Patch targets an unexpected library or class: ' + jar)
         payload = directory / jar
         if hashlib.sha256(payload.read_bytes()).hexdigest() != details['patched_sha256']:
@@ -111,6 +111,13 @@ def validate_fixture_set(entries, fixture_set='standard'):
         raise RuntimeError('Generate the complete ' + fixture_set + ' fixture set before starting a lab')
 
 
+def compatible_patch_lock(lock, candidate):
+    if candidate['image'] != lock['image'] or {k: v['sha256'] for k, v in candidate['libraries'].items()} != {
+            k: v['sha256'] for k, v in lock['libraries'].items()}:
+        raise RuntimeError('Baseline lock targets different official libraries')
+    return candidate
+
+
 def up(args):
     root = args.root.resolve()
     root.mkdir(parents=True, exist_ok=True)
@@ -124,8 +131,10 @@ def up(args):
     engine = [args.engine] + (['--connection', args.connection] if args.connection else [])
     lock = load_lock()
     selected_image = lock['image']
+    patch_lock = json.loads(Path(args.patch_lock).read_text()) if getattr(args, 'patch_lock', None) else lock
+    compatible_patch_lock(lock, patch_lock)
     if args.patch:
-        patch_payload(args.patch, lock)
+        patch_payload(args.patch, patch_lock)
         selected_libraries(lock, getattr(args, 'components', 'both'))
     if args.pull:
         call(engine, 'pull', selected_image)
@@ -163,7 +172,7 @@ def up(args):
                 raise ValueError('Invalid or duplicate additional synthetic fixture')
             files[key] = path
         if args.patch:
-            install_patch(engine, container_id, args.patch, lock, state['components'])
+            install_patch(engine, container_id, args.patch, patch_lock, state['components'])
         call(engine, 'cp', '-', container_id + ':/opt', data=archive(files))
         call(engine, 'start', container_id)
         session = requests.Session()

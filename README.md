@@ -1,7 +1,19 @@
 # GeoServer affine-raster fixes
 
-**Research branch:** see the [combined affine candidate and new validation](docs/research/combined.md).
-The published baseline report below is retained for comparison.
+**Research branch: mask optimization.** See the [current results and reproduction commands](docs/research/mask-optimized.md).
+This builds on the [correct combined candidate](docs/research/combined.md), using direct mask sampling,
+direct NoData checks and a conservative shortcut for tiles wholly inside the source image.
+The comparison measures the optimization against that correct candidate.
+
+Across three fresh server pairs and **62,640 timed requests**, rotated single-client WMS latency
+falls by **71% for RGB, 65% for RGBA, 51% for four-band UInt16, and 49% for Float32 numeric/NaN NoData**
+(rounded median paired reductions). North-up controls change little. Optimized responses have
+zero timed errors; the baseline has one intermittent invalid response, retained in the report.
+The optimized candidate passes **2,640 typed image checks** with zero missing, spurious, alpha or
+color mismatches, using the existing tolerances.
+
+The report below describes the earlier published baseline. Its transparency and
+outer-edge limitations are historical; the research reports contain the current validation.
 
 Reproduce two raster-rendering defects on **official GeoServer 3.0.2** and test
 candidate source fixes in **GeoTools 35.2** and **Eclipse ImageN 0.9.3**.
@@ -14,7 +26,7 @@ These are experimental source corrections, **not an accepted upstream fix**.
 The tests preserve the TIFF's rotation/shear, source pixels and nearest-neighbour
 sampling. No north-up conversion, smoothing or resampling of the source is used.
 
-**Extended validity tests found regressions:** rotated RGB and multispectral
+**Historical baseline limitations:** extended validity tests found that rotated RGB and multispectral
 footprints gain opaque pixels where transparency is required, and rotated
 Float32 elevation loses NoData transparency. The earlier interior performance
 gains do not establish general correctness. See the
@@ -72,7 +84,7 @@ uv run affine-reproduce --pull --root .runs/geoserver-3.0.2
 ```
 
 Use `--engine docker` for Docker. The command generates 14 immutable synthetic
-TIFFs, compiles the two corrected classes against the exact official libraries,
+TIFFs, compiles the corrected GeoTools/ImageN classes against the exact official libraries,
 and runs stock and patched servers sequentially. Each server gets a fresh
 catalog and is tested with gutters **0 and 1**, using direct WMS and GWC/WMTS.
 Caches are cleared between treatments and cache MISS responses are verified.

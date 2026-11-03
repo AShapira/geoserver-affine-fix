@@ -11,7 +11,10 @@
     "gt-render-35.2.jar": {
       "sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
       "source": "source/geotools/GridCoverageReaderHelper.java",
-      "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class"
+      "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class",
+      "added_classes": [
+        "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper$NoDataMaskOpImage.class"
+      ]
     },
     "imagen-affine-0.9.3.jar": {
       "sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
@@ -35,14 +38,14 @@
     }
   },
   "source_sha256": {
-    "patches/geotools.patch": "2a38b48265392090b8603cb8f7c52b396e035850e2ee237c226a9b38d407f024",
+    "patches/geotools.patch": "e9c2d698eeae202f4bb3bd54dad88d6934264b25e000c00ab7389e85b3c6be85",
     "patches/imagen.patch": "6f48f67bfe7719e652cf67e3ad6c6306546f9049c0b7518f63dec26af6f7ac17",
-    "source/geotools/GridCoverageReaderHelper.java": "9700354a1146996e871288fcba9028add686a8206d3d47675ea220d433993aa9",
+    "source/geotools/GridCoverageReaderHelper.java": "70167a17f7581410c74d44265d54db66769e334eef64ccbd7aa61c28a3d127e8",
     "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
     "source/imagen/AffineOpImage.java": "a9f045daff27801584ab41633296046dbcb0a59a401fcdc549699b604bdfd050",
     "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
-    "tests/java/AffineScanlineRegression.java": "d2a2a0f1d4f5e51beb677056d55e773a938e608fa03fa02de153d8eea7130730",
-    "source/imagen/AffineGeneralOpImage.java": "9f1ddceeca9568b4f007daed8bfaada48bab025f344bfcedb47f3aa44123ac63",
+    "tests/java/AffineScanlineRegression.java": "529ecaaa63c340317d39e9d34b6371524731da9aae3e49709e293a4309b745fc",
+    "source/imagen/AffineGeneralOpImage.java": "97ce6c3c4a3e323ee3136a24541eceb45123e9ec9d5d8a894b72c5228df7a934",
     "source/imagen/AffineBicubicOpImage.java": "3bb4daaf6d5f0b39641f7fad7927ee8dda8199a23c5cd2dd8c564222a818e838",
     "source/imagen/AffineNearestOpImage.java": "45c001f940fdab8ddf9926f5974f16c14a32b75f9f04e28c7d04b42a33710b96",
     "source/imagen/AffineBilinearOpImage.java": "4ed33dba3cb732d7ba79cffe6c2ff843dd028541ecc55cb60c5670249b0d80ce",
@@ -52,7 +55,7 @@
     "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
     "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504",
     "source/imagen/AffineGeneralOpImage.java.original": "639d91047d7fe8766cbf673bb4563d733710303274fb137896492bacd363c240",
-    "patches/imagen-general.patch": "667a97f269ae9cf6615aa9234930a630836cdab171e2f39928f77898913cd6d3"
+    "patches/imagen-general.patch": "c3bb1156b50ad4aeb40b4694bdb8b1cb2cdde10705828f72959f1467378e6326"
   },
   "source_archives": [
     {

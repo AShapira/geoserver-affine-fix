@@ -5,6 +5,7 @@ import io
 import json
 from pathlib import Path
 import random
+import time
 
 import numpy as np
 from PIL import Image
@@ -144,27 +145,40 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,default=Path('.runs/typed-3.0.2'))
     parser.add_argument('--replicates',type=int,default=3)
+    parser.add_argument('--rounds',type=int,default=3)
+    parser.add_argument('--profiles',nargs='+',choices=('wms','gwc-miss','gwc-hit'),default=['wms','gwc-miss','gwc-hit'])
+    parser.add_argument('--concurrencies',nargs='+',type=int,choices=(1,6),default=[1,6])
     parser.add_argument('--port',type=int,default=18116)
+    parser.add_argument('--baseline-lock',type=Path,help='Source/class lock for the comparison baseline')
+    parser.add_argument('--baseline-patch',type=Path,help='Compare against a previous correct candidate, not stock')
+    parser.add_argument('--profile-only',action='store_true')
+    parser.add_argument('--profile-seconds',type=int,default=30)
     parser.add_argument('--quality-only',action='store_true',help='Run one validity replicate without performance timing')
     parser.add_argument('--variants',nargs='+',choices=('stock','both'),default=['stock','both'])
     parser.add_argument('--patch',type=Path,help='Reuse a previously built candidate directory')
     parser.add_argument('--kinds',nargs='+',choices=KINDS,default=list(KINDS))
     args=parser.parse_args();args.root=args.root.resolve();args.root.mkdir(parents=True,exist_ok=False);args.root.chmod(0o700)
+    if bool(args.baseline_patch) != bool(args.baseline_lock):
+        parser.error('--baseline-patch and --baseline-lock must be used together')
+    if args.replicates < 1 or args.rounds < 1 or args.profile_seconds <= 0:
+        parser.error('Replicates, rounds and profile duration must be positive')
+    run_lock=lab.load_lock()
     probe.FIXTURE_ROOT=None
     probe.fixtures(args.root/'fixtures')
     entries=fixtures(args.root/'typed-fixtures',args.kinds)
-    if args.quality_only: args.replicates=1
+    if args.quality_only or args.profile_only: args.replicates=1
     patch=args.patch.resolve() if args.patch else args.root/'patch'
     if not args.patch: command(args.root/'build.log','affine_fix.build','--output',patch)
     jobs=[j for e in entries for j in jobs_for(e)]
     runner=TypedRunner(args,entries,{'typed':jobs})
+    profiles=[]
     quality=[];started=datetime.now(timezone.utc).isoformat();complete=False
     try:
         for rep in range(args.replicates):
             runner.current_replicate=rep
             for variant in [v for v in (('stock','both') if rep%2==0 else ('both','stock')) if v in args.variants]:
                 root=args.root/f'replicate-{rep}'/variant
-                state=lab.up(argparse.Namespace(root=root,fixtures=args.root/'fixtures',engine='podman',connection=None,port=args.port+(variant=='both'),pull=False,patch=patch if variant=='both' else None,components='both',extra_fixtures=[Path(e['path']) for e in entries]))
+                state=lab.up(argparse.Namespace(root=root,fixtures=args.root/'fixtures',engine='podman',connection=None,port=args.port+(variant=='both'),pull=False,patch=patch if variant=='both' else args.baseline_patch,components='both',patch_lock=args.baseline_lock if variant=='stock' else None,extra_fixtures=[Path(e['path']) for e in entries]))
                 runner.states[variant]=state;runner.cgroups[variant]=bm.cgroup_path(state)
                 s=probe.session('admin',state['password_file']);runner.sessions[variant]=s;runner.select(variant)
                 probe.snapshot(root/'catalog',s);probe.publish(root/'catalog',s)
@@ -176,20 +190,31 @@ def main():
                     probe.checked(s,'PUT',f'/rest/layers/{probe.WS}:{name}.json',json={'layer':{'defaultStyle':{'name':e['kind'],'workspace':probe.WS}}})
                     probe.cache_config(s,name,1,1)
                 runner.servers.append(dict(replicate=rep,variant=variant,image=state['image'],versions=json.loads((root/'version.json').read_text())))
-                if rep==0:
+                if rep==0 and not args.profile_only:
                     for e in entries:
                         for gutter in (0,1):
                             quality.extend(validity(s,e,j,args.root,variant,gutter) for j in jobs_for(e,True))
                     probe.write_json(args.root/'quality.json',quality)
                 if not args.quality_only:
                     for _ in range(2): runner.perform(variant,jobs,'wms',1,6)
-            if args.quality_only:
+            if args.profile_only:
+                profile_jobs=[j for j in jobs if runner.entries[j['name']]['angle'] != 0]
+                for variant,state in runner.states.items():
+                    pid=bm.start_profile(state)
+                    begin=time.monotonic();count=errors=0
+                    while time.monotonic()-begin < args.profile_seconds:
+                        rows=runner.perform(variant,profile_jobs,'wms',1,6)
+                        count+=len(rows);errors+=sum(bool(x.get('error')) for x in rows)
+                    workload_seconds=time.monotonic()-begin
+                    result=bm.finish_profile(state,pid,args.root/'profiles'/variant,count-errors)
+                    profiles.append(dict(result,variant=variant,errors=errors,workload_seconds=workload_seconds,elapsed_seconds=time.monotonic()-begin))
+            if args.quality_only or args.profile_only:
                 runner.close_servers()
                 continue
-            for round in range(3):
+            for round in range(args.rounds):
                 shuffled=list(jobs);random.Random(rep*100+round).shuffle(shuffled)
-                for concurrency in (1,6):
-                    for profile in ('wms','gwc-miss','gwc-hit'):
+                for concurrency in args.concurrencies:
+                    for profile in args.profiles:
                         for variant in [v for v in (('stock','both') if (rep+round+concurrency)%2 else ('both','stock')) if v in args.variants]:
                             runner.block(variant,shuffled,replicate=rep,round=round,suite='typed',profile=profile,gutter=1,concurrency=concurrency)
             runner.close_servers()
@@ -198,7 +223,7 @@ def main():
     finally:
         for pool in runner.pools.values():pool.shutdown()
         if runner.states:runner.close_servers()
-        probe.write_json(args.root/'result.json',dict(complete=complete,started_utc=started,finished_utc=datetime.now(timezone.utc).isoformat(),runtime=lab.load_lock(),quality_only=args.quality_only,patch_build=json.loads((patch/'build.json').read_text()),environment=bm.environment(),servers=runner.servers,fixtures=[{k:v for k,v in e.items() if k!='path'} for e in entries],quality=quality,blocks=runner.blocks))
+        probe.write_json(args.root/'result.json',dict(complete=complete,started_utc=started,finished_utc=datetime.now(timezone.utc).isoformat(),runtime=run_lock,variant_labels={'stock': 'correct_baseline' if args.baseline_patch else 'official_stock', 'both': 'optimized_candidate'},baseline_runtime=json.loads(args.baseline_lock.read_text()) if args.baseline_lock else None,quality_only=args.quality_only,profile_only=args.profile_only,profiles=profiles,baseline_patch_build=json.loads((args.baseline_patch/'build.json').read_text()) if args.baseline_patch else None,patch_build=json.loads((patch/'build.json').read_text()),environment=bm.environment(),servers=runner.servers,fixtures=[{k:v for k,v in e.items() if k!='path'} for e in entries],quality=quality,blocks=runner.blocks))
     print('COMPLETE',sum(b['summary']['requests'] for b in runner.blocks),'requests',flush=True)
 
 

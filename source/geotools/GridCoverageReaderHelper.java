@@ -19,26 +19,21 @@ package org.geotools.renderer.lite.gridcoverage2d;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.image.RenderedImage;
-import java.awt.image.renderable.ParameterBlock;
-import java.util.HashMap;
-import java.util.Map;
-import org.eclipse.imagen.PlanarImage;
-import org.eclipse.imagen.ROI;
-import org.eclipse.imagen.ROIShape;
-import org.eclipse.imagen.ImageN;
-import org.eclipse.imagen.media.range.NoDataContainer;
-import org.eclipse.imagen.media.rlookup.RangeLookupTable;
-import org.geotools.coverage.util.CoverageUtilities;
-import org.geotools.image.ImageWorker;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.imagen.Interpolation;
 import org.eclipse.imagen.InterpolationNearest;
+import org.eclipse.imagen.PlanarImage;
+import org.eclipse.imagen.ROI;
+import org.eclipse.imagen.ROIShape;
+import org.eclipse.imagen.media.range.NoDataContainer;
 import org.geotools.api.geometry.BoundingBox;
 import org.geotools.api.geometry.MismatchedDimensionException;
 import org.geotools.api.parameter.GeneralParameterValue;
@@ -62,6 +57,7 @@ import org.geotools.coverage.grid.io.ReadPaddingCalculator;
 import org.geotools.coverage.grid.io.ReadResolutionCalculator;
 import org.geotools.coverage.processing.CoverageProcessor;
 import org.geotools.coverage.processing.EmptyIntersectionException;
+import org.geotools.coverage.util.CoverageUtilities;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.parameter.Parameter;
@@ -401,23 +397,20 @@ public class GridCoverageReaderHelper {
             // replaced by a background value that is also a valid styled value.
             PlanarImage image = PlanarImage.wrapRenderedImage(coverage.getRenderedImage());
             ROI roi = CoverageUtilities.getROIProperty(coverage);
-            if (roi == null) roi = new ROI(new ROIShape(image.getBounds()).getAsImage());
-            NoDataContainer container =
-                    CoverageUtilities.getNoDataProperty(coverage);
+            NoDataContainer container = CoverageUtilities.getNoDataProperty(coverage);
+            if (roi == null && container == null
+                    && coverage.getGridGeometry().getGridToCRS(PixelInCell.CELL_CORNER)
+                            instanceof java.awt.geom.AffineTransform gridToWorld
+                    && requestInsideSource(image.getBounds(), gridToWorld,
+                            new java.awt.geom.Rectangle2D.Double(mapExtent.getMinX(), mapExtent.getMinY(),
+                                    mapExtent.getWidth(), mapExtent.getHeight()))) {
+                return coverage;
+            }
             if (container != null) {
-                RangeLookupTable.Builder<Byte, Byte> builder =
-                        new RangeLookupTable.Builder<>();
-                builder.add(container.getAsRange(), (byte) 0);
-                ParameterBlock pb = new ParameterBlock();
-                pb.addSource(image).add(builder.build()).add((byte) 1);
-                RenderedImage valid = ImageN.create("RLookup", pb);
-                if (image.getSampleModel().getNumBands() > 1) {
-                    double[][] sum = new double[1][image.getSampleModel().getNumBands() + 1];
-                    java.util.Arrays.fill(sum[0], 1);
-                    sum[0][sum[0].length - 1] = 0;
-                    valid = new ImageWorker(valid).bandCombine(sum).getRenderedImage();
-                }
-                roi = roi.intersect(new ROI(valid, 1));
+                ROI valid = new ROI(new NoDataMaskOpImage(image, container.getAsRange()), 1);
+                roi = roi == null ? valid : roi.intersect(valid);
+            } else if (roi == null) {
+                roi = new ROI(new ROIShape(image.getBounds()).getAsImage());
             }
             Map<String, Object> properties = new HashMap<>();
             if (coverage.getProperties() != null) properties.putAll(coverage.getProperties());
@@ -441,6 +434,78 @@ public class GridCoverageReaderHelper {
             }
         } else {
             return null;
+        }
+    }
+
+    /** Skip a synthetic footprint mask only when the entire request is safely inside the read image. */
+    static boolean requestInsideSource(Rectangle bounds, java.awt.geom.AffineTransform gridToWorld,
+            java.awt.geom.Rectangle2D request) {
+        double[] corners = {request.getMinX(), request.getMinY(), request.getMaxX(), request.getMinY(),
+                request.getMaxX(), request.getMaxY(), request.getMinX(), request.getMaxY()};
+        try {
+            gridToWorld.inverseTransform(corners, 0, corners, 0, 4);
+        } catch (java.awt.geom.NoninvertibleTransformException e) {
+            return false;
+        }
+        // An affine rectangle is convex: all four corners inside imply the whole request is inside.
+        // Keep a full source-pixel guard, including nearest-neighbour coordinate rounding.
+        for (int i = 0; i < corners.length; i += 2) {
+            if (!(corners[i] >= bounds.getMinX() + 1 && corners[i] <= bounds.getMaxX() - 1
+                    && corners[i + 1] >= bounds.getMinY() + 1 && corners[i + 1] <= bounds.getMaxY() - 1))
+                return false;
+        }
+        return true;
+    }
+
+    /** Lazy byte validity mask, without boxed range lookup or intermediate band images. */
+    static final class NoDataMaskOpImage extends org.eclipse.imagen.PointOpImage {
+        private final org.eclipse.imagen.media.range.Range noData;
+
+        NoDataMaskOpImage(RenderedImage source, org.eclipse.imagen.media.range.Range noData) {
+            super(source, layout(source), null, true);
+            double min = noData.getMin().doubleValue(), max = noData.getMax().doubleValue();
+            int type = noData.getDataType().getDataType();
+            // RangeUshort exposes signed Short endpoints although raster samples are unsigned.
+            if (type == java.awt.image.DataBuffer.TYPE_USHORT) {
+                min = noData.getMin().intValue() & 0xffff;
+                max = noData.getMax().intValue() & 0xffff;
+            }
+            boolean floating = type == java.awt.image.DataBuffer.TYPE_FLOAT
+                    || type == java.awt.image.DataBuffer.TYPE_DOUBLE;
+            this.noData = org.eclipse.imagen.media.range.RangeFactory.create(
+                    min, noData.isMinIncluded(), max, noData.isMaxIncluded(), floating && noData.isNanIncluded());
+        }
+
+        private static org.eclipse.imagen.ImageLayout layout(RenderedImage source) {
+            java.awt.image.SampleModel sm = new java.awt.image.PixelInterleavedSampleModel(
+                    java.awt.image.DataBuffer.TYPE_BYTE, source.getTileWidth(), source.getTileHeight(),
+                    1, source.getTileWidth(), new int[] {0});
+            return new org.eclipse.imagen.ImageLayout(source).setSampleModel(sm)
+                    .setColorModel(PlanarImage.createColorModel(sm));
+        }
+
+        @Override
+        protected void computeRect(java.awt.image.Raster[] sources, java.awt.image.WritableRaster dest,
+                Rectangle rect) {
+            java.awt.image.Raster source = sources[0];
+            int bands = source.getNumBands();
+            java.awt.image.ComponentSampleModel sm = (java.awt.image.ComponentSampleModel) dest.getSampleModel();
+            java.awt.image.DataBufferByte buffer = (java.awt.image.DataBufferByte) dest.getDataBuffer();
+            byte[] data = buffer.getData();
+            for (int y = rect.y; y < rect.y + rect.height; y++) {
+                int offset = buffer.getOffset() + sm.getOffset(
+                        rect.x - dest.getSampleModelTranslateX(), y - dest.getSampleModelTranslateY());
+                for (int x = rect.x; x < rect.x + rect.width; x++, offset += sm.getPixelStride()) {
+                    int valid = 0;
+                    for (int band = 0; band < bands; band++) {
+                        if (!noData.contains(source.getSampleDouble(x, y, band))) {
+                            valid = 1;
+                            break;
+                        }
+                    }
+                    data[offset] = (byte) valid;
+                }
+            }
         }
     }
 

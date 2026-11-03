@@ -1,0 +1,329 @@
+{
+  "baseline_commit": "c9aff37f393feb0638add12a2ce63d67f0f00d84",
+  "typed": {
+    "optimized": {
+      "checks": 1320,
+      "errors": 0,
+      "missing": 0,
+      "spurious": 0,
+      "alpha_mismatch": 0,
+      "color_mismatch": 0
+    },
+    "paired_optimized": {
+      "checks": 1320,
+      "errors": 0,
+      "missing": 0,
+      "spurious": 0,
+      "alpha_mismatch": 0,
+      "color_mismatch": 0
+    },
+    "paired_baseline": {
+      "checks": 1320,
+      "errors": 0,
+      "missing": 0,
+      "spurious": 0,
+      "alpha_mismatch": 0,
+      "color_mismatch": 0
+    }
+  },
+  "rendering_passed": true,
+  "timed_requests": 62640,
+  "timed_errors": 1,
+  "timed_errors_by_variant": {
+    "stock": 1,
+    "both": 0
+  },
+  "failed_requests": [
+    {
+      "name": "dem_nan_r0_base",
+      "tile": [
+        18,
+        156581,
+        106216
+      ],
+      "seconds": 0.007925019002868794,
+      "status": 200,
+      "bytes": 538,
+      "cache": null,
+      "error": "invalid_image_response",
+      "replicate": 1,
+      "round": 1,
+      "variant": "stock",
+      "profile": "wms",
+      "concurrency": 6
+    }
+  ],
+  "fresh_jvm_pairs": 3,
+  "cases": [
+    {
+      "kind": "rgb",
+      "angle": 0,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 4.931069997837767,
+          "optimized_ms": 4.770899504364934,
+          "reduction_percent": 3.248189410068536
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 5.2798979995714035,
+          "optimized_ms": 4.858422504185,
+          "reduction_percent": 7.98264465375309
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 5.138965505466331,
+          "optimized_ms": 5.101028502394911,
+          "reduction_percent": 0.7382225669945841
+        }
+      ],
+      "baseline_ms": 5.138965505466331,
+      "optimized_ms": 4.858422504185,
+      "median_reduction_percent": 3.248189410068536
+    },
+    {
+      "kind": "rgb",
+      "angle": 30,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 17.964278002182255,
+          "optimized_ms": 5.2475814991339575,
+          "reduction_percent": 70.78879819998056
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 18.91932599755819,
+          "optimized_ms": 5.4062890048953705,
+          "reduction_percent": 71.42451583321134
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 18.582128497655503,
+          "optimized_ms": 5.384381500334712,
+          "reduction_percent": 71.02387112964989
+        }
+      ],
+      "baseline_ms": 18.582128497655503,
+      "optimized_ms": 5.384381500334712,
+      "median_reduction_percent": 71.02387112964989
+    },
+    {
+      "kind": "rgba",
+      "angle": 0,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 5.95674299984239,
+          "optimized_ms": 5.913577497267397,
+          "reduction_percent": 0.7246494028051109
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 6.124427000031574,
+          "optimized_ms": 6.212869004230015,
+          "reduction_percent": -1.4440861846828357
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 6.511875504656928,
+          "optimized_ms": 6.68844000028912,
+          "reduction_percent": -2.711423083962883
+        }
+      ],
+      "baseline_ms": 6.124427000031574,
+      "optimized_ms": 6.212869004230015,
+      "median_reduction_percent": -1.4440861846828357
+    },
+    {
+      "kind": "rgba",
+      "angle": 30,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 18.205973497970263,
+          "optimized_ms": 6.219681501534069,
+          "reduction_percent": 65.8371385511053
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 18.717638002271997,
+          "optimized_ms": 6.5804299993033055,
+          "reduction_percent": 64.84369449550978
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 18.595372996060178,
+          "optimized_ms": 6.583434998901794,
+          "reduction_percent": 64.5963810443779
+        }
+      ],
+      "baseline_ms": 18.595372996060178,
+      "optimized_ms": 6.5804299993033055,
+      "median_reduction_percent": 64.84369449550978
+    },
+    {
+      "kind": "multispectral",
+      "angle": 0,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 20.66190899859066,
+          "optimized_ms": 20.479812505072914,
+          "reduction_percent": 0.881314952699519
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 20.984419501473894,
+          "optimized_ms": 20.766619003552478,
+          "reduction_percent": 1.0379152871306196
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 21.564940994721837,
+          "optimized_ms": 21.291309501975775,
+          "reduction_percent": 1.2688719751796973
+        }
+      ],
+      "baseline_ms": 20.984419501473894,
+      "optimized_ms": 20.766619003552478,
+      "median_reduction_percent": 1.0379152871306196
+    },
+    {
+      "kind": "multispectral",
+      "angle": 30,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 51.90605049938313,
+          "optimized_ms": 23.274694503925275,
+          "reduction_percent": 55.15995865606867
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 51.972408498841105,
+          "optimized_ms": 25.452151498029707,
+          "reduction_percent": 51.027569756369395
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 52.94273149775108,
+          "optimized_ms": 29.771114499453688,
+          "reduction_percent": 43.76732431964091
+        }
+      ],
+      "baseline_ms": 51.972408498841105,
+      "optimized_ms": 25.452151498029707,
+      "median_reduction_percent": 51.027569756369395
+    },
+    {
+      "kind": "dem",
+      "angle": 0,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 11.245154997595819,
+          "optimized_ms": 11.03874250111403,
+          "reduction_percent": 1.8355682649631722
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 12.52617700083647,
+          "optimized_ms": 11.40557950202492,
+          "reduction_percent": 8.946045539167436
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 12.671874497755198,
+          "optimized_ms": 11.854693493660307,
+          "reduction_percent": 6.448777599870114
+        }
+      ],
+      "baseline_ms": 12.52617700083647,
+      "optimized_ms": 11.40557950202492,
+      "median_reduction_percent": 6.448777599870114
+    },
+    {
+      "kind": "dem",
+      "angle": 30,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 46.821664000162855,
+          "optimized_ms": 25.066488000447862,
+          "reduction_percent": 46.46391038054377
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 51.133562497852836,
+          "optimized_ms": 26.282382998033427,
+          "reduction_percent": 48.60052436374435
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 52.62596050306456,
+          "optimized_ms": 25.56053499938571,
+          "reduction_percent": 51.42979861071182
+        }
+      ],
+      "baseline_ms": 51.133562497852836,
+      "optimized_ms": 25.56053499938571,
+      "median_reduction_percent": 48.60052436374435
+    },
+    {
+      "kind": "dem_nan",
+      "angle": 0,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 11.38285100023495,
+          "optimized_ms": 11.169760997290723,
+          "reduction_percent": 1.872026638491786
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 12.004151500150329,
+          "optimized_ms": 11.613566497544525,
+          "reduction_percent": 3.253749359968605
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 12.441101498552598,
+          "optimized_ms": 11.49327300299774,
+          "reduction_percent": 7.6185255434587535
+        }
+      ],
+      "baseline_ms": 12.004151500150329,
+      "optimized_ms": 11.49327300299774,
+      "median_reduction_percent": 3.253749359968605
+    },
+    {
+      "kind": "dem_nan",
+      "angle": 30,
+      "replicates": [
+        {
+          "replicate": 0,
+          "baseline_ms": 48.59657149791019,
+          "optimized_ms": 25.28482099660323,
+          "reduction_percent": 47.96994887244143
+        },
+        {
+          "replicate": 1,
+          "baseline_ms": 51.890708000428276,
+          "optimized_ms": 26.624521502526477,
+          "reduction_percent": 48.69115776507282
+        },
+        {
+          "replicate": 2,
+          "baseline_ms": 52.248449999751756,
+          "optimized_ms": 25.824624997767387,
+          "reduction_percent": 50.57341414359644
+        }
+      ],
+      "baseline_ms": 51.890708000428276,
+      "optimized_ms": 25.824624997767387,
+      "median_reduction_percent": 48.69115776507282
+    }
+  ]
+}

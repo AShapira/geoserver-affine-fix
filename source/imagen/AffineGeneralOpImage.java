@@ -781,9 +781,15 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int destScanlineStride = destSM.getScanlineStride();
 
         byte[] sourceData = sourceDB.getData();
-        Number[] sourceDataNum = new Number[sourceData.length];
-        for (int i = 0; i < sourceData.length; i++) {
-            sourceDataNum[i] = sourceData[i];
+        // Pure nearest sampling of a validity bitmap needs neither boxed samples
+        // nor interpolation/ROI bookkeeping. Keep the generic path otherwise.
+        final boolean directNearest = interpN != null && !hasROI && !hasNoData;
+        Number[] sourceDataNum = null;
+        if (!directNearest) {
+            sourceDataNum = new Number[sourceData.length];
+            for (int i = 0; i < sourceData.length; i++) {
+                sourceDataNum[i] = sourceData[i];
+            }
         }
         int sourceDBOffset = sourceDB.getOffset();
 
@@ -888,7 +894,10 @@ public class AffineGeneralOpImage extends AffineOpImage {
 
                     int xNextBitNo = sourceDataBitOffset + (s_ix + 1 - sourceTransX);
 
-                    if (interpN != null) {
+                    if (directNearest) {
+                        int bit = xNextBitNo - 1;
+                        s = (sourceData[sourceYOffset + (bit >> 3)] >>> (7 - (bit & 7))) & 1;
+                    } else if (interpN != null) {
                         s = interpN.interpolateBinary(
                                 xNextBitNo,
                                 sourceDataNum,
@@ -1304,9 +1313,15 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int destScanlineStride = destSM.getScanlineStride();
 
         short[] sourceData = sourceDB.getData();
-        Number[] sourceDataNum = new Number[sourceData.length];
-        for (int i = 0; i < sourceData.length; i++) {
-            sourceDataNum[i] = sourceData[i];
+        // Pure nearest sampling of a validity bitmap needs neither boxed samples
+        // nor interpolation/ROI bookkeeping. Keep the generic path otherwise.
+        final boolean directNearest = interpN != null && !hasROI && !hasNoData;
+        Number[] sourceDataNum = null;
+        if (!directNearest) {
+            sourceDataNum = new Number[sourceData.length];
+            for (int i = 0; i < sourceData.length; i++) {
+                sourceDataNum[i] = sourceData[i];
+            }
         }
         int sourceDBOffset = sourceDB.getOffset();
 
@@ -1412,7 +1427,10 @@ public class AffineGeneralOpImage extends AffineOpImage {
                     coordinates[1] = src.getY() + ((s_iy - srcRectY) * sourceScanlineStride) / sourceScanlineStride;
 
                     int xNextBitNo = sourceDataBitOffset + (s_ix + 1 - sourceTransX);
-                    if (interpN != null) {
+                    if (directNearest) {
+                        int bit = xNextBitNo - 1;
+                        s = (sourceData[sourceYOffset + (bit >> 4)] >>> (15 - (bit & 15))) & 1;
+                    } else if (interpN != null) {
                         s = interpN.interpolateBinary(
                                 xNextBitNo,
                                 sourceDataNum,
@@ -2102,9 +2120,15 @@ public class AffineGeneralOpImage extends AffineOpImage {
         int destScanlineStride = destSM.getScanlineStride();
 
         int[] sourceData = sourceDB.getData();
-        Number[] sourceDataNum = new Number[sourceData.length];
-        for (int i = 0; i < sourceData.length; i++) {
-            sourceDataNum[i] = sourceData[i];
+        // Pure nearest sampling of a validity bitmap needs neither boxed samples
+        // nor interpolation/ROI bookkeeping. Keep the generic path otherwise.
+        final boolean directNearest = interpN != null && !hasROI && !hasNoData;
+        Number[] sourceDataNum = null;
+        if (!directNearest) {
+            sourceDataNum = new Number[sourceData.length];
+            for (int i = 0; i < sourceData.length; i++) {
+                sourceDataNum[i] = sourceData[i];
+            }
         }
         int sourceDBOffset = sourceDB.getOffset();
 
@@ -2209,7 +2233,10 @@ public class AffineGeneralOpImage extends AffineOpImage {
                     coordinates[1] = src.getY() + ((s_iy - srcRectY) * sourceScanlineStride) / sourceScanlineStride;
 
                     int xNextBitNo = sourceDataBitOffset + (s_ix + 1 - sourceTransX);
-                    if (interpN != null) {
+                    if (directNearest) {
+                        int bit = xNextBitNo - 1;
+                        s = (sourceData[sourceYOffset + (bit >> 5)] >>> (31 - (bit & 31))) & 1;
+                    } else if (interpN != null) {
                         s = interpN.interpolateBinary(
                                 xNextBitNo,
                                 sourceDataNum,

@@ -1,0 +1,1891 @@
+{
+  "profiles": [
+    {
+      "events": {
+        "jdk.ObjectAllocationSample": 8800,
+        "jdk.ExecutionSample": 3046,
+        "jdk.GCPhasePause": 85,
+        "jdk.GarbageCollection": 68
+      },
+      "completed_requests": 580,
+      "allocation_sample_weight_bytes": 35619901576,
+      "estimated_allocation_bytes_per_request": 61413623.406896554,
+      "crop_execution_samples": 3,
+      "crop_allocation_sample_weight_bytes": 416008680,
+      "leaf_execution_stacks": [
+        [
+          "org.eclipse.imagen.media.rlookup.RangeLookupOpImage.lookupAsFloatData",
+          693
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.byteLoopBinary",
+          334
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decode",
+          244
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.createRendering",
+          201
+        ],
+        [
+          "org.eclipse.imagen.media.bandmerge.BandMergeOpImage.byteLoop",
+          163
+        ],
+        [
+          "java.awt.image.SampleModel.setPixels",
+          139
+        ],
+        [
+          "java.awt.image.SampleModel.getPixels",
+          135
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.overlayByteLoop",
+          88
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.setPixels",
+          87
+        ],
+        [
+          "org.eclipse.imagen.media.range.Range.containsN",
+          55
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.getUnpackedBinaryData",
+          51
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decodeRaw",
+          42
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.getPixels",
+          42
+        ],
+        [
+          "java.math.BigInteger.<init>",
+          38
+        ],
+        [
+          "org.eclipse.imagen.media.rescale.RescaleOpImage.intLoop",
+          34
+        ],
+        [
+          "java.awt.image.DataBufferUShort.setElem",
+          33
+        ],
+        [
+          "java.lang.Float.doubleValue",
+          33
+        ],
+        [
+          "org.eclipse.imagen.media.iterator.RectIterFallback.nextPixelDone",
+          32
+        ],
+        [
+          "java.awt.Rectangle.contains",
+          29
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.addTileComputationListener",
+          24
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.setUnpackedBinaryData",
+          23
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getHeight",
+          23
+        ],
+        [
+          "org.eclipse.imagen.media.rlookup.RangeLookupTable.getLookupItem",
+          23
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.setPixel",
+          22
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getMinY",
+          21
+        ],
+        [
+          "org.eclipse.imagen.media.binarize.BinarizeOpImage.byteLoop",
+          21
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.GenericPiecewiseOpImage.computeRectGeneral",
+          20
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.getPixel",
+          18
+        ],
+        [
+          "java.awt.image.SampleModel.setPixel",
+          18
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.DefaultPiecewiseTransform1DElement.transform",
+          18
+        ],
+        [
+          "org.eclipse.imagen.ROI.contains",
+          17
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.floatLoop",
+          17
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.MosaicOpImage.floatLoop",
+          17
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.byteLoop",
+          14
+        ],
+        [
+          "org.eclipse.imagen.media.algebra.AlgebraOpImage.computeRectBinary",
+          12
+        ],
+        [
+          "org.eclipse.imagen.ComponentSampleModelImageN.setSample",
+          12
+        ],
+        [
+          "java.awt.image.DataBufferFloat.getElemFloat",
+          11
+        ],
+        [
+          "java.awt.image.DataBufferByte.setElem",
+          10
+        ],
+        [
+          "org.eclipse.imagen.media.interpolators.InterpolationNearest.interpolateBinary",
+          10
+        ],
+        [
+          "org.eclipse.imagen.media.iterator.RandomIterFallback.getSample",
+          10
+        ],
+        [
+          "org.eclipse.imagen.media.border.BorderOpImage.byteLoop",
+          9
+        ],
+        [
+          "java.awt.image.DataBufferUShort.getElem",
+          9
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.ushortLoop",
+          8
+        ],
+        [
+          "org.eclipse.imagen.media.iterator.RandomIterFallback.makeCurrent",
+          8
+        ],
+        [
+          "java.awt.image.DataBufferFloat.setElemFloat",
+          8
+        ],
+        [
+          "java.awt.image.SampleModel.getPixel",
+          7
+        ],
+        [
+          "org.eclipse.imagen.RasterAccessor.clampFloatArrays",
+          6
+        ],
+        [
+          "java.awt.image.Raster.getPixel",
+          5
+        ],
+        [
+          "java.awt.image.MultiPixelPackedSampleModel.getSample",
+          5
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.PiecewiseUtilities.binarySearch",
+          5
+        ]
+      ],
+      "leaf_allocation_stacks": [
+        [
+          "java.lang.StringUTF16.compress",
+          2301129536
+        ],
+        [
+          "java.nio.HeapCharBuffer.<init>",
+          2289270424
+        ],
+        [
+          "java.lang.Object.clone",
+          2274442440
+        ],
+        [
+          "java.util.Arrays.copyOfRangeByte",
+          2229560032
+        ],
+        [
+          "java.util.Arrays.copyOf",
+          2219382928
+        ],
+        [
+          "org.geotools.referencing.operation.projection.MapProjection$Inverse.transform",
+          2199872424
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFImageReadParam.<init>",
+          2133095520
+        ],
+        [
+          "java.util.concurrent.ConcurrentHashMap$EntrySetView.iterator",
+          2115533144
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.<init>",
+          2115456040
+        ],
+        [
+          "java.lang.Float.valueOf",
+          2103935152
+        ],
+        [
+          "java.awt.image.DataBufferByte.<init>",
+          2035694544
+        ],
+        [
+          "java.lang.StringLatin1.replace",
+          1922311024
+        ],
+        [
+          "java.awt.image.DataBufferFloat.<init>",
+          1888397280
+        ],
+        [
+          "java.awt.image.DataBufferUShort.<init>",
+          1530929992
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decodeRaw",
+          1468302024
+        ],
+        [
+          "java.awt.image.SampleModel.getPixels",
+          1011256328
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.getUnpackedBinaryData",
+          688681536
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.byteLoopBinary",
+          311223736
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFDeflateDecompressor.decodeRaw",
+          296810088
+        ],
+        [
+          "java.time.Instant.create",
+          228128792
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.getPixels",
+          169886048
+        ],
+        [
+          "sun.awt.image.ByteInterleavedRaster.getPixels",
+          137179968
+        ],
+        [
+          "java.awt.image.Raster.createWritableRaster",
+          90059752
+        ],
+        [
+          "java.io.ByteArrayOutputStream.<init>",
+          81021232
+        ],
+        [
+          "org.eclipse.imagen.media.iterators.RandomIterFallbackShort.<init>",
+          79152360
+        ],
+        [
+          "java.util.HashMap.newNode",
+          78673512
+        ],
+        [
+          "java.util.concurrent.ConcurrentHashMap$EntryIterator.next",
+          66397384
+        ],
+        [
+          "java.awt.Rectangle.intersection",
+          63144344
+        ],
+        [
+          "java.lang.StringLatin1.toLowerCase",
+          59392320
+        ],
+        [
+          "org.eclipse.imagen.RasterAccessor.getByteDataArrays",
+          56775256
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.getPackedBinaryData",
+          53266496
+        ],
+        [
+          "java.awt.image.Raster.getBounds",
+          48086408
+        ],
+        [
+          "java.awt.Rectangle.getBounds",
+          47107680
+        ],
+        [
+          "java.lang.Throwable.fillInStackTrace",
+          43970312
+        ],
+        [
+          "org.eclipse.imagen.media.cache.ConcurrentTileCacheMultiMap.updateMultiMap",
+          40105504
+        ],
+        [
+          "org.huldra.math.BigInt.copy",
+          37737384
+        ],
+        [
+          "java.util.ArrayList.iterator",
+          31121864
+        ],
+        [
+          "org.eclipse.imagen.RasterAccessor.findCompatibleTags",
+          30926376
+        ],
+        [
+          "org.eclipse.imagen.PropertySourceImpl.getProperty",
+          30641552
+        ],
+        [
+          "java.util.HashMap.resize",
+          30573592
+        ],
+        [
+          "java.lang.AbstractStringBuilder.<init>",
+          30552520
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineOpImage.advanceToStartOfScanline",
+          29809152
+        ],
+        [
+          "java.awt.image.IndexColorModel.setRGBs",
+          26630248
+        ],
+        [
+          "java.util.regex.Matcher.<init>",
+          25429920
+        ],
+        [
+          "org.eclipse.imagen.media.util.CaselessStringKeyHashtable.put",
+          25409792
+        ],
+        [
+          "java.awt.image.DataBuffer.getOffsets",
+          24713496
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.decodeTile",
+          23358072
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFIFD.initialize",
+          22218152
+        ],
+        [
+          "jdk.internal.reflect.GeneratedSerializationConstructorAccessor44.newInstance",
+          21806552
+        ],
+        [
+          "java.util.stream.ReferencePipeline$3.opWrapSink",
+          21090944
+        ]
+      ],
+      "inclusive_execution_stacks": [
+        [
+          "org.eclipse.imagen.OpImage.getTile",
+          2978
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.getData",
+          2978
+        ],
+        [
+          "org.eclipse.imagen.media.util.SunTileScheduler.scheduleTile",
+          2977
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.computeTile",
+          2895
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getData",
+          2839
+        ],
+        [
+          "org.eclipse.imagen.PointOpImage.computeTile",
+          2685
+        ],
+        [
+          "org.geoserver.wms.map.RenderedImageTimeDecorator.getData",
+          1976
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.computeTile",
+          1664
+        ],
+        [
+          "it.geosolutions.imageio.plugins.png.ScanlineProviderFactory.getProvider",
+          1415
+        ],
+        [
+          "org.geoserver.wms.map.png.PNGJWriter.writePNG",
+          1381
+        ],
+        [
+          "it.geosolutions.imageio.plugins.png.PNGWriter.isScanlineSupported",
+          1380
+        ],
+        [
+          "org.geoserver.wms.map.PNGMapResponse.formatImageOutputStream",
+          1351
+        ],
+        [
+          "org.geoserver.wms.map.RenderedImageMapResponse.write",
+          1123
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.getExtendedData",
+          1096
+        ],
+        [
+          "org.geoserver.ows.Dispatcher.response",
+          1089
+        ],
+        [
+          "org.geoserver.ows.Dispatcher.handleRequestInternal",
+          1057
+        ],
+        [
+          "org.springframework.web.servlet.mvc.AbstractController.handleRequest",
+          978
+        ],
+        [
+          "org.eclipse.imagen.media.rlookup.RangeLookupOpImage.computeRect",
+          976
+        ],
+        [
+          "org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle",
+          946
+        ],
+        [
+          "org.springframework.web.servlet.DispatcherServlet.doDispatch",
+          926
+        ],
+        [
+          "org.eclipse.imagen.ROI.contains",
+          887
+        ],
+        [
+          "org.eclipse.imagen.media.rlookup.RangeLookupOpImage.doLookup",
+          881
+        ],
+        [
+          "org.eclipse.imagen.media.rlookup.RangeLookupOpImage.lookupAsFloatData",
+          805
+        ],
+        [
+          "org.springframework.web.servlet.DispatcherServlet.doService",
+          754
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.GenericPiecewiseOpImage.computeRect",
+          712
+        ],
+        [
+          "org.eclipse.imagen.media.nullop.NullOpImage.computeTile",
+          712
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.processRequest",
+          695
+        ],
+        [
+          "org.eclipse.imagen.media.imageread.ImageReadOpImage.computeTile",
+          690
+        ],
+        [
+          "org.eclipse.imagen.media.crop.CropOpImage.getTile",
+          567
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.doGet",
+          557
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineOpImage.computeTile",
+          529
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.computeTile",
+          529
+        ],
+        [
+          "jakarta.servlet.http.HttpServlet.service",
+          524
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decode",
+          484
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.read",
+          484
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.decodeTile",
+          484
+        ],
+        [
+          "org.eclipse.imagen.media.bandmerge.BandMergeOpImage.computeRect",
+          474
+        ],
+        [
+          "org.eclipse.imagen.media.bandmerge.BandMergeOpImage.byteLoop",
+          473
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.service",
+          406
+        ],
+        [
+          "org.eclipse.imagen.media.bandselect.BandSelectOpImage.getTile",
+          364
+        ],
+        [
+          "org.eclipse.imagen.media.bandselect.BandSelectOpImage.computeTile",
+          364
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.computeRect",
+          346
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.byteLoopBinary",
+          346
+        ],
+        [
+          "java.awt.image.WritableRaster.setRect",
+          262
+        ],
+        [
+          "java.awt.image.WritableRaster.setPixels",
+          240
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.createRendering",
+          230
+        ],
+        [
+          "org.apache.catalina.core.ApplicationFilterChain.doFilter",
+          198
+        ],
+        [
+          "java.awt.image.Raster.getPixels",
+          191
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.cobbleUShort",
+          181
+        ],
+        [
+          "org.apache.tomcat.websocket.server.WsFilter.doFilter",
+          170
+        ]
+      ],
+      "inclusive_allocation_stacks": [
+        [
+          "org.geoserver.wms.map.RenderedImageMapOutputFormat.produceMap",
+          15824964360
+        ],
+        [
+          "org.geoserver.wms.GetMap.executeInternal",
+          15821696448
+        ],
+        [
+          "org.geoserver.wms.GetMap.run",
+          15804036128
+        ],
+        [
+          "org.geoserver.wms.DefaultWebMapService.getMap",
+          15782198184
+        ],
+        [
+          "org.geoserver.wms.map.DirectRasterRenderer.render",
+          13902984096
+        ],
+        [
+          "org.geoserver.wms.map.DirectRasterRenderer.readWithProjectionHandling",
+          13836665120
+        ],
+        [
+          "jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl",
+          13790490152
+        ],
+        [
+          "jdk.internal.reflect.DirectMethodHandleAccessor.invoke",
+          13783904016
+        ],
+        [
+          "java.lang.invoke.Invokers$Holder.invokeExact_MT",
+          13777553968
+        ],
+        [
+          "java.lang.reflect.Method.invoke",
+          13746768608
+        ],
+        [
+          "java.lang.invoke.LambdaForm$DMH.0x0000754ea863d000.invokeInterface",
+          13569539080
+        ],
+        [
+          "java.lang.invoke.LambdaForm$MH.0x0000754ea8d37400.invoke",
+          13565027064
+        ],
+        [
+          "org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection",
+          13457791360
+        ],
+        [
+          "org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint",
+          13396812416
+        ],
+        [
+          "org.eclipse.imagen.OpImage.getTile",
+          11909100896
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.getData",
+          11908313632
+        ],
+        [
+          "org.eclipse.imagen.media.util.SunTileScheduler.scheduleTile",
+          11868471736
+        ],
+        [
+          "org.geotools.renderer.lite.gridcoverage2d.GridCoverageRenderer.renderImage",
+          11722912416
+        ],
+        [
+          "org.geotools.renderer.lite.gridcoverage2d.GridCoverageReaderHelper.readCoverages",
+          11451533008
+        ],
+        [
+          "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed",
+          11317770904
+        ],
+        [
+          "org.geoserver.gwc.wms.CacheSeedingWebMapService.invoke",
+          11225543216
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.computeTile",
+          10675535240
+        ],
+        [
+          "org.eclipse.imagen.PointOpImage.computeTile",
+          10247879648
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getData",
+          10179491504
+        ],
+        [
+          "org.apache.catalina.core.ApplicationFilterChain.doFilter",
+          7220053320
+        ],
+        [
+          "org.geoserver.gwc.wms.CachingWebMapService.invoke",
+          6735490064
+        ],
+        [
+          "org.geotools.renderer.crs.ProjectionHandler.getSourceEnvelopes",
+          6658905312
+        ],
+        [
+          "org.geotools.renderer.crs.ProjectionHandler.transformEnvelope",
+          6658905312
+        ],
+        [
+          "org.geotools.renderer.crs.ProjectionHandler.getQueryEnvelopes",
+          6658905312
+        ],
+        [
+          "org.geotools.geometry.jts.ReferencedEnvelope.transform",
+          6628987320
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.computeTile",
+          6393635024
+        ],
+        [
+          "org.eclipse.imagen.media.imageread.ImageReadOpImage.computeTile",
+          5897026696
+        ],
+        [
+          "org.geotools.renderer.lite.gridcoverage2d.GridCoverageReaderHelper.readCoverageInEnvelope",
+          4794649800
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.read",
+          4705351984
+        ],
+        [
+          "org.geoserver.filters.SessionDebugFilter.doFilter",
+          4647496616
+        ],
+        [
+          "org.geoserver.filters.GZIPFilter.doFilter",
+          4647496616
+        ],
+        [
+          "org.geoserver.filters.FlushSafeFilter.doFilter",
+          4647496616
+        ],
+        [
+          "org.geoserver.filters.SecurityHeadersFilter.doFilter",
+          4646972920
+        ],
+        [
+          "org.geoserver.security.GeoServerSecurityFilterChainProxy.doFilter",
+          4639896120
+        ],
+        [
+          "org.springframework.web.filter.DelegatingFilterProxy.doFilter",
+          4639896120
+        ],
+        [
+          "org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate",
+          4639896120
+        ],
+        [
+          "org.springframework.security.web.FilterChainProxy.doFilter",
+          4639896120
+        ],
+        [
+          "org.springframework.security.web.FilterChainProxy.doFilterInternal",
+          4639896120
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.getExtendedData",
+          4612215680
+        ],
+        [
+          "org.apache.tomcat.util.buf.StringCache.toString",
+          4591677296
+        ],
+        [
+          "org.apache.tomcat.util.buf.ByteChunk.toStringInternal",
+          4591677296
+        ],
+        [
+          "org.apache.tomcat.util.buf.ByteChunk.toString",
+          4591677296
+        ],
+        [
+          "org.springframework.security.web.FilterChainProxy.getFilters",
+          4589876256
+        ],
+        [
+          "org.apache.catalina.connector.RequestFacade.getQueryString",
+          4589876256
+        ],
+        [
+          "org.springframework.security.web.DefaultSecurityFilterChain.matches",
+          4589876256
+        ]
+      ],
+      "variant": "stock",
+      "errors": 0,
+      "workload_seconds": 32.222614679005346,
+      "elapsed_seconds": 82.91180206300487
+    },
+    {
+      "events": {
+        "jdk.ObjectAllocationSample": 7983,
+        "jdk.ExecutionSample": 3008,
+        "jdk.GCPhasePause": 115,
+        "jdk.GarbageCollection": 93
+      },
+      "completed_requests": 1160,
+      "allocation_sample_weight_bytes": 33471413000,
+      "estimated_allocation_bytes_per_request": 28854666.379310343,
+      "crop_execution_samples": 0,
+      "crop_allocation_sample_weight_bytes": 8645192,
+      "leaf_execution_stacks": [
+        [
+          "org.geotools.renderer.lite.gridcoverage2d.GridCoverageReaderHelper$NoDataMaskOpImage.computeRect",
+          838
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.overlayByteLoop",
+          184
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decodeRaw",
+          169
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.setPixels",
+          139
+        ],
+        [
+          "java.math.BigInteger.<init>",
+          126
+        ],
+        [
+          "org.eclipse.imagen.media.iterator.RectIterFallback.nextPixelDone",
+          119
+        ],
+        [
+          "java.awt.image.SampleModel.setPixels",
+          118
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.MosaicOpImage.floatLoop",
+          118
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.byteLoopBinary",
+          100
+        ],
+        [
+          "java.awt.geom.AffineTransform.transform",
+          73
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.GenericPiecewiseOpImage.computeRectGeneral",
+          68
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decode",
+          60
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.getPixels",
+          57
+        ],
+        [
+          "java.awt.image.DataBufferUShort.getElem",
+          55
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.floatLoop",
+          51
+        ],
+        [
+          "org.eclipse.imagen.media.range.RangeDouble.contains",
+          44
+        ],
+        [
+          "java.awt.Rectangle.contains",
+          43
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.setUnpackedBinaryData",
+          42
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.DefaultPiecewiseTransform1DElement.transform",
+          40
+        ],
+        [
+          "org.eclipse.imagen.ComponentSampleModelImageN.getSampleFloat",
+          37
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.getUnpackedBinaryData",
+          33
+        ],
+        [
+          "java.awt.image.DataBufferFloat.getElemFloat",
+          30
+        ],
+        [
+          "org.eclipse.imagen.media.binarize.BinarizeOpImage.byteLoop",
+          29
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.byteLoop",
+          28
+        ],
+        [
+          "java.awt.image.DataBufferUShort.setElem",
+          27
+        ],
+        [
+          "org.eclipse.imagen.ComponentSampleModelImageN.getSampleDouble",
+          21
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.setPixel",
+          20
+        ],
+        [
+          "java.awt.image.SampleModel.getPixels",
+          15
+        ],
+        [
+          "org.eclipse.imagen.media.rescale.RescaleOpImage.intLoop",
+          13
+        ],
+        [
+          "java.awt.image.DataBufferByte.setElem",
+          10
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.ushortLoop",
+          10
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.PiecewiseUtilities.binarySearch",
+          10
+        ],
+        [
+          "org.eclipse.imagen.media.border.BorderOpImage.byteLoop",
+          9
+        ],
+        [
+          "java.awt.image.Raster.getSampleDouble",
+          8
+        ],
+        [
+          "java.awt.image.DataBufferByte.getElem",
+          8
+        ],
+        [
+          "org.eclipse.imagen.media.iterator.RectIterFallback.nextLineDone",
+          8
+        ],
+        [
+          "org.eclipse.imagen.RasterAccessor.clampIntArrays",
+          7
+        ],
+        [
+          "java.awt.image.SampleModel.getPixel",
+          7
+        ],
+        [
+          "org.eclipse.imagen.media.iterators.RandomIterFallbackByte.makeCurrent",
+          7
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.createRawImage",
+          7
+        ],
+        [
+          "java.awt.image.MultiPixelPackedSampleModel.getSample",
+          6
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.createRendering",
+          6
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getWidth",
+          6
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.getPixel",
+          5
+        ],
+        [
+          "ar.com.hjg.pngj.PngWriter.filterRowSub",
+          5
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.PixelIterator$PixelIteratorFloat.read",
+          5
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.roiZero",
+          4
+        ],
+        [
+          "org.eclipse.imagen.media.bandmerge.BandMergeOpImage.byteLoop",
+          4
+        ],
+        [
+          "ar.com.hjg.pngj.PngWriter.close",
+          4
+        ],
+        [
+          "java.lang.Math.floor",
+          3
+        ]
+      ],
+      "leaf_allocation_stacks": [
+        [
+          "java.awt.image.DataBufferFloat.<init>",
+          3435629552
+        ],
+        [
+          "java.util.Arrays.copyOfRangeByte",
+          3304655944
+        ],
+        [
+          "java.awt.image.DataBufferByte.<init>",
+          3017601456
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decodeRaw",
+          2723224432
+        ],
+        [
+          "java.awt.image.DataBufferUShort.<init>",
+          2478898312
+        ],
+        [
+          "java.util.Arrays.copyOf",
+          1938021056
+        ],
+        [
+          "java.lang.StringUTF16.compress",
+          1781001640
+        ],
+        [
+          "java.io.ObjectInputStream.readClassDescriptor",
+          1689562168
+        ],
+        [
+          "java.util.Collections.unmodifiableSet",
+          1630483768
+        ],
+        [
+          "java.util.HashSet.<init>",
+          1605973736
+        ],
+        [
+          "java.util.Arrays$ArrayList.iterator",
+          1588747600
+        ],
+        [
+          "tech.units.indriya.internal.function.simplify.CompositionTask.reduceToNormalForm",
+          1553431080
+        ],
+        [
+          "java.io.ObjectOutputStream.defaultWriteFields",
+          1533115936
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.getUnpackedBinaryData",
+          658216184
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFDeflateDecompressor.decodeRaw",
+          568885792
+        ],
+        [
+          "java.time.Instant.create",
+          374111208
+        ],
+        [
+          "java.util.HashMap.newNode",
+          287536352
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.getPixels",
+          250953640
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.decodeTile",
+          205280080
+        ],
+        [
+          "java.lang.StringLatin1.toLowerCase",
+          171999384
+        ],
+        [
+          "sun.awt.image.ByteInterleavedRaster.getPixels",
+          169851376
+        ],
+        [
+          "java.lang.Throwable.fillInStackTrace",
+          155076696
+        ],
+        [
+          "org.eclipse.imagen.PropertySourceImpl.getProperty",
+          114678624
+        ],
+        [
+          "java.util.HashMap.resize",
+          95043648
+        ],
+        [
+          "java.io.ByteArrayOutputStream.<init>",
+          80425032
+        ],
+        [
+          "java.util.Hashtable.addEntry",
+          68017264
+        ],
+        [
+          "java.util.regex.Matcher.<init>",
+          63923736
+        ],
+        [
+          "java.lang.Object.clone",
+          59728648
+        ],
+        [
+          "java.awt.image.Raster.getBounds",
+          50232664
+        ],
+        [
+          "java.io.BufferedReader.<init>",
+          45111032
+        ],
+        [
+          "org.eclipse.imagen.media.util.ImageUtil.getPackedBinaryData",
+          43580368
+        ],
+        [
+          "java.nio.HeapByteBuffer.<init>",
+          42811424
+        ],
+        [
+          "java.math.BigInteger.toByteArray",
+          42118008
+        ],
+        [
+          "java.util.zip.ZipFile$Source.initCEN",
+          38654880
+        ],
+        [
+          "org.eclipse.imagen.PropertySourceImpl.<init>",
+          38365800
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFIFD.initialize",
+          38010096
+        ],
+        [
+          "org.geotools.util.GenericName.toString",
+          37025352
+        ],
+        [
+          "org.locationtech.jts.geomgraph.PlanarGraph.<init>",
+          37015144
+        ],
+        [
+          "java.lang.StringBuilder.toString",
+          36782736
+        ],
+        [
+          "java.awt.image.PixelInterleavedSampleModel.createSubsetSampleModel",
+          36549688
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.<init>",
+          36079832
+        ],
+        [
+          "java.util.StringJoiner.add",
+          35368552
+        ],
+        [
+          "java.lang.StackStreamFactory$StackFrameTraverser$StackFrameBuffer.resize",
+          34873664
+        ],
+        [
+          "jdk.internal.misc.Unsafe.allocateUninitializedArray",
+          34099576
+        ],
+        [
+          "java.util.LinkedList.linkLast",
+          30861184
+        ],
+        [
+          "java.math.BigInteger.multiplyByInt",
+          30355888
+        ],
+        [
+          "java.util.Vector.iterator",
+          30194984
+        ],
+        [
+          "java.util.ArrayList.<init>",
+          29465952
+        ],
+        [
+          "org.eclipse.imagen.RasterAccessor.<init>",
+          29177368
+        ],
+        [
+          "java.util.LinkedHashMap.newNode",
+          29058040
+        ]
+      ],
+      "inclusive_execution_stacks": [
+        [
+          "org.eclipse.imagen.OpImage.getTile",
+          2877
+        ],
+        [
+          "org.eclipse.imagen.media.util.SunTileScheduler.scheduleTile",
+          2877
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.getData",
+          2877
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getData",
+          2828
+        ],
+        [
+          "org.eclipse.imagen.PointOpImage.computeTile",
+          2557
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.computeTile",
+          2395
+        ],
+        [
+          "org.geoserver.wms.map.RenderedImageTimeDecorator.getData",
+          2192
+        ],
+        [
+          "it.geosolutions.imageio.plugins.png.ScanlineProviderFactory.getProvider",
+          2113
+        ],
+        [
+          "it.geosolutions.imageio.plugins.png.PNGWriter.isScanlineSupported",
+          2070
+        ],
+        [
+          "org.geoserver.wms.map.png.PNGJWriter.writePNG",
+          1923
+        ],
+        [
+          "org.geoserver.wms.map.PNGMapResponse.formatImageOutputStream",
+          1754
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineGeneralOpImage.computeTile",
+          1377
+        ],
+        [
+          "org.eclipse.imagen.media.nullop.NullOpImage.computeTile",
+          1114
+        ],
+        [
+          "org.geoserver.wms.map.RenderedImageMapResponse.write",
+          1064
+        ],
+        [
+          "org.geoserver.ows.Dispatcher.response",
+          1052
+        ],
+        [
+          "org.geoserver.ows.Dispatcher.handleRequestInternal",
+          986
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.getExtendedData",
+          931
+        ],
+        [
+          "org.springframework.web.servlet.mvc.AbstractController.handleRequest",
+          909
+        ],
+        [
+          "org.geotools.renderer.lite.gridcoverage2d.GridCoverageReaderHelper$NoDataMaskOpImage.computeRect",
+          908
+        ],
+        [
+          "org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle",
+          892
+        ],
+        [
+          "org.springframework.web.servlet.DispatcherServlet.doDispatch",
+          875
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.GenericPiecewiseOpImage.computeRect",
+          847
+        ],
+        [
+          "org.eclipse.imagen.media.imageread.ImageReadOpImage.computeTile",
+          768
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineOpImage.computeTile",
+          723
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.computeTile",
+          723
+        ],
+        [
+          "org.springframework.web.servlet.DispatcherServlet.doService",
+          717
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.processRequest",
+          675
+        ],
+        [
+          "org.eclipse.imagen.media.crop.CropOpImage.getTile",
+          612
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.doGet",
+          538
+        ],
+        [
+          "jakarta.servlet.http.HttpServlet.service",
+          513
+        ],
+        [
+          "org.eclipse.imagen.ROI.contains",
+          474
+        ],
+        [
+          "org.eclipse.imagen.media.bandselect.BandSelectOpImage.getTile",
+          465
+        ],
+        [
+          "org.eclipse.imagen.media.bandselect.BandSelectOpImage.computeTile",
+          465
+        ],
+        [
+          "java.awt.image.WritableRaster.setRect",
+          440
+        ],
+        [
+          "it.geosolutions.imageio.plugins.tiff.TIFFDecompressor.decode",
+          436
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.read",
+          436
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.decodeTile",
+          436
+        ],
+        [
+          "org.eclipse.imagen.media.piecewise.GenericPiecewiseOpImage.computeRectGeneral",
+          389
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getTile",
+          351
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.service",
+          332
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.cobbleUShort",
+          299
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.MosaicOpImage.computeTile",
+          272
+        ],
+        [
+          "java.awt.image.WritableRaster.setPixels",
+          260
+        ],
+        [
+          "org.apache.catalina.core.ApplicationFilterChain.doFilter",
+          246
+        ],
+        [
+          "org.apache.tomcat.websocket.server.WsFilter.doFilter",
+          238
+        ],
+        [
+          "org.geoserver.filters.ThreadLocalsCleanupFilter.doFilter",
+          234
+        ],
+        [
+          "org.geoserver.filters.SpringDelegatingFilter$Chain.doFilter",
+          221
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.computeRect",
+          219
+        ],
+        [
+          "org.geoserver.rest.SuffixStripFilter.doFilterInternal",
+          215
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.overlayByteLoop",
+          188
+        ]
+      ],
+      "inclusive_allocation_stacks": [
+        [
+          "jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl",
+          13984821824
+        ],
+        [
+          "jdk.internal.reflect.DirectMethodHandleAccessor.invoke",
+          13969394088
+        ],
+        [
+          "java.lang.reflect.Method.invoke",
+          13922555080
+        ],
+        [
+          "org.eclipse.imagen.OpImage.getTile",
+          13870708776
+        ],
+        [
+          "org.eclipse.imagen.PlanarImage.getData",
+          13870630736
+        ],
+        [
+          "org.eclipse.imagen.media.util.SunTileScheduler.scheduleTile",
+          13870185760
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getData",
+          12418542992
+        ],
+        [
+          "org.geoserver.ows.Dispatcher.handleRequestInternal",
+          11547496008
+        ],
+        [
+          "org.eclipse.imagen.PointOpImage.computeTile",
+          11126139648
+        ],
+        [
+          "org.springframework.web.servlet.mvc.AbstractController.handleRequest",
+          11114819912
+        ],
+        [
+          "org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter.handle",
+          10988778920
+        ],
+        [
+          "org.eclipse.imagen.media.imageread.ImageReadOpImage.computeTile",
+          10924449672
+        ],
+        [
+          "java.lang.invoke.Invokers$Holder.invokeExact_MT",
+          9200240192
+        ],
+        [
+          "org.springframework.web.servlet.DispatcherServlet.doDispatch",
+          9131053976
+        ],
+        [
+          "it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader.read",
+          8445474488
+        ],
+        [
+          "org.eclipse.imagen.media.mosaic.SingleImageMosaicOpImage.computeTile",
+          7872530552
+        ],
+        [
+          "java.awt.image.Raster.createWritableRaster",
+          7395456112
+        ],
+        [
+          "org.springframework.web.servlet.DispatcherServlet.doService",
+          7299176096
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineOpImage.computeTile",
+          7281056280
+        ],
+        [
+          "org.eclipse.imagen.media.affine.AffineNearestOpImage.computeTile",
+          7281056280
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.processRequest",
+          7228749112
+        ],
+        [
+          "org.geoserver.wms.map.RenderedImageTimeDecorator.getData",
+          7068485856
+        ],
+        [
+          "org.eclipse.imagen.media.crop.CropOpImage.getTile",
+          7000496616
+        ],
+        [
+          "org.springframework.aop.framework.ReflectiveMethodInvocation.proceed",
+          6994544464
+        ],
+        [
+          "it.geosolutions.imageio.plugins.png.ScanlineProviderFactory.getProvider",
+          6915277952
+        ],
+        [
+          "java.lang.invoke.LambdaForm$DMH.0x00007ecca8639c00.invokeInterface",
+          6853336744
+        ],
+        [
+          "java.lang.invoke.LambdaForm$MH.0x00007ecca802d400.invokeExact_MT",
+          6853336744
+        ],
+        [
+          "org.geoserver.catalog.impl.ModificationProxy.invoke",
+          6747341680
+        ],
+        [
+          "org.geoserver.ows.util.RequestObjectLogger.invoke",
+          6715771000
+        ],
+        [
+          "org.geoserver.wms.MapLayerInfo.getCoverageReader",
+          6715394744
+        ],
+        [
+          "org.geoserver.catalog.ResourcePool.getGridCoverageReader",
+          6712394312
+        ],
+        [
+          "org.geoserver.catalog.impl.CoverageInfoImpl.getGridCoverageReader",
+          6712394312
+        ],
+        [
+          "java.lang.invoke.LambdaForm$MH.0x00007ecca8d3a000.invoke",
+          6712394312
+        ],
+        [
+          "jdk.proxy3.$Proxy86.getGridCoverageReader",
+          6712263864
+        ],
+        [
+          "org.springframework.aop.framework.JdkDynamicAopProxy.invoke",
+          6693464856
+        ],
+        [
+          "org.springframework.web.servlet.FrameworkServlet.doGet",
+          6669769808
+        ],
+        [
+          "jdk.proxy3.$Proxy42.getMap",
+          6633972872
+        ],
+        [
+          "java.lang.invoke.DirectMethodHandle$Holder.invokeSpecial",
+          6599359808
+        ],
+        [
+          "java.lang.invoke.LambdaForm$MH.0x00007ecca8d50800.invoke",
+          6576307536
+        ],
+        [
+          "org.geoserver.ows.util.RequestObjectLogger.log",
+          6553678984
+        ],
+        [
+          "java.lang.StringBuffer.append",
+          6513057240
+        ],
+        [
+          "org.geoserver.ows.Dispatcher.execute",
+          6508019328
+        ],
+        [
+          "java.lang.String.valueOf",
+          6494129712
+        ],
+        [
+          "org.geotools.referencing.wkt.Formattable.toString",
+          6480732392
+        ],
+        [
+          "org.geotools.referencing.wkt.Formattable.toWKT",
+          6449409960
+        ],
+        [
+          "org.geotools.referencing.crs.DefaultProjectedCRS.formatWKT",
+          6434149792
+        ],
+        [
+          "org.geotools.referencing.wkt.Formatter.append",
+          6434149792
+        ],
+        [
+          "it.geosolutions.imageio.plugins.png.PNGWriter.isScanlineSupported",
+          6392260504
+        ],
+        [
+          "org.eclipse.imagen.RenderedOp.getTile",
+          5690259144
+        ],
+        [
+          "java.awt.image.ComponentSampleModel.createDataBuffer",
+          5681113704
+        ]
+      ],
+      "variant": "both",
+      "errors": 0,
+      "workload_seconds": 31.85780752899882,
+      "elapsed_seconds": 79.22025704300177
+    }
+  ],
+  "patch_build": {
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "geoserver": "3.0.2",
+    "custom_image_built": false,
+    "source_sha256": {
+      "patches/geotools.patch": "e9c2d698eeae202f4bb3bd54dad88d6934264b25e000c00ab7389e85b3c6be85",
+      "patches/imagen.patch": "6f48f67bfe7719e652cf67e3ad6c6306546f9049c0b7518f63dec26af6f7ac17",
+      "source/geotools/GridCoverageReaderHelper.java": "70167a17f7581410c74d44265d54db66769e334eef64ccbd7aa61c28a3d127e8",
+      "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
+      "source/imagen/AffineOpImage.java": "a9f045daff27801584ab41633296046dbcb0a59a401fcdc549699b604bdfd050",
+      "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
+      "tests/java/AffineScanlineRegression.java": "529ecaaa63c340317d39e9d34b6371524731da9aae3e49709e293a4309b745fc",
+      "source/imagen/AffineGeneralOpImage.java": "97ce6c3c4a3e323ee3136a24541eceb45123e9ec9d5d8a894b72c5228df7a934",
+      "source/imagen/AffineBicubicOpImage.java": "3bb4daaf6d5f0b39641f7fad7927ee8dda8199a23c5cd2dd8c564222a818e838",
+      "source/imagen/AffineNearestOpImage.java": "45c001f940fdab8ddf9926f5974f16c14a32b75f9f04e28c7d04b42a33710b96",
+      "source/imagen/AffineBilinearOpImage.java": "4ed33dba3cb732d7ba79cffe6c2ff843dd028541ecc55cb60c5670249b0d80ce",
+      "source/imagen/AffineNearestOpImage.java.original": "b933d624fc9230e7d62ddd19366b1b912fc089feb7b570166706df467f20b35a",
+      "patches/imagen-nearest.patch": "596b6a3d3311f56b5ea6f9e56856cf35c60ce58813f15b0df6a9eb3dd4c5d855",
+      "source/imagen/AffineDescriptor.java": "b3953397769ce2e46ac570727515c2bd9fa79f9a2db36e44fffbbe8a2507d8a8",
+      "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
+      "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504",
+      "source/imagen/AffineGeneralOpImage.java.original": "639d91047d7fe8766cbf673bb4563d733710303274fb137896492bacd363c240",
+      "patches/imagen-general.patch": "c3bb1156b50ad4aeb40b4694bdb8b1cb2cdde10705828f72959f1467378e6326"
+    },
+    "java": "javac 21.0.12.1",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "original_sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "patched_sha256": "93a58aafa698f868f4f03c79f3f24f5bb6d34f5703da3fdbaf90a19b5487cadb",
+        "changed_entries": [
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class",
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper$NoDataMaskOpImage.class"
+        ],
+        "bytes": 618429
+      },
+      "imagen-affine-0.9.3.jar": {
+        "original_sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "patched_sha256": "a2751b796510a29bb43ad970ac9c3a0c56976da9c325e9d5461b18bb1251110a",
+        "changed_entries": [
+          "org/eclipse/imagen/media/affine/AffineOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineGeneralOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBicubicOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineNearestOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBilinearOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+          "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+        ],
+        "bytes": 98104
+      }
+    },
+    "original_regression_exit": 1,
+    "patched_regression_exit": 0
+  },
+  "baseline_patch_build": {
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "geoserver": "3.0.2",
+    "custom_image_built": false,
+    "java": "javac 21.0.12.1",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "original_sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "patched_sha256": "989ce75b121fa9a6a790cacec54f211469f8e3e81d2b69efd19dc21e18943311",
+        "changed_entries": [
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class"
+        ],
+        "bytes": 614794
+      },
+      "imagen-affine-0.9.3.jar": {
+        "original_sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "patched_sha256": "d78d5a44cfc0e75f35751c1b8164934a39eec76a9b135cb94fe3a62d1d8018f4",
+        "changed_entries": [
+          "org/eclipse/imagen/media/affine/AffineOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineGeneralOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBicubicOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineNearestOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBilinearOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+          "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+        ],
+        "bytes": 97905
+      }
+    },
+    "original_regression_exit": 1,
+    "patched_regression_exit": 0
+  },
+  "environment": {
+    "cpu_model": "AMD Ryzen 9 9950X3D 16-Core Processor",
+    "logical_cpus": 28,
+    "total_memory_bytes": 50510602240,
+    "platform": "Linux",
+    "kernel": "6.18.33.1-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "python": "3.13.14"
+  },
+  "runtime": {
+    "geoserver": "3.0.2",
+    "geotools": "35.2",
+    "imagen": "0.9.3",
+    "geowebcache": "2.0.2",
+    "image_tag": "docker.osgeo.org/geoserver:3.0.2",
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "java_release": 17,
+    "library_directory": "/usr/local/tomcat/webapps/geoserver/WEB-INF/lib",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "source": "source/geotools/GridCoverageReaderHelper.java",
+        "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class",
+        "added_classes": [
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper$NoDataMaskOpImage.class"
+        ]
+      },
+      "imagen-affine-0.9.3.jar": {
+        "sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "source": "source/imagen/AffineOpImage.java",
+        "class": "org/eclipse/imagen/media/affine/AffineOpImage.class",
+        "additional_sources": [
+          "source/imagen/AffineGeneralOpImage.java",
+          "source/imagen/AffineBicubicOpImage.java",
+          "source/imagen/AffineNearestOpImage.java",
+          "source/imagen/AffineBilinearOpImage.java",
+          "source/imagen/AffineDescriptor.java"
+        ],
+        "additional_classes": [
+          "org/eclipse/imagen/media/affine/AffineGeneralOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBicubicOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineNearestOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBilinearOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+          "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+        ]
+      }
+    },
+    "source_sha256": {
+      "patches/geotools.patch": "e9c2d698eeae202f4bb3bd54dad88d6934264b25e000c00ab7389e85b3c6be85",
+      "patches/imagen.patch": "6f48f67bfe7719e652cf67e3ad6c6306546f9049c0b7518f63dec26af6f7ac17",
+      "source/geotools/GridCoverageReaderHelper.java": "70167a17f7581410c74d44265d54db66769e334eef64ccbd7aa61c28a3d127e8",
+      "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
+      "source/imagen/AffineOpImage.java": "a9f045daff27801584ab41633296046dbcb0a59a401fcdc549699b604bdfd050",
+      "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
+      "tests/java/AffineScanlineRegression.java": "529ecaaa63c340317d39e9d34b6371524731da9aae3e49709e293a4309b745fc",
+      "source/imagen/AffineGeneralOpImage.java": "97ce6c3c4a3e323ee3136a24541eceb45123e9ec9d5d8a894b72c5228df7a934",
+      "source/imagen/AffineBicubicOpImage.java": "3bb4daaf6d5f0b39641f7fad7927ee8dda8199a23c5cd2dd8c564222a818e838",
+      "source/imagen/AffineNearestOpImage.java": "45c001f940fdab8ddf9926f5974f16c14a32b75f9f04e28c7d04b42a33710b96",
+      "source/imagen/AffineBilinearOpImage.java": "4ed33dba3cb732d7ba79cffe6c2ff843dd028541ecc55cb60c5670249b0d80ce",
+      "source/imagen/AffineNearestOpImage.java.original": "b933d624fc9230e7d62ddd19366b1b912fc089feb7b570166706df467f20b35a",
+      "patches/imagen-nearest.patch": "596b6a3d3311f56b5ea6f9e56856cf35c60ce58813f15b0df6a9eb3dd4c5d855",
+      "source/imagen/AffineDescriptor.java": "b3953397769ce2e46ac570727515c2bd9fa79f9a2db36e44fffbbe8a2507d8a8",
+      "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
+      "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504",
+      "source/imagen/AffineGeneralOpImage.java.original": "639d91047d7fe8766cbf673bb4563d733710303274fb137896492bacd363c240",
+      "patches/imagen-general.patch": "c3bb1156b50ad4aeb40b4694bdb8b1cb2cdde10705828f72959f1467378e6326"
+    },
+    "source_archives": [
+      {
+        "name": "gt-render-35.2-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/geotools/gt-render/35.2/gt-render-35.2-sources.jar",
+        "sha256": "f141caf5569e5be494c27dd3231cd9da92af74b4d7bbd1e81017d79c8ca62519"
+      },
+      {
+        "name": "imagen-affine-0.9.3-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/eclipse/imagen/imagen-affine/0.9.3/imagen-affine-0.9.3-sources.jar",
+        "sha256": "ee4fa05ae794650a573c72deb58be3a411db9ad2459bc67303e6a632d7085bed"
+      }
+    ],
+    "validated_platform": "linux/amd64"
+  },
+  "baseline_runtime": {
+    "geoserver": "3.0.2",
+    "geotools": "35.2",
+    "imagen": "0.9.3",
+    "geowebcache": "2.0.2",
+    "image_tag": "docker.osgeo.org/geoserver:3.0.2",
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "java_release": 17,
+    "library_directory": "/usr/local/tomcat/webapps/geoserver/WEB-INF/lib",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "source": "source/geotools/GridCoverageReaderHelper.java",
+        "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class"
+      },
+      "imagen-affine-0.9.3.jar": {
+        "sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "source": "source/imagen/AffineOpImage.java",
+        "class": "org/eclipse/imagen/media/affine/AffineOpImage.class",
+        "additional_sources": [
+          "source/imagen/AffineGeneralOpImage.java",
+          "source/imagen/AffineBicubicOpImage.java",
+          "source/imagen/AffineNearestOpImage.java",
+          "source/imagen/AffineBilinearOpImage.java",
+          "source/imagen/AffineDescriptor.java"
+        ],
+        "additional_classes": [
+          "org/eclipse/imagen/media/affine/AffineGeneralOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBicubicOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineNearestOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineBilinearOpImage.class",
+          "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+          "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+        ]
+      }
+    },
+    "source_sha256": {
+      "patches/geotools.patch": "2a38b48265392090b8603cb8f7c52b396e035850e2ee237c226a9b38d407f024",
+      "patches/imagen.patch": "6f48f67bfe7719e652cf67e3ad6c6306546f9049c0b7518f63dec26af6f7ac17",
+      "source/geotools/GridCoverageReaderHelper.java": "9700354a1146996e871288fcba9028add686a8206d3d47675ea220d433993aa9",
+      "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
+      "source/imagen/AffineOpImage.java": "a9f045daff27801584ab41633296046dbcb0a59a401fcdc549699b604bdfd050",
+      "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
+      "tests/java/AffineScanlineRegression.java": "d2a2a0f1d4f5e51beb677056d55e773a938e608fa03fa02de153d8eea7130730",
+      "source/imagen/AffineGeneralOpImage.java": "9f1ddceeca9568b4f007daed8bfaada48bab025f344bfcedb47f3aa44123ac63",
+      "source/imagen/AffineBicubicOpImage.java": "3bb4daaf6d5f0b39641f7fad7927ee8dda8199a23c5cd2dd8c564222a818e838",
+      "source/imagen/AffineNearestOpImage.java": "45c001f940fdab8ddf9926f5974f16c14a32b75f9f04e28c7d04b42a33710b96",
+      "source/imagen/AffineBilinearOpImage.java": "4ed33dba3cb732d7ba79cffe6c2ff843dd028541ecc55cb60c5670249b0d80ce",
+      "source/imagen/AffineNearestOpImage.java.original": "b933d624fc9230e7d62ddd19366b1b912fc089feb7b570166706df467f20b35a",
+      "patches/imagen-nearest.patch": "596b6a3d3311f56b5ea6f9e56856cf35c60ce58813f15b0df6a9eb3dd4c5d855",
+      "source/imagen/AffineDescriptor.java": "b3953397769ce2e46ac570727515c2bd9fa79f9a2db36e44fffbbe8a2507d8a8",
+      "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
+      "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504",
+      "source/imagen/AffineGeneralOpImage.java.original": "639d91047d7fe8766cbf673bb4563d733710303274fb137896492bacd363c240",
+      "patches/imagen-general.patch": "667a97f269ae9cf6615aa9234930a630836cdab171e2f39928f77898913cd6d3"
+    },
+    "source_archives": [
+      {
+        "name": "gt-render-35.2-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/geotools/gt-render/35.2/gt-render-35.2-sources.jar",
+        "sha256": "f141caf5569e5be494c27dd3231cd9da92af74b4d7bbd1e81017d79c8ca62519"
+      },
+      {
+        "name": "imagen-affine-0.9.3-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/eclipse/imagen/imagen-affine/0.9.3/imagen-affine-0.9.3-sources.jar",
+        "sha256": "ee4fa05ae794650a573c72deb58be3a411db9ad2459bc67303e6a632d7085bed"
+      }
+    ],
+    "validated_platform": "linux/amd64"
+  }
+}
