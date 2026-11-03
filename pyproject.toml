@@ -17,6 +17,9 @@ analysis = ["matplotlib>=3.8,<4"]
 affine-probe = "affine_fix.probe:main"
 affine-validate = "affine_fix.validate:main"
 affine-lab = "affine_fix.lab:main"
+affine-build = "affine_fix.build:main"
+affine-reproduce = "affine_fix.reproduce:main"
+affine-report = "affine_fix.report:main"
 
 [tool.setuptools]
 packages = ["affine_fix"]

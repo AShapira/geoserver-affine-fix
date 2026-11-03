@@ -1,3 +1,3 @@
-# Preserve imported source/archive bytes and unified-diff context lines.
+# Preserve upstream source bytes and unified-diff context lines.
 *.patch -whitespace
-bundles/*/source/* -whitespace
+source/*/* -whitespace

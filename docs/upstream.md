@@ -3,10 +3,12 @@
 Project repository published on 2026-11-03:
 [AShapira/geoserver-affine-fix](https://github.com/AShapira/geoserver-affine-fix).
 
-Status on 2026-11-02: dedicated local project created. No upstream issues,
-forks, PRs or current-main regression builds have been created by this project.
-The 2026-10-27 investigation found pre-fix logic in both main branches; refresh
-that comparison before implementation because upstream may have changed.
+The reproduction targets the official GeoServer 3.0.2 release, with GeoTools
+35.2 and ImageN 0.9.3. See the [validation report](validation.md) for the tested
+release behavior. No upstream issues, forks, PRs or current-main regression
+builds have been created by this project. Check current upstream main and
+existing issues before preparing contributions; release validation does not
+establish the behavior of a newer development branch.
 
 ## Two independent contributions
 
@@ -20,7 +22,7 @@ that comparison before implementation because upstream may have changed.
 
 Each regression must fail on its unmodified upstream branch and pass with only
 the corresponding correction. Run normal Maven/QA checks. Keep remaining
-gutter-0 seams and the 16 recorded footprint-edge omissions separate; no public
+gutter-0 seams and any measured footprint-edge omissions separate; no public
 API changes or source TIFF transformations are intended.
 
 ## Submission and human review
@@ -43,6 +45,6 @@ References checked during the planning investigation:
 - [Eclipse handbook](https://www.eclipse.org/projects/handbook/)
 
 After acceptance, track ImageN release, GeoTools dependency adoption/release,
-GeoServer release and Kartoza packaging. Verify an official binary with the
+GeoServer release and official packaging. Verify an official binary with the
 reproduction before calling it fixed in a shipped version. Request compatible
 backports after main acceptance. Maintainers control release timing.

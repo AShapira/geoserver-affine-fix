@@ -5,7 +5,6 @@ Runs locally or in an isolated lab with explicit paths and credentials.
 from __future__ import annotations
 
 import argparse
-from concurrent.futures import ThreadPoolExecutor
 import functools
 import hashlib
 import io
@@ -15,7 +14,6 @@ import struct
 from pathlib import Path
 import time
 import xml.etree.ElementTree as ET
-import zipfile
 
 import numpy as np
 from PIL import Image
@@ -156,8 +154,7 @@ def verify(root):
     root = Path(FIXTURE_ROOT or root).resolve()
     entries = json.loads((root / 'fixtures.json').read_text())
     for item in entries:
-        # Accept the historical manifest's container paths while making new
-        # manifests relocatable and keeping all local reads in the fixture root.
+        # Keep all local reads within the selected, relocatable fixture root.
         item['path'] = str(root / 'fixtures' / (item['name'] + '.tif'))
         if digest(item['path']) != item['sha256']:
             raise RuntimeError('Fixture changed: ' + item['name'])
@@ -395,80 +392,6 @@ def scan(root, s, quick=False, names=None, label='baseline', mosaic=False, extra
     verify(root)
 
 
-def experiments(root, s):
-    entries = {i['name']: i for i in verify(root)}
-    item = entries['rot30_base']
-    selected = list(cases(item, quick=True))
-    configurations = [
-        ('aph_off', {'format_options': 'antialias:off;advancedProjectionHandling:false'}),
-        ('wrapping_off', {'format_options': 'antialias:off;mapWrapping:false'}),
-        ('aph_on', {'format_options': 'antialias:off;advancedProjectionHandling:true;mapWrapping:true'}),
-        ('wms_buffer_256', {'buffer': 256}),
-        ('duplicate_layer', {'layers': f'{WS}:{item["name"]},{WS}:{item["name"]}',
-                             'interpolations': 'nearest neighbor,nearest neighbor'}),
-    ]
-    for label, options in configurations:
-        missing = 0
-        for t in selected:
-            r = request_image(s, item, t, extra=options)
-            record(root, label, *r)
-            missing += r[0]['missing_pixels']
-        print(label, 'missing', missing, flush=True)
-    for pad in (20, 64, 128, 256):
-        label = f'expanded_{pad}'
-        missing = 0
-        for t in selected:
-            r = request_image(s, item, t, pad=pad)
-            record(root, label, *r)
-            missing += r[0]['missing_pixels']
-        print(label, 'missing', missing, flush=True)
-    try:
-        for gutter in (0, 20, 64, 128, 256):
-            for metatile in (1, 2, 4):
-                label = f'gwc_g{gutter}_m{metatile}'
-                cache_config(s, item['name'], gutter, metatile)
-                truncate(s, item['name'])
-                missing = 0
-                for t in selected:
-                    r = request_image(s, item, t, route='gwc')
-                    record(root, label, *r)
-                    missing += r[0]['missing_pixels']
-                    hit = request_image(s, item, t, route='gwc')
-                    if hit[0]['cache'] != 'HIT':
-                        raise RuntimeError('Expected a GWC HIT on repeated request')
-                print(label, 'missing', missing, flush=True)
-    finally:
-        cache_config(s, item['name'], 0, 1)
-        truncate(s, item['name'])
-    verify(root)
-
-
-def mosaics(root, s, names):
-    entries = verify(root)
-    for item in entries:
-        if names and item['name'] not in names.split(','):
-            continue
-        name = 'mosaic_' + item['name']
-        store = f'/rest/workspaces/{WS}/coveragestores/{name}'
-        if s.get(BASE + store + '.json', timeout=30).status_code == 404:
-            buf = io.BytesIO()
-            with zipfile.ZipFile(buf, 'w', compression=zipfile.ZIP_STORED) as z:
-                z.write(item['path'], Path(item['path']).name)
-            checked(s, 'PUT', store + '/file.imagemosaic', params={'configure': 'first', 'coverageName': name},
-                    data=buf.getvalue(), headers={'Content-Type': 'application/zip'})
-        checked(s, 'PUT', f'/rest/layers/{WS}:{name}.json', json={'layer': {'defaultStyle': {'name': 'affine_gray', 'workspace': WS}}})
-        cache_config(s, name, 0, 1)
-        candidate = dict(item, name=name)
-        for route in ('wms', 'gwc'):
-            missing = 0
-            for t in cases(item, quick=True):
-                result = request_image(s, candidate, t, route)
-                record(root, 'mosaic-pilot', *result)
-                missing += result[0]['missing_pixels']
-            print(name, route, 'missing', missing, flush=True)
-    verify(root)
-
-
 def configure(root, s, gutter, metatile):
     for item in verify(root):
         cache_config(s, item['name'], gutter, metatile)
@@ -478,118 +401,6 @@ def configure(root, s, gutter, metatile):
             checked(s, 'GET', f'/gwc/rest/layers/{WS}:{name}.xml').content)
     write_json(root / f'config/gutter-{gutter}-metatile-{metatile}.json',
                {'gutter': gutter, 'metatile': metatile, 'grid': GRID})
-
-
-def seams(root, s):
-    item = next(i for i in verify(root) if i['name'] == 'rot30_base')
-    for z in (18, 20, 22, 24):
-        _, x, y = tile_at(z, *world(item['gt'], 4096 * .31, 4096 * .68))
-        x, y = x // 2 * 2, y // 2 * 2
-        tl, br = tile(z, x, y), tile(z, x + 1, y + 1)
-        bbox = [tl[0], br[1], br[2], tl[3]]
-        ref, valid = expected(source_array(item['path']), item['gt'], bbox, 512, 512)
-        for interp in ('nearest neighbor', 'bilinear'):
-            label = f'seams-z{z}-' + interp.replace(' ', '-')
-            pieces = Image.new('RGB', (512, 512))
-            for dy in range(2):
-                for dx in range(2):
-                    result = request_image(s, item, (z, x + dx, y + dy), interpolation=interp)
-                    pieces.paste(result[1].convert('RGB'), (256 * dx, 256 * dy))
-            r = checked(s, 'GET', '/wms', params=wms(item['name'], bbox, interp, 512, 512))
-            big = Image.open(io.BytesIO(r.content)); big.load()
-            pmetrics, _ = metrics(pieces, ref, valid)
-            bmetrics, _ = metrics(big, ref, valid)
-            (root / 'seams').mkdir(exist_ok=True)
-            pieces.save(root / 'seams' / (label + '-tiles.png'))
-            big.save(root / 'seams' / (label + '-single.png'))
-            write_json(root / 'seams' / (label + '.json'), {'tiles': pmetrics, 'single': bmetrics,
-                       'differing_pixels': int(np.any(np.array(pieces) != np.array(big.convert('RGB')), axis=2).sum()),
-                       'single_url': r.url})
-
-
-def benchmark(root, s, label, gutter=0):
-    import threading
-    item = next(i for i in verify(root) if i['name'] == 'rot30_base')
-    cache_config(s, item['name'], gutter, 1)
-    truncate(s, item['name'])
-    sample = []
-    for z in (20, 22, 24):
-        _, cx, cy = tile_at(z, *world(item['gt'], 4096 * .5, 4096 * .6))
-        sample.extend((z, cx + (i % 8 - 3) * 4, cy + (i // 8 - 1) * 4) for i in range(32))
-    local = threading.local()
-    def perform(job):
-        if not hasattr(local, 'session'):
-            local.session = session()
-        t, route, interpolation = job
-        start = time.perf_counter()
-        try:
-            result = request_image(local.session, item, t, route, interpolation,
-                                   pad=gutter if route == 'wms' and interpolation == 'nearest neighbor' else 0,
-                                   analyze=False)[0]
-            result['total_seconds'] = time.perf_counter() - start
-            return result
-        except Exception as error:
-            return {'tile': t, 'route': route, 'error': str(error), 'seconds': time.perf_counter() - start}
-    # Three repeated blocks; alternate order to reduce systematic warm-up/order bias.
-    for repetition in range(3):
-        profiles = [('wms-nearest', 'wms', 'nearest neighbor'), ('wms-bilinear', 'wms', 'bilinear'),
-                    ('gwc-miss', 'gwc', 'nearest neighbor'), ('gwc-hit', 'gwc', 'nearest neighbor')]
-        if repetition % 2:
-            profiles.reverse()
-        for concurrency in (1, 6):
-            for profile, route, interpolation in profiles:
-                # Warm Java/rendering paths before the measured block.
-                for t in sample[:8]:
-                    perform((t, route, interpolation))
-                jobs = [(sample[i % len(sample)], route, interpolation) for i in range(96)]
-                if profile == 'gwc-miss':
-                    # Distinct metatiles: no artificial HITs among miss requests.
-                    truncate(s, item['name'], 20, 24)
-                elif profile == 'gwc-hit':
-                    for t in sample:
-                        perform((t, route, interpolation))
-                began = time.time()
-                print('BENCH_START', label, repetition, concurrency, profile, began, flush=True)
-                with ThreadPoolExecutor(max_workers=concurrency) as pool:
-                    results = list(pool.map(perform, jobs))
-                finished = time.time()
-                good = [r['seconds'] for r in results if 'error' not in r]
-                row = {'label': label, 'gutter': gutter, 'repetition': repetition, 'concurrency': concurrency, 'profile': profile,
-                       'started': began, 'finished': finished, 'elapsed': finished - began,
-                       'requests': len(results), 'errors': sum('error' in r for r in results),
-                       'median_ms': float(np.median(good) * 1000) if good else None,
-                       'p95_ms': float(np.percentile(good, 95) * 1000) if good else None,
-                       'throughput': len(results) / (finished - began),
-                       'cache_results': {key: sum(r.get('cache') == key for r in results) for key in ('HIT', 'MISS')},
-                       'raw': results}
-                with (root / ('performance-' + label + '.jsonl')).open('a') as f:
-                    f.write(json.dumps(row) + '\n')
-                print('BENCH_END', json.dumps({k: v for k, v in row.items() if k != 'raw'}), flush=True)
-    verify(root)
-
-
-def edge_probe(root, s):
-    """Vary only the expansion of requests that produced explicit exceptions."""
-    entries = {i['name']: i for i in verify(root)}
-    failures = {}
-    for name in ('baseline-errors', 'expanded128-full-errors'):
-        for line in (root / (name + '.jsonl')).read_text().splitlines():
-            r = json.loads(line)
-            if r['route'] == 'wms' and r['interpolation'] == 'nearest neighbor':
-                failures[(r['name'], tuple(r['tile']))] = r
-    output = []
-    for pad in (0, 16, 32, 64, 96, 127, 128, 129, 160, 192, 256, 512):
-        for (name, t) in failures:
-            try:
-                result = request_image(s, entries[name], t, pad=pad)
-                record(root, 'edge-pad-' + str(pad), *result)
-                output.append(result[0])
-            except RenderFailure as error:
-                output.append({'name': name, 'tile': t, 'pad': pad, 'error': str(error), 'url': error.url})
-        selected = [r for r in output if r['pad'] == pad]
-        print('edge pad', pad, 'errors', sum('error' in r for r in selected),
-              'missing', sum(r.get('missing_pixels', 0) for r in selected), flush=True)
-    write_json(root / 'edge-probe.json', output)
 
 
 def regression(root, s, pad=0):
@@ -619,134 +430,16 @@ def regression(root, s, pad=0):
     print('PASS: interior triangles, tile rows, georeferencing and footprint exception regression', flush=True)
 
 
-def transparent(root, s, color, names=None):
-    for item in verify(root):
-        name = item['name']
-        if names and name not in names.split(','):
-            continue
-        path = f'/rest/workspaces/{WS}/coveragestores/{name}/coverages/{name}.json'
-        coverage = checked(s, 'GET', path).json()
-        parameters = coverage['coverage']['parameters']['entry']
-        found = False
-        for parameter in parameters:
-            if parameter['string'][0] == 'InputTransparentColor':
-                parameter['string'][1] = color
-                found = True
-        if not found:
-            raise RuntimeError('Reader does not expose InputTransparentColor')
-        checked(s, 'PUT', path, json={'coverage': {'parameters': coverage['coverage']['parameters']}})
-        write_json(root / 'config' / (name + '-transparent-' + (color.replace('#', '') or 'none') + '.json'),
-                   checked(s, 'GET', path).json())
-        truncate(s, name)
-    print('InputTransparentColor set to', repr(color), flush=True)
-
-
-def restore(root, s):
-    path = root / 'config/wms-original.xml'
-    if path.exists():
-        checked(s, 'PUT', '/rest/services/wms/settings.xml', data=path.read_bytes(), headers={'Content-Type': 'application/xml'})
-        current = checked(s, 'GET', '/rest/services/wms/settings.xml').content
-        (root / 'config/wms-restored.xml').write_bytes(current)
-        before, after = ET.fromstring(path.read_bytes()), ET.fromstring(current)
-        # GeoServer's REST update copies effective getter defaults into previously
-        # null fields. These five values are the exact WMSInfo/Impl 3.0.1 defaults.
-        defaults = {'bboxForEachCRS': 'false', 'maxRequestedDimensionValues': '100',
-                    'remoteStyleMaxRequestTime': '60000', 'remoteStyleTimeout': '30000',
-                    'defaultGroupStyleEnabled': 'true'}
-        materialized = {}
-        for tag, value in defaults.items():
-            found = after.find(tag)
-            if before.find(tag) is None and found is not None and found.text == value:
-                materialized[tag] = value
-                after.remove(found)
-        def canonical(e):
-            return (e.tag, tuple(sorted(e.attrib.items())), (e.text or '').strip(),
-                    tuple(canonical(child) for child in e))
-        if canonical(before) != canonical(after):
-            raise RuntimeError('Restored WMS configuration differs from original snapshot')
-        write_json(root / 'config/restoration-verification.json',
-                   {'effective_wms_settings_restored': True, 'explicit_defaults_added_by_rest': materialized})
-    if (root / 'fixtures.json').exists():
-        verify(root)
-
-
 def main():
-    global BASE, FIXTURE_ROOT, SERVER_FIXTURE_DIR
-    p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--root', type=Path, default=Path('.runs/study'))
-    p.add_argument('--fixture-root', type=Path)
-    p.add_argument('--base', default=BASE)
-    p.add_argument('--username', default='admin')
-    p.add_argument('--password-file', type=Path)
-    p.add_argument('--server-fixture-dir', help='Fixture directory as seen by GeoServer')
-    p.add_argument('--size', type=int, default=4096, help='Use 4096 for the historical rendering matrix')
-    p.add_argument('stage', choices=['prepare', 'publish', 'snapshot', 'scan', 'experiments', 'mosaics', 'configure', 'transparent', 'seams', 'edge-probe', 'regression', 'benchmark', 'analyze', 'verify', 'restore'])
-    p.add_argument('--quick', action='store_true')
-    p.add_argument('--names')
-    p.add_argument('--label', default='baseline')
-    p.add_argument('--mosaic', action='store_true')
-    p.add_argument('--nearest-only', action='store_true')
-    p.add_argument('--gwc-only', action='store_true')
-    p.add_argument('--wms-only', action='store_true')
-    p.add_argument('--pad', type=int, default=0)
-    p.add_argument('--gutter', type=int, default=0)
-    p.add_argument('--metatile', type=int, default=1)
-    p.add_argument('--color', default='')
-    a = p.parse_args()
-    BASE = a.base
-    FIXTURE_ROOT = a.fixture_root.resolve() if a.fixture_root else None
-    SERVER_FIXTURE_DIR = a.server_fixture_dir
-    if a.pad < 0 or a.gutter < 0 or a.metatile < 1:
-        p.error('Padding/gutter must be nonnegative and metatile must be positive')
-    a.root.mkdir(parents=True, exist_ok=True)
-    if a.fixture_root:
-        source = (a.fixture_root / 'fixtures.json').read_bytes()
-        target = a.root / 'fixtures.json'
-        if target.exists() and target.read_bytes() != source:
-            raise RuntimeError('Existing fixture manifest differs')
-        if not target.exists():
-            target.write_bytes(source)
-    if a.stage == 'prepare':
-        if a.fixture_root:
-            p.error('prepare writes to --root; do not supply --fixture-root')
-        fixtures(a.root, a.size)
-    elif a.stage == 'verify':
-        verify(a.root)
-    elif a.stage == 'analyze':
-        from .analysis import analyze
-        analyze(a.root)
+    parser = argparse.ArgumentParser(description='Generate or verify immutable synthetic affine fixtures')
+    parser.add_argument('stage', choices=['prepare', 'verify'])
+    parser.add_argument('--root', type=Path, default=Path('.runs/fixtures'))
+    parser.add_argument('--size', type=int, default=4096, help='Rendering validation requires 4096')
+    args = parser.parse_args()
+    if args.stage == 'prepare':
+        fixtures(args.root, args.size)
     else:
-        if not a.password_file:
-            p.error('--password-file is required for server operations')
-        s = session(a.username, a.password_file)
-        if a.stage == 'snapshot':
-            snapshot(a.root, s)
-        elif a.stage == 'publish':
-            snapshot(a.root, s)
-            publish(a.root, s)
-        elif a.stage == 'scan':
-            scan(a.root, s, a.quick, a.names, a.label, a.mosaic,
-                 routes=[('gwc', 'nearest neighbor')] if a.gwc_only else
-                 [('wms', 'nearest neighbor')] if a.wms_only else
-                 [('wms', 'nearest neighbor'), ('gwc', 'nearest neighbor')] if a.nearest_only else None, pad=a.pad)
-        elif a.stage == 'experiments':
-            experiments(a.root, s)
-        elif a.stage == 'mosaics':
-            mosaics(a.root, s, a.names)
-        elif a.stage == 'configure':
-            configure(a.root, s, a.gutter, a.metatile)
-        elif a.stage == 'seams':
-            seams(a.root, s)
-        elif a.stage == 'edge-probe':
-            edge_probe(a.root, s)
-        elif a.stage == 'regression':
-            regression(a.root, s, a.pad)
-        elif a.stage == 'transparent':
-            transparent(a.root, s, a.color, a.names)
-        elif a.stage == 'benchmark':
-            benchmark(a.root, s, a.label, a.gutter)
-        elif a.stage == 'restore':
-            restore(a.root, s)
+        verify(args.root)
 
 
 if __name__ == '__main__':

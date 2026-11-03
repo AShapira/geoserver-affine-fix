@@ -12,8 +12,7 @@ The root license does not relicense upstream material:
 - Installed Python, CesiumJS and Playwright dependencies retain their package
   licenses; they are not vendored into this repository.
 
-Each bundle includes its upstream license texts and source provenance. See
-[2.28.5 source provenance](bundles/kartoza-geoserver-affine-fix/source/README.md)
-and [2.28.0 notices](bundles/kartoza-geoserver-2.28.0-affine-fix/NOTICE.md).
+See [source provenance](source/README.md), [GeoTools license](source/geotools/LICENSE.md)
+and [ImageN license](source/imagen/LICENSE.md).
 Keep the source distribution with each runtime distribution. Synthetic fixtures
 are generated from this project's deterministic pattern, not downloaded imagery.

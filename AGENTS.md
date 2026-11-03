@@ -5,14 +5,15 @@ scanline clipping and GeoTools rotated-grid cropping. Keep remaining tile seams
 and footprint-edge omissions explicit and separate from those fixes.
 
 - Preserve source raster geometry and nearest-neighbour values.
-- Historical evidence under bundles/ and the original study is dated evidence,
-  not proof of current upstream behavior. Never rewrite it with a new test run.
+- Target the official GeoServer 3.0.2 release and the exact libraries pinned in
+  runtime/lock.json. Update evidence only from a fresh, controlled reproduction.
 - Use generated synthetic fixtures and isolated lab containers. Do not use or
   alter retained benchmark services, catalogs, volumes or credentials.
 - Keep generated JARs, fixture data, raw responses, passwords and build outputs
   out of Git. Preserve all upstream licenses and source provenance.
-- Run `python -m unittest discover -s tests -v`, each bundle's startup tests,
-  and `node --test viewer/tests/adapter.test.mjs` for relevant changes.
+- Run `python -m unittest discover -s tests -v` and
+  `node --test viewer/tests/adapter.test.mjs` for relevant changes. Runtime and
+  Java changes also require the official-image build and rendering reproduction.
 - Upstream forks belong in separate checkouts (the ignored upstream/ directory
   is an option). Contributions target upstream main before backports.
 - Prepare concrete issue/PR drafts before requesting publication approval.

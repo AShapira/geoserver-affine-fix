@@ -1,0 +1,377 @@
+{
+  "checked_utc": "2026-11-03T04:31:32.427877+00:00",
+  "lock": {
+    "geoserver": "3.0.2",
+    "geotools": "35.2",
+    "imagen": "0.9.3",
+    "geowebcache": "2.0.2",
+    "image_tag": "docker.osgeo.org/geoserver:3.0.2",
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "java_release": 17,
+    "library_directory": "/usr/local/tomcat/webapps/geoserver/WEB-INF/lib",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "source": "source/geotools/GridCoverageReaderHelper.java",
+        "class": "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class"
+      },
+      "imagen-affine-0.9.3.jar": {
+        "sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "source": "source/imagen/AffineOpImage.java",
+        "class": "org/eclipse/imagen/media/affine/AffineOpImage.class"
+      }
+    },
+    "source_sha256": {
+      "patches/geotools.patch": "9c4d759d0749cb82dd815a43a8ded2e840ce0bff521ba764f5fb628577f69e26",
+      "patches/imagen.patch": "8f949790c847f68289106637684581f566a4c499a79ceead4ee6f7ffadd66631",
+      "source/geotools/GridCoverageReaderHelper.java": "8d38d7f996b4e1233a76d76dbddc99a27ff5eddabf9a4921687ff9fc30a6631a",
+      "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
+      "source/imagen/AffineOpImage.java": "09d15b6b1293863f13657984b2690ddda062263f681d5761538a13415c3eeedc",
+      "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
+      "tests/java/AffineScanlineRegression.java": "085b1e2d7c6e1a1460067e0ef2ffe9f45edd9c3f6b94402c10c6bdea32bbc9ca"
+    },
+    "source_archives": [
+      {
+        "name": "gt-render-35.2-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/geotools/gt-render/35.2/gt-render-35.2-sources.jar",
+        "sha256": "f141caf5569e5be494c27dd3231cd9da92af74b4d7bbd1e81017d79c8ca62519"
+      },
+      {
+        "name": "imagen-affine-0.9.3-sources.jar",
+        "url": "https://repo.osgeo.org/repository/release/org/eclipse/imagen/imagen-affine/0.9.3/imagen-affine-0.9.3-sources.jar",
+        "sha256": "ee4fa05ae794650a573c72deb58be3a411db9ad2459bc67303e6a632d7085bed"
+      }
+    ],
+    "validated_platform": "linux/amd64"
+  },
+  "quick": false,
+  "requests_per_treatment_and_route": 1180,
+  "fixtures_unchanged": true,
+  "fixture_sha256": {
+    "rot0_base": "18f749604dc2e3dedeaa48e69fafdc65b118e6f1ed625a959a8fb8b9dc8b1441",
+    "rot0_ovr": "22a520a910491255c53ae2afc350e8d3285398e69422b03740a421cf9aeecadf",
+    "rot15_base": "e2e07ea835daf7e3ae727733d7010dcb0f957a868fca0c8845e64b1038e05a83",
+    "rot15_ovr": "f3ad03b9d057c057b3c1cbd5d0947bf54260819225189b7fb4f59a9ae4da3039",
+    "rot30_base": "8ef770c3cfe9aa115705f23cb033881f3471057ad9d633b00edf5a9352811c9f",
+    "rot30_ovr": "7da0e04b82fdb178bae53afeffbfea8e18bdc7708e24610c271aec2f2cb90270",
+    "rot45_base": "a2ba3126f3e71a035f5f9876343f3997739b981af6894297c99ee949a2b4123a",
+    "rot45_ovr": "24ba592f95aac756ab8892dad005dd136bd1c88a6dd3be87632217dbf7c9d935",
+    "rot75_base": "bdf27c39168d37a7ba2128a1469801e3ddbab0bb6d4e8a5f10877aa47433a3bb",
+    "rot75_ovr": "98c84b34ac35677053a83e5e3fefbc3b0d22f7083cd2e387da3028afb4dbe9e8",
+    "rotm30_base": "2c058c2c8a013e1941c95191c35d9e3045c8592123d290ffe94bea487451ac37",
+    "rotm30_ovr": "1ace31907b9dd57f38d074875c9a389daf14b3940d381496394a4dbedaddbb07",
+    "shear_base": "aee0633f6c37d88e5a2624e65f2f989848f164a9965a001fe72613c4fae0659f",
+    "shear_ovr": "2e22ee29865e3fb4b21ccca69559d231f056ccc9d7a219f0efab6f763cc854c1"
+  },
+  "versions": {
+    "stock": {
+      "about": {
+        "resource": [
+          {
+            "@name": "GeoServer",
+            "Build-Timestamp": "16-Oct-2026 15:07",
+            "Version": "3.0.2",
+            "Git-Revision": "61a96a7e1529141c6cad7d733628299aec4ea2fb"
+          },
+          {
+            "@name": "GeoTools",
+            "Build-Timestamp": "16-Oct-2026 01:58",
+            "Version": 35.2,
+            "Git-Revision": "b38c801a7c5aaa5755661c7b8cbef89430a4491d"
+          },
+          {
+            "@name": "GeoWebCache",
+            "Version": "2.0.2",
+            "Git-Revision": "2.0.x/3bcdd830d7f49b3e429a997a405d1ec9c8d5b9ca"
+          }
+        ]
+      }
+    },
+    "patched": {
+      "about": {
+        "resource": [
+          {
+            "@name": "GeoServer",
+            "Build-Timestamp": "16-Oct-2026 15:07",
+            "Version": "3.0.2",
+            "Git-Revision": "61a96a7e1529141c6cad7d733628299aec4ea2fb"
+          },
+          {
+            "@name": "GeoTools",
+            "Build-Timestamp": "16-Oct-2026 01:58",
+            "Version": 35.2,
+            "Git-Revision": "b38c801a7c5aaa5755661c7b8cbef89430a4491d"
+          },
+          {
+            "@name": "GeoWebCache",
+            "Version": "2.0.2",
+            "Git-Revision": "2.0.x/3bcdd830d7f49b3e429a997a405d1ec9c8d5b9ca"
+          }
+        ]
+      }
+    }
+  },
+  "build": {
+    "image": "docker.osgeo.org/geoserver@sha256:2da4103f1071a7b9e470dde5e547b851b1b3fa0d492427e803979cb2eaf0ccca",
+    "geoserver": "3.0.2",
+    "custom_image_built": false,
+    "java": "javac 21.0.12.1",
+    "libraries": {
+      "gt-render-35.2.jar": {
+        "original_sha256": "a77d472d907255851a2b8202b0bb806fa089184c5f636e0237335e4a2018ec86",
+        "patched_sha256": "d0ece67d196f2c423accbdecfa8ccda086e891ca114f9fbf1cdd5bcc11b8ab39",
+        "changed_entries": [
+          "org/geotools/renderer/lite/gridcoverage2d/GridCoverageReaderHelper.class"
+        ],
+        "bytes": 613513
+      },
+      "imagen-affine-0.9.3.jar": {
+        "original_sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
+        "patched_sha256": "b41728e87b1a508c0a6b828b1f9b6e2637c09d224b336210ec675a5532478322",
+        "changed_entries": [
+          "org/eclipse/imagen/media/affine/AffineOpImage.class"
+        ],
+        "bytes": 122680
+      }
+    },
+    "original_regression_exit": 1,
+    "patched_regression_exit": 0
+  },
+  "regression": {
+    "passed": true,
+    "failures": []
+  },
+  "cache": [
+    {
+      "route": "gwc",
+      "tile": [
+        24,
+        10021196,
+        6798186
+      ],
+      "cache": "MISS",
+      "missing_pixels": 0
+    },
+    {
+      "route": "gwc",
+      "tile": [
+        24,
+        10021196,
+        6798186
+      ],
+      "cache": "HIT",
+      "missing_pixels": 0
+    }
+  ],
+  "treatments": {
+    "stock-g0": {
+      "wms": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3980676,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3645102,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1178
+        }
+      },
+      "gwc": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3980676,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3645102,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1178
+        }
+      }
+    },
+    "stock-g1": {
+      "wms": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3646979,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3389890,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1178
+        }
+      },
+      "gwc": {
+        "successful_requests": 1178,
+        "errors": 2,
+        "missing_pixels": 3646979,
+        "interior_requests": 658,
+        "interior_missing_pixels": 3389890,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1178
+        }
+      }
+    },
+    "patched-g0": {
+      "wms": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 1714,
+        "interior_requests": 658,
+        "interior_missing_pixels": 1536,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1180
+        }
+      },
+      "gwc": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 1714,
+        "interior_requests": 658,
+        "interior_missing_pixels": 1536,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1180
+        }
+      }
+    },
+    "patched-g1": {
+      "wms": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 16,
+        "interior_requests": 658,
+        "interior_missing_pixels": 0,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "null": 1180
+        }
+      },
+      "gwc": {
+        "successful_requests": 1180,
+        "errors": 0,
+        "missing_pixels": 16,
+        "interior_requests": 658,
+        "interior_missing_pixels": 0,
+        "north_up_missing_pixels": 0,
+        "cache_headers": {
+          "MISS": 1180
+        }
+      }
+    }
+  },
+  "servers_stopped": true,
+  "passed": true,
+  "failures": [],
+  "illustrations": {
+    "triangles": {
+      "stock-g0": {
+        "name": "rot30_base",
+        "tile": [
+          24,
+          10021196,
+          6798186
+        ],
+        "route": "wms",
+        "pad": 0,
+        "valid_pixels": 65536,
+        "missing_pixels": 29022,
+        "mae_valid_nonblank": 0.004464041189680671
+      },
+      "patched-g0": {
+        "name": "rot30_base",
+        "tile": [
+          24,
+          10021196,
+          6798186
+        ],
+        "route": "wms",
+        "pad": 0,
+        "valid_pixels": 65536,
+        "missing_pixels": 0,
+        "mae_valid_nonblank": 0.00689697265625
+      },
+      "stock-g1": {
+        "name": "rot30_base",
+        "tile": [
+          24,
+          10021196,
+          6798186
+        ],
+        "route": "wms",
+        "pad": 1,
+        "valid_pixels": 65536,
+        "missing_pixels": 29024,
+        "mae_valid_nonblank": 0.007066170026292726
+      },
+      "patched-g1": {
+        "name": "rot30_base",
+        "tile": [
+          24,
+          10021196,
+          6798186
+        ],
+        "route": "wms",
+        "pad": 1,
+        "valid_pixels": 65536,
+        "missing_pixels": 0,
+        "mae_valid_nonblank": 0.011932373046875
+      }
+    },
+    "checkerboard": {
+      "stock-g0": {
+        "name": "rot30_base",
+        "tile": [
+          20,
+          626312,
+          424824
+        ],
+        "route": "wms",
+        "pad": 0,
+        "valid_pixels": 65536,
+        "missing_pixels": 1723,
+        "mae_valid_nonblank": 0.0
+      },
+      "patched-g0": {
+        "name": "rot30_base",
+        "tile": [
+          20,
+          626312,
+          424824
+        ],
+        "route": "wms",
+        "pad": 0,
+        "valid_pixels": 65536,
+        "missing_pixels": 0,
+        "mae_valid_nonblank": 0.0
+      },
+      "stock-g1": {
+        "name": "rot30_base",
+        "tile": [
+          20,
+          626312,
+          424824
+        ],
+        "route": "wms",
+        "pad": 1,
+        "valid_pixels": 65536,
+        "missing_pixels": 241,
+        "mae_valid_nonblank": 0.0
+      },
+      "patched-g1": {
+        "name": "rot30_base",
+        "tile": [
+          20,
+          626312,
+          424824
+        ],
+        "route": "wms",
+        "pad": 1,
+        "valid_pixels": 65536,
+        "missing_pixels": 0,
+        "mae_valid_nonblank": 0.0
+      }
+    }
+  }
+}

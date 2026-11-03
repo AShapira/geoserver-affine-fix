@@ -1,4 +1,4 @@
-"""Create a disposable Kartoza lab with its own catalog and copied fixtures."""
+"""Create an isolated official GeoServer lab with its own catalog and copied fixtures."""
 import argparse
 import hashlib
 import io
@@ -14,7 +14,7 @@ import requests
 
 from . import probe
 
-DEFAULT_IMAGE = 'docker.io/kartoza/geoserver@sha256:a500f30ec973014be203851290e89996cfccfe4335b1b4345047f64eda05521d'
+ROOT = Path(__file__).resolve().parents[1]
 LABEL = 'org.geoserver-affine-fix.lab'
 SERVER_FIXTURES = '/opt/affine-fixtures'
 
@@ -50,19 +50,42 @@ def stop(state, root):
     call(state['engine'], 'stop', '--time', '20', state['container_id'])
 
 
-def configure_lab_rate_limit(state, root):
-    """Remove only the per-user WMS rate rule from this lab's temporary catalog."""
-    owned_container(state)
-    path = '/opt/geoserver/data_dir/controlflow.properties'
-    result = call(state['engine'], 'exec', state['container_id'], 'cat', path, check=False)
-    if result.returncode:
-        return
-    filtered = b'\n'.join(line for line in result.stdout.splitlines()
-        if not line.strip().startswith(b'user.ows.wms.getmap=')) + b'\n'
-    if filtered != result.stdout:
-        (root / 'controlflow-original.properties').write_bytes(result.stdout)
-        call(state['engine'], 'exec', '-i', state['container_id'], 'tee', path, data=filtered)
-        time.sleep(3)
+def load_lock():
+    return json.loads((ROOT / 'runtime/lock.json').read_text())
+
+
+def image_mounts(config):
+    paths = set(config.get('Config', {}).get('Volumes') or {})
+    paths.add('/opt/geoserver_data')
+    return [arg for path in sorted(paths) for arg in ('--tmpfs', path)]
+
+
+def patch_payload(directory, lock):
+    manifest = json.loads((directory / 'build.json').read_text())
+    if manifest['image'] != lock['image'] or set(manifest['libraries']) != set(lock['libraries']):
+        raise RuntimeError('Patch was not built for the pinned official image')
+    files = {}
+    for jar, spec in lock['libraries'].items():
+        details = manifest['libraries'][jar]
+        if details['original_sha256'] != spec['sha256'] or details['changed_entries'] != [spec['class']]:
+            raise RuntimeError('Patch targets an unexpected library or class: ' + jar)
+        payload = directory / jar
+        if hashlib.sha256(payload.read_bytes()).hexdigest() != details['patched_sha256']:
+            raise RuntimeError('Patch payload checksum mismatch: ' + jar)
+        files[jar] = payload
+    return files
+
+
+def install_patch(engine, container, directory, lock):
+    files = patch_payload(directory, lock)
+    lib = lock['library_directory']
+    for jar, spec in lock['libraries'].items():
+        data = call(engine, 'cp', container + ':' + lib + '/' + jar, '-').stdout
+        with tarfile.open(fileobj=io.BytesIO(data)) as tar:
+            members = [m for m in tar.getmembers() if m.isfile()]
+            if len(members) != 1 or hashlib.sha256(tar.extractfile(members[0]).read()).hexdigest() != spec['sha256']:
+                raise RuntimeError('Refusing to replace a different original JAR: ' + jar)
+    call(engine, 'cp', '-', container + ':' + lib, data=archive(files))
 
 
 def up(args):
@@ -77,11 +100,14 @@ def up(args):
     if len(entries) != 14 or any(e['size'] != 4096 for e in entries):
         raise RuntimeError('Generate the full 4096-pixel fixtures before starting a lab')
     engine = [args.engine] + (['--connection', args.connection] if args.connection else [])
+    lock = load_lock()
+    selected_image = lock['image']
+    if args.patch:
+        patch_payload(args.patch, lock)
     if args.pull:
-        call(engine, 'pull', args.image)
-    config = json.loads(call(engine, 'image', 'inspect', args.image).stdout)[0]
-    mounts = [arg for path in sorted(config.get('Config', {}).get('Volumes') or {})
-              for arg in ('--tmpfs', path)]
+        call(engine, 'pull', selected_image)
+    config = json.loads(call(engine, 'image', 'inspect', selected_image).stdout)[0]
+    mounts = image_mounts(config)
     owner = uuid.uuid4().hex
     name = 'geoserver-affine-lab-' + owner[:12]
     password = secrets.token_hex(24)
@@ -90,39 +116,24 @@ def up(args):
     password_file.chmod(0o600)
     env = root / 'server.env'
     env.write_text('GEOSERVER_ADMIN_USER=admin\nGEOSERVER_ADMIN_PASSWORD=' + password
-                   + '\nSHOW_PASSWORD=false\nINITIAL_MEMORY=512M\nMAXIMUM_MEMORY=2G\nSAMPLE_DATA=false\n')
+                   + '\nSKIP_DEMO_DATA=true\nINSTALL_EXTENSIONS=false\nEXTRA_JAVA_OPTS=-Xms512m -Xmx2g\n')
     env.chmod(0o600)
     command = ['create', '--pull=never', '--name', name, '--label', LABEL + '=' + owner,
                '--cpus', '2', '--memory', '6g', '-p', f'127.0.0.1:{args.port}:8080',
                '--env-file', str(env), *mounts]
-    if args.bundle:
-        command += ['--entrypoint', '/bin/bash']
-    command += [args.image]
-    if args.bundle:
-        command += ['/opt/affine-fix/start-with-affine-fix.sh']
+    command += [selected_image]
     container_id = call(engine, *command).stdout.decode().strip()
     state = {'owner': owner, 'container_id': container_id, 'container_name': name,
-             'engine': engine, 'image': args.image, 'image_id': config['Id'],
+             'engine': engine, 'image': selected_image, 'image_id': config['Id'],
              'url': f'http://127.0.0.1:{args.port}/geoserver',
              'fixtures': str(args.fixtures.resolve()), 'server_fixture_dir': SERVER_FIXTURES,
-             'password_file': str(password_file), 'bundle': str(args.bundle.resolve()) if args.bundle else None}
+             'password_file': str(password_file), 'patch': str(args.patch.resolve()) if args.patch else None}
     probe.write_json(state_file, state)
     state_file.chmod(0o600)
     try:
         files = {'affine-fixtures/' + Path(e['path']).name: Path(e['path']) for e in entries}
-        if args.bundle:
-            # Copy only installation inputs, not private artifacts or source trees.
-            names = ['apply-affine-fix.sh', 'start-with-affine-fix.sh', 'jars.sha256.tsv']
-            manifest = (args.bundle / 'jars.sha256.tsv').read_text().splitlines()
-            for row in manifest:
-                jar, _, patched = row.split('\t')
-                if Path(jar).name != jar:
-                    raise ValueError('Invalid JAR filename in bundle manifest')
-                payload = args.bundle / 'jars' / jar
-                if hashlib.sha256(payload.read_bytes()).hexdigest() != patched:
-                    raise RuntimeError('Bundle payload checksum mismatch: ' + jar)
-                names.append('jars/' + jar)
-            files.update({'affine-fix/' + n: args.bundle / n for n in names})
+        if args.patch:
+            install_patch(engine, container_id, args.patch, lock)
         call(engine, 'cp', '-', container_id + ':/opt', data=archive(files))
         call(engine, 'start', container_id)
         session = requests.Session()
@@ -132,8 +143,13 @@ def up(args):
             try:
                 response = session.get(state['url'] + '/rest/about/version.json', timeout=5)
                 if response.ok:
-                    probe.write_json(root / 'version.json', response.json())
-                    configure_lab_rate_limit(state, root)
+                    version = response.json()
+                    installed = {r['@name']: str(r['Version']) for r in version['about']['resource']}
+                    for component, expected in [('GeoServer', lock['geoserver']), ('GeoTools', lock['geotools']),
+                                                 ('GeoWebCache', lock['geowebcache'])]:
+                        if installed.get(component) != expected:
+                            raise RuntimeError('Unexpected running ' + component + ' version')
+                    probe.write_json(root / 'version.json', version)
                     print('Ready:', state['url'], flush=True)
                     print('Lab state:', state_file, flush=True)
                     return state
@@ -156,10 +172,9 @@ def main():
     parser.add_argument('--fixtures', type=Path, default=Path('.runs/fixtures'))
     parser.add_argument('--engine', default='podman')
     parser.add_argument('--connection')
-    parser.add_argument('--image', default=DEFAULT_IMAGE)
     parser.add_argument('--port', type=int, default=18096)
     parser.add_argument('--pull', action='store_true', help='Fetch the selected image before creation')
-    parser.add_argument('--bundle', type=Path, help='A rebuilt, version-matched Kartoza installation bundle')
+    parser.add_argument('--patch', type=Path, help='Output directory from affine-build')
     args = parser.parse_args()
     if args.port < 1024 or args.port > 65535:
         parser.error('--port must be between 1024 and 65535')

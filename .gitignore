@@ -9,8 +9,6 @@ dist/
 .env
 node_modules/
 upstream/
-bundles/*/jars/
 *.zip
 *.zip.sha256
-bundles/*/SHA256SUMS
-bundles/*/SOURCE_SHA256SUMS
+viewer/evidence/

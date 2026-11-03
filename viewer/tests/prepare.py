@@ -39,5 +39,6 @@ for z in (20, 22, 24):
     benchmark.extend([z, cx + (i % 8 - 3) * 4, cy + (i // 8 - 1) * 4] for i in range(32))
 (ROOT / 'fixtures.json').write_text(json.dumps([{k: v for k, v in f.items() if k != 'path'} for f in fixtures], indent=2) + '\n')
 (ROOT / 'cases.json').write_text(json.dumps({'matrix': matrix, 'benchmark': benchmark}, separators=(',', ':')) + '\n')
+(ROOT / 'evidence').mkdir(exist_ok=True)
 (ROOT / 'evidence/fixture-checksums.json').write_text(json.dumps(checksums, indent=2) + '\n')
 print(f'Prepared {len(matrix)} independent reference tiles and {len(benchmark)} benchmark requests; verified {len(fixtures)} TIFF checksums.')

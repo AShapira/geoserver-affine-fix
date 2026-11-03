@@ -1,124 +1,128 @@
 # GeoServer affine-raster fixes
 
-[GitHub repository](https://github.com/AShapira/geoserver-affine-fix)
+Reproduce two raster-rendering defects on **official GeoServer 3.0.2** and test
+candidate source fixes in **GeoTools 35.2** and **Eclipse ImageN 0.9.3**.
+GeoServer 3.0.2 is the [current stable release](https://geoserver.org/download/),
+verified on 2026-11-03. The test runtime uses the project's
+[official container image](https://github.com/geoserver/docker), pinned by digest
+in [runtime/lock.json](runtime/lock.json).
 
-Reproduce and contribute two fixes for rotated/sheared GeoTIFF rendering while
-preserving the source affine transform and nearest-neighbour pixel values:
+These are experimental source corrections, **not an accepted upstream fix**.
+The tests preserve the TIFF's rotation/shear, source pixels and nearest-neighbour
+sampling. No north-up conversion, smoothing or resampling of the source is used.
 
-- **GeoTools:** avoid premature map-space cropping of rotated source pixels.
-- **Eclipse ImageN:** correct exclusive scanline bounds and empty intersections.
+## The visible bug
 
-This is an independent reproduction and contribution project. The patches are
-experimental and have not been accepted upstream. The original full matrix used
-a **one-pixel gutter**, with zero failed requests or missing interior pixels and
-**16 isolated footprint-edge omissions per serving path**. It is not a claim of
-seamless rendering without a gutter. See the [original study](docs/rotated-geotiff-study.md),
-[compatibility results](bundles/kartoza-geoserver-affine-fix/COMPATIBILITY.md), and
-[upstream status](docs/upstream.md).
+A rotated GeoTIFF contains valid data throughout this map tile, but the stock
+server drops triangular areas. White pixels inside this tile are missing output,
+not gaps in the source TIFF. Each row compares stock and patched code with the
+**same request gutter** and the same map extent. The right column is calculated
+independently from the source affine transform.
 
-The [project creation validation](docs/validation.md) records the fresh local
-checks separately from that historical evidence.
+![Actual stock and patched GeoServer responses compared with independently expected pixels](docs/assets/triangles.png)
 
-## Local setup and tests
+**GeoTools correction:** `GridCoverageReaderHelper.cropCoverage` crops a rotated
+source grid in map coordinates before final rendering. That crop can discard
+source pixels that the output still needs. For same-CRS rotated/sheared grids
+using nearest interpolation, the candidate change keeps the reader-selected
+pixels available to the renderer. See the [source diff](patches/geotools.patch).
 
-Python 3.11+ is required. The locked environment was tested with Python 3.13.
-From this repository root:
+The checkerboard example shows that the correction retains sharp source pixels:
+
+![Checkerboard rendering before and after the source corrections](docs/assets/checkerboard.png)
+
+## The separate clipping defect
+
+ImageN's affine scanline clipping includes a sample at the exclusive upper source
+bound. This can select an invalid sample and cause an array-bounds exception.
+The second correction fixes endpoint rounding for both traversal directions and
+represents a disjoint intersection as empty. See the [source diff](patches/imagen.patch).
+
+![Illustration of the exclusive source bound and the incorrect extra sample](docs/assets/scanline-bounds.png)
+
+This diagram is an illustration; the two comparisons above contain actual server
+responses. A direct Java regression fails against the original ImageN library
+and passes against the correction, including **32,448 enumerated scanlines**
+with positive, negative, fractional and zero increments.
+
+Across the full matrix, the patch with gutter 1 removed all rendering errors and
+missing interior pixels. **Sixteen outer-footprint pixels per route still remain
+missing**; this is a separate limitation. See the [measured results](docs/validation.md).
+
+## Reproduce the comparison
+
+Requirements: Python 3.11+ (tested with 3.13), [uv](https://docs.astral.sh/uv/),
+and Podman or Docker. The pinned runtime was validated on Linux/WSL amd64.
+Rasterio supplies GDAL through its wheel; no host GDAL installation is required.
 
 ```bash
+git clone https://github.com/AShapira/geoserver-affine-fix.git
+cd geoserver-affine-fix
 uv sync --frozen --all-extras
-uv run python -m unittest discover -s tests -v
-uv run python -m unittest discover -s bundles/kartoza-geoserver-affine-fix/tests -p 'test_*.py' -v
-uv run python -m unittest discover -s bundles/kartoza-geoserver-2.28.0-affine-fix/tests -p 'test_*.py' -v
-node --test viewer/tests/adapter.test.mjs
+uv run affine-reproduce --pull --root .runs/geoserver-3.0.2
 ```
 
-Without uv, create a virtual environment and run `python -m pip install -e '.[fixtures,analysis]'`.
-The `fixtures` extra uses Rasterio's GDAL implementation; no separate host GDAL
-installation is needed on platforms with a supported wheel. Node 22+ is needed
-only for the optional viewer. The unit tests do not contact GeoServer.
+Use `--engine docker` for Docker. The command generates 14 immutable synthetic
+TIFFs, compiles the two corrected classes against the exact official libraries,
+and runs stock and patched servers sequentially. Each server gets a fresh
+catalog and is tested with gutters **0 and 1**, using direct WMS and GWC/WMTS.
+Caches are cleared between treatments and cache MISS responses are verified.
 
-## Reproduce on a fresh isolated server
+The servers bind to localhost, copy fixtures into their containers and use
+temporary catalogs. They do not mount host directories. Generated credentials,
+logs, JARs and raw responses remain under the ignored run directory. Both test
+servers are stopped when their work finishes. Choose a new `--root` for each run;
+existing run directories are not silently reused. `--quick` runs an interior
+subset instead of the full matrix, and `--port` selects another localhost port.
 
-The lab uses Docker or Podman, binds its HTTP port to localhost, copies synthetic
-TIFFs into a new container, and puts image-declared catalog/cache volumes in
-temporary filesystems. It does not mount the old benchmark volume or any host
-directory. Its generated password and state stay in ignored `.runs/` files.
-The lab removes only Kartoza's per-user WMS rate rule in its temporary catalog,
-retaining concurrency limits, so HTTP 429 throttling does not obscure rendering
-results. The original rule file is saved locally.
+The selected rendering regression checks missing interior pixels, source values
+and the footprint-edge exception. The [validation report](docs/validation.md)
+records the full matrix and remaining limitations. **A gutter is still relevant
+at tile boundaries; the code changes alone are not a claim of seamless output.**
+For direct WMS the runner expands the request at unchanged resolution and crops
+the central tile; for GWC it configures the layer's gutter.
+
+To regenerate the README figures and compact evidence from a completed run:
+
+```bash
+uv run affine-report --run .runs/geoserver-3.0.2 --output docs
+```
+
+## Work on one server
+
+For an interactive lab and the optional [Cesium gutter viewer](viewer/README.md):
 
 ```bash
 uv run affine-probe prepare --root .runs/fixtures
-uv run affine-lab up --pull
-uv run affine-validate publish --url http://127.0.0.1:18096/geoserver --password-file .runs/lab/admin-password
-uv run affine-validate scan --url http://127.0.0.1:18096/geoserver --password-file .runs/lab/admin-password --quick --label stock-g0
-uv run affine-lab stop
-```
+uv run affine-lab up --pull --root .runs/lab
+uv run affine-validate publish --password-file .runs/lab/admin-password
+# Inspect or test the stock server at http://127.0.0.1:18096/geoserver
+uv run affine-lab stop --root .runs/lab
 
-`affine-lab` defaults to the exact Kartoza 2.28.5 image in the historical build
-lock. The first pull is approximately 1.5 GB compressed. `--engine docker`,
-`--connection NAME` (Podman), `--image`, `--port`, `--root`, and `--fixtures`
-select explicit alternatives. Images must use the Kartoza startup contract.
-`stop` retains the container and local evidence; `down` removes only the container
-whose ownership label matches that lab's saved state. Tmpfs catalogs disappear
-on stop; start a fresh lab root for each new treatment.
-
-The stock scan **is expected to expose missing pixels**. A scan records defects;
-it is not a pass/fail assertion of a fix. `affine-validate regression` performs
-the selected assertions and is expected to fail on stock. Results and PNGs go to
-`.runs/rendering/`; use a fresh `--label` and `--output` for each treatment.
-Scan labels resume previous requests, including failures.
-Run `affine-validate configure` with the intended gutter before a new scan to
-clear this lab's layer caches if earlier requests have populated them.
-
-For a full matrix omit `--quick`. The 14 default fixtures are 4096 × 4096 and
-occupy approximately 51 MB. A smaller `affine-probe prepare --size 32` is useful
-for fixture tests, but is rejected by the rendering validator. Fixture files are
-read-only and existing checksums are verified before reuse.
-
-## Test the existing correction
-
-The source repository carries builders and matching source archives, not compiled
-JAR payloads. Build the 2.28.5 bundle using its pinned stock image:
-
-```bash
-uv run python bundles/kartoza-geoserver-affine-fix/build.py --engine podman
-uv run affine-lab up --root .runs/patched-lab --port 18097 --bundle bundles/kartoza-geoserver-affine-fix
-uv run affine-validate publish --url http://127.0.0.1:18097/geoserver --password-file .runs/patched-lab/admin-password --output .runs/patched
-uv run affine-validate configure --url http://127.0.0.1:18097/geoserver --password-file .runs/patched-lab/admin-password --output .runs/patched --gutter 1
-uv run affine-validate regression --url http://127.0.0.1:18097/geoserver --password-file .runs/patched-lab/admin-password --output .runs/patched --gutter 1
+uv run affine-build
+uv run affine-lab up --root .runs/patched-lab --patch .artifacts/patch
+uv run affine-validate publish --password-file .runs/patched-lab/admin-password --output .runs/patched
+uv run affine-validate configure --password-file .runs/patched-lab/admin-password --output .runs/patched --gutter 1
+uv run affine-validate regression --password-file .runs/patched-lab/admin-password --output .runs/patched --gutter 1
 uv run affine-lab stop --root .runs/patched-lab
 ```
 
-The builder checks original JAR/source hashes, compiles two classes in a unique
-network-isolated container, runs the failing-original/passing-patched Java
-regression, and verifies that no other JAR entries changed. Build output stays in
-the bundle's ignored `jars/` and `.artifacts/` folders. For other exact versions,
-see [bundle instructions](bundles/kartoza-geoserver-affine-fix/README.md) and
-[compatibility tools](bundles/kartoza-geoserver-affine-fix/compatibility/README.md).
+`affine-lab down --root …` removes only that lab's labelled container and keeps
+local evidence. The builder verifies source and JAR hashes and changes exactly
+one class per JAR. No custom server image is built.
 
-`affine-validate` defaults to fixtures at `.runs/fixtures` and server fixture
-location `/opt/affine-fixtures`. Both are configurable. Only point catalog-writing
-commands at an isolated test server. GWC gutter settings do not apply to direct
-WMS; the validator separately expands/crops WMS requests at the same resolution.
+## Tests and contribution status
 
-## Project layout and provenance
+```bash
+uv run python -m unittest discover -s tests -v
+node --test viewer/tests/adapter.test.mjs
+```
 
-| Location | Purpose |
-|---|---|
-| `affine_fix/` | Fixture generator, oracle, WMS/GWC probes, lab lifecycle, analysis |
-| `tests/` | Lightweight regressions and original Java clipping regression |
-| `patches/` | GeoTools 35.1 / ImageN 0.9.2 candidate diffs |
-| `bundles/` | Version-specific builders, installers, matching sources, historical evidence |
-| `viewer/` | Optional Cesium comparison; see its standalone instructions |
-| `docs/` | Study, upstream plan, validation and migration notes |
-| `provenance/import.json` | Original commit, file mapping and pre-adaptation SHA-256 values |
+Node 22+ is only needed for the optional viewer and its tests. GitHub CI runs
+these lightweight tests; the container rendering matrix is a separate integration
+check. [docs/upstream.md](docs/upstream.md) describes the two upstream contribution
+paths and the additional current-main tests needed before submission.
 
-Imported from `AShapira/small-gis-demos` at commit
-`45b8aeb44e594b75480b97d1cb8d9f1793d57503`. Historical snapshots remain there.
-New test output must not overwrite the imported evidence. Upstream contributions
-will be made in separate GeoTools/ImageN forks, not by vendoring those repositories.
-
-Original tooling is MIT licensed. GeoTools and ImageN adaptations retain their
-upstream licenses; see [license scope](LICENSING.md). Upstream submissions remain
-pending; publishing this project does not mean the fixes are accepted upstream.
+Matching source files, patches and license notices are under [source/](source/README.md).
+The original tooling is MIT licensed; GeoTools and ImageN code retain their
+upstream licenses. See [LICENSING.md](LICENSING.md).

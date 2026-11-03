@@ -30,10 +30,11 @@ node --test viewer/tests/adapter.test.mjs
 ```
 
 Run `npm run test:browser`, `test:smoke` and `test:gutters` from this folder only
-when the viewer and intended lab are running. The original [results](RESULTS.md)
-and `evidence/` are historical; their Windows Podman endpoint and timings describe
-that earlier run.
+when the viewer and intended lab are running. Browser outputs go to ignored
+`evidence/` and `.artifacts/` folders. The authoritative server comparison is
+the official GeoServer 3.0.2 [validation report](../docs/validation.md).
 
-Gutter 128 was a partial stock-renderer workaround. The experimental paired
-correction was validated with gutter 1 and retained 16 isolated outer-footprint
-omissions per path. See the [study](../docs/rotated-geotiff-study.md).
+This optional viewer compares request gutters on one selected server. The main
+reproduction compares stock and patched code separately and uses actual server
+responses for its README illustrations. See the root instructions for creating
+a lab with `affine-lab up` and publishing the fixtures before opening the viewer.
