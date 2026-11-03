@@ -67,7 +67,7 @@ def patch_payload(directory, lock):
     files = {}
     for jar, spec in lock['libraries'].items():
         details = manifest['libraries'][jar]
-        if details['original_sha256'] != spec['sha256'] or details['changed_entries'] != [spec['class']]:
+        if details['original_sha256'] != spec['sha256'] or details['changed_entries'] != [spec['class'], *spec.get('additional_classes', [])]:
             raise RuntimeError('Patch targets an unexpected library or class: ' + jar)
         payload = directory / jar
         if hashlib.sha256(payload.read_bytes()).hexdigest() != details['patched_sha256']:

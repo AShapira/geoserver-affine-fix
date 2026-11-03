@@ -1,5 +1,8 @@
 # GeoServer affine-raster fixes
 
+**Research branch:** see the [boundary precision experiment](docs/research/precision.md).
+The published baseline report below is retained for comparison.
+
 Reproduce two raster-rendering defects on **official GeoServer 3.0.2** and test
 candidate source fixes in **GeoTools 35.2** and **Eclipse ImageN 0.9.3**.
 GeoServer 3.0.2 is the [current stable release](https://geoserver.org/download/),

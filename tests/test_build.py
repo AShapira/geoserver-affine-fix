@@ -27,6 +27,16 @@ class BuildTests(unittest.TestCase):
                 source.read_text().splitlines(True), fromfile='a/' + target, tofile='b/' + target))
             self.assertEqual((ROOT / 'patches' / (project + '.patch')).read_text(), expected)
 
+    def test_additional_candidate_diffs_match_locked_sources(self):
+        for patch in (ROOT / 'patches').glob('imagen-*.patch'):
+            text = patch.read_text()
+            target = text.splitlines()[0].removeprefix('--- a/')
+            source = ROOT / 'source/imagen' / Path(target).name
+            original = Path(str(source) + '.original')
+            expected = ''.join(difflib.unified_diff(original.read_text().splitlines(True),
+                source.read_text().splitlines(True), fromfile='a/' + target, tofile='b/' + target))
+            self.assertEqual(text, expected)
+
     def test_replacement_preserves_other_entries_metadata_and_comment(self):
         source = io.BytesIO()
         with zipfile.ZipFile(source, 'w') as archive:

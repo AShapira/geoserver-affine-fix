@@ -20,7 +20,30 @@ public class AffineScanlineRegression {
         image.ifracdy = 0;
         check(image.performScanlineClipping(0, 0, 2, 2, -3, 0, 0, 0, 0, 8, 0, 0, 0, 0), 3, 3);
         int cases = exhaustiveNearestBounds(image);
+        // A sample 1e-6 source pixels inside the boundary must not drift outside
+        // after 202 scanline increments (regression for 20-bit fraction rounding).
+        image.incx = 0;
+        image.ifracdx = 0;
+        double dy = -0.004665345964671403;
+        double sy = 1e-6 - 202 * dy;
+        image.incy = -1;
+        image.ifracdy = (int) Math.round((dy + 1) * AffineOpImage.GEOM_FRAC_MAX);
+        int fy = (int) Math.floor(sy * AffineOpImage.GEOM_FRAC_MAX);
+        check(image.performScanlineClipping(0, 0, 2, 2, 0, 0, 0, fy, 0, 256, 0, 0, 0, 0), 0, 203);
+        // Integer step times the fraction denominator must be widened before multiplication.
+        image.incx = 16;
+        image.incy = 0;
+        image.ifracdy = 0;
+        check(image.performScanlineClipping(0, 0, 32, 2, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0), 0, 2);
         image.dispose();
+        BufferedImage edgeSource = new BufferedImage(2048, 2, BufferedImage.TYPE_BYTE_GRAY);
+        edgeSource.getRaster().setSample(2047, 0, 0, 173);
+        AffineNearestOpImage edge = new AffineNearestOpImage(edgeSource, org.eclipse.imagen.BorderExtender.createInstance(org.eclipse.imagen.BorderExtender.BORDER_ZERO), null, null,
+                AffineTransform.getTranslateInstance(0.5 - 2047.999964, 0),
+                new InterpolationNearest(), new double[] {0}, true, false, null);
+        int value = edge.getData(new java.awt.Rectangle(0, 0, 1, 1)).getSample(0, 0, 0);
+        edge.dispose();
+        if (value != 173) throw new AssertionError("Float-narrowed source edge lost: " + value);
         System.out.println("PASS: forward, reverse and empty scanline clipping; " + cases + " enumerated nearest-bound cases");
     }
 

@@ -25,3 +25,5 @@ The builder changes exactly one class in each JAR, verifies all other archive
 entries are unchanged, and keeps generated binaries outside Git. Distribute the
 matching upstream source archives and these modifications with any derived
 binaries, respecting the [license scope](../LICENSING.md).
+
+On the boundary-precision research branch, `AffineNearestOpImage.java` also changes. The unchanged `AffineGeneralOpImage.java`, `AffineBicubicOpImage.java` and `AffineBilinearOpImage.java` are recompiled because Java inlines `GEOM_FRAC_MAX`. All four come from the same locked ImageN source archive. The build manifest enumerates every replaced class.
