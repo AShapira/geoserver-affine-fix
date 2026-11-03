@@ -21,8 +21,8 @@ Complete matching source archives are available from OSGeo Maven:
 
 [runtime/lock.json](../runtime/lock.json) records the image digest, original JAR
 hashes, source archive hashes, modified source hashes and regression source hash.
-The builder changes exactly one class in each JAR, verifies all other archive
-entries are unchanged, and keeps generated binaries outside Git. Distribute the
+The builder replaces only the classes declared in the runtime lock, verifies all
+other archive entries are unchanged, and keeps generated binaries outside Git. Distribute the
 matching upstream source archives and these modifications with any derived
 binaries, respecting the [license scope](../LICENSING.md).
 
