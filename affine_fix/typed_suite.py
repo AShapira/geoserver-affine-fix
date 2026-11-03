@@ -144,21 +144,26 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,default=Path('.runs/typed-3.0.2'))
     parser.add_argument('--replicates',type=int,default=3)
+    parser.add_argument('--quality-only',action='store_true',help='Run one validity replicate without performance timing')
+    parser.add_argument('--variants',nargs='+',choices=('stock','both'),default=['stock','both'])
+    parser.add_argument('--patch',type=Path,help='Reuse a previously built candidate directory')
     parser.add_argument('--kinds',nargs='+',choices=KINDS,default=list(KINDS))
     args=parser.parse_args();args.root=args.root.resolve();args.root.mkdir(parents=True,exist_ok=False);args.root.chmod(0o700)
     probe.FIXTURE_ROOT=None
     probe.fixtures(args.root/'fixtures')
     entries=fixtures(args.root/'typed-fixtures',args.kinds)
-    command(args.root/'build.log','affine_fix.build','--output',args.root/'patch')
+    if args.quality_only: args.replicates=1
+    patch=args.patch.resolve() if args.patch else args.root/'patch'
+    if not args.patch: command(args.root/'build.log','affine_fix.build','--output',patch)
     jobs=[j for e in entries for j in jobs_for(e)]
     runner=TypedRunner(args,entries,{'typed':jobs})
     quality=[];started=datetime.now(timezone.utc).isoformat();complete=False
     try:
         for rep in range(args.replicates):
             runner.current_replicate=rep
-            for variant in (('stock','both') if rep%2==0 else ('both','stock')):
+            for variant in [v for v in (('stock','both') if rep%2==0 else ('both','stock')) if v in args.variants]:
                 root=args.root/f'replicate-{rep}'/variant
-                state=lab.up(argparse.Namespace(root=root,fixtures=args.root/'fixtures',engine='podman',connection=None,port=18116+(variant=='both'),pull=False,patch=args.root/'patch' if variant=='both' else None,components='both',extra_fixtures=[Path(e['path']) for e in entries]))
+                state=lab.up(argparse.Namespace(root=root,fixtures=args.root/'fixtures',engine='podman',connection=None,port=18116+(variant=='both'),pull=False,patch=patch if variant=='both' else None,components='both',extra_fixtures=[Path(e['path']) for e in entries]))
                 runner.states[variant]=state;runner.cgroups[variant]=bm.cgroup_path(state)
                 s=probe.session('admin',state['password_file']);runner.sessions[variant]=s;runner.select(variant)
                 probe.snapshot(root/'catalog',s);probe.publish(root/'catalog',s)
@@ -175,12 +180,16 @@ def main():
                         for gutter in (0,1):
                             quality.extend(validity(s,e,j,args.root,variant,gutter) for j in jobs_for(e,True))
                     probe.write_json(args.root/'quality.json',quality)
-                for _ in range(2): runner.perform(variant,jobs,'wms',1,6)
+                if not args.quality_only:
+                    for _ in range(2): runner.perform(variant,jobs,'wms',1,6)
+            if args.quality_only:
+                runner.close_servers()
+                continue
             for round in range(3):
                 shuffled=list(jobs);random.Random(rep*100+round).shuffle(shuffled)
                 for concurrency in (1,6):
                     for profile in ('wms','gwc-miss','gwc-hit'):
-                        for variant in (('stock','both') if (rep+round+concurrency)%2 else ('both','stock')):
+                        for variant in [v for v in (('stock','both') if (rep+round+concurrency)%2 else ('both','stock')) if v in args.variants]:
                             runner.block(variant,shuffled,replicate=rep,round=round,suite='typed',profile=profile,gutter=1,concurrency=concurrency)
             runner.close_servers()
         assert all(probe.digest(Path(e['path']))==e['sha256'] for e in entries)
@@ -188,7 +197,7 @@ def main():
     finally:
         for pool in runner.pools.values():pool.shutdown()
         if runner.states:runner.close_servers()
-        probe.write_json(args.root/'result.json',dict(complete=complete,started_utc=started,finished_utc=datetime.now(timezone.utc).isoformat(),runtime=lab.load_lock(),environment=bm.environment(),servers=runner.servers,fixtures=[{k:v for k,v in e.items() if k!='path'} for e in entries],quality=quality,blocks=runner.blocks))
+        probe.write_json(args.root/'result.json',dict(complete=complete,started_utc=started,finished_utc=datetime.now(timezone.utc).isoformat(),runtime=lab.load_lock(),quality_only=args.quality_only,patch_build=json.loads((patch/'build.json').read_text()),environment=bm.environment(),servers=runner.servers,fixtures=[{k:v for k,v in e.items() if k!='path'} for e in entries],quality=quality,blocks=runner.blocks))
     print('COMPLETE',sum(b['summary']['requests'] for b in runner.blocks),'requests',flush=True)
 
 
