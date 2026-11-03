@@ -1,5 +1,8 @@
 # Upstream contribution plan
 
+Project repository published on 2026-11-03:
+[AShapira/geoserver-affine-fix](https://github.com/AShapira/geoserver-affine-fix).
+
 Status on 2026-11-02: dedicated local project created. No upstream issues,
 forks, PRs or current-main regression builds have been created by this project.
 The 2026-10-27 investigation found pre-fix logic in both main branches; refresh

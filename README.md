@@ -1,5 +1,7 @@
 # GeoServer affine-raster fixes
 
+[GitHub repository](https://github.com/AShapira/geoserver-affine-fix)
+
 Reproduce and contribute two fixes for rotated/sheared GeoTIFF rendering while
 preserving the source affine transform and nearest-neighbour pixel values:
 
@@ -118,5 +120,5 @@ New test output must not overwrite the imported evidence. Upstream contributions
 will be made in separate GeoTools/ImageN forks, not by vendoring those repositories.
 
 Original tooling is MIT licensed. GeoTools and ImageN adaptations retain their
-upstream licenses; see [license scope](LICENSING.md). No GitHub publication or
-upstream submission is implied by local project creation.
+upstream licenses; see [license scope](LICENSING.md). Upstream submissions remain
+pending; publishing this project does not mean the fixes are accepted upstream.
