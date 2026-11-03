@@ -11,6 +11,12 @@ These are experimental source corrections, **not an accepted upstream fix**.
 The tests preserve the TIFF's rotation/shear, source pixels and nearest-neighbour
 sampling. No north-up conversion, smoothing or resampling of the source is used.
 
+**Extended validity tests found regressions:** rotated RGB and multispectral
+footprints gain opaque pixels where transparency is required, and rotated
+Float32 elevation loses NoData transparency. The earlier interior performance
+gains do not establish general correctness. See the
+[RGB, RGBA, UInt16 and Float32 test report](docs/typed-raster-tests/README.md).
+
 ## The visible bug
 
 A rotated GeoTIFF contains valid data throughout this map tile, but the stock
@@ -45,8 +51,8 @@ responses. A direct Java regression fails against the original ImageN library
 and passes against the correction, including **32,448 enumerated scanlines**
 with positive, negative, fractional and zero increments.
 
-Across the full matrix, the patch with gutter 1 removed all rendering errors and
-missing interior pixels. **Sixteen outer-footprint pixels per route still remain
+Across the original single-band Byte matrix, the patch with gutter 1 removed all
+rendering errors and missing interior pixels. **Sixteen outer-footprint pixels per route still remain
 missing**; this is a separate limitation. See the [measured results](docs/validation.md).
 
 ## Reproduce the comparison

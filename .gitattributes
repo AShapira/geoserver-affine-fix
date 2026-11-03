@@ -5,3 +5,5 @@ source/*/* -whitespace
 # Keep generated measurements collapsible in GitHub reviews.
 docs/performance/* linguist-generated=true
 docs/assets/performance.png linguist-generated=true
+docs/typed-raster-tests/*.json linguist-generated=true
+docs/typed-raster-tests/*.csv linguist-generated=true

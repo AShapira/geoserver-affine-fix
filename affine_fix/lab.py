@@ -156,6 +156,12 @@ def up(args):
     state_file.chmod(0o600)
     try:
         files = {'affine-fixtures/' + Path(e['path']).name: Path(e['path']) for e in entries}
+        for path in getattr(args, 'extra_fixtures', ()):
+            path = Path(path)
+            key = 'affine-fixtures/' + path.name
+            if not path.is_file() or path.suffix != '.tif' or key in files:
+                raise ValueError('Invalid or duplicate additional synthetic fixture')
+            files[key] = path
         if args.patch:
             install_patch(engine, container_id, args.patch, lock, state['components'])
         call(engine, 'cp', '-', container_id + ':/opt', data=archive(files))
