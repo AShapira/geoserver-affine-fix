@@ -16,17 +16,27 @@
     "imagen-affine-0.9.3.jar": {
       "sha256": "32e8d5cbd24f00bbd4f3783941f2f8c08a1139ec070b2037a5ec6a478b9aced3",
       "source": "source/imagen/AffineOpImage.java",
-      "class": "org/eclipse/imagen/media/affine/AffineOpImage.class"
+      "class": "org/eclipse/imagen/media/affine/AffineOpImage.class",
+      "additional_sources": [
+        "source/imagen/AffineDescriptor.java"
+      ],
+      "additional_classes": [
+        "org/eclipse/imagen/media/affine/AffineDescriptor.class",
+        "org/eclipse/imagen/media/affine/AffinePropertyGenerator.class"
+      ]
     }
   },
   "source_sha256": {
-    "patches/geotools.patch": "9c4d759d0749cb82dd815a43a8ded2e840ce0bff521ba764f5fb628577f69e26",
+    "patches/geotools.patch": "2a38b48265392090b8603cb8f7c52b396e035850e2ee237c226a9b38d407f024",
     "patches/imagen.patch": "8f949790c847f68289106637684581f566a4c499a79ceead4ee6f7ffadd66631",
-    "source/geotools/GridCoverageReaderHelper.java": "8d38d7f996b4e1233a76d76dbddc99a27ff5eddabf9a4921687ff9fc30a6631a",
+    "source/geotools/GridCoverageReaderHelper.java": "9700354a1146996e871288fcba9028add686a8206d3d47675ea220d433993aa9",
     "source/geotools/GridCoverageReaderHelper.java.original": "613ad2b7de133f6b2d69f655633431f2e36b462bee6d48a6aebcba52a4b764c3",
     "source/imagen/AffineOpImage.java": "09d15b6b1293863f13657984b2690ddda062263f681d5761538a13415c3eeedc",
     "source/imagen/AffineOpImage.java.original": "86244652c9ff769c947c64a7fcac8e929955d24b703e91040059ef64d37599ae",
-    "tests/java/AffineScanlineRegression.java": "085b1e2d7c6e1a1460067e0ef2ffe9f45edd9c3f6b94402c10c6bdea32bbc9ca"
+    "tests/java/AffineScanlineRegression.java": "f47bfa8aa75f67ffda18a30fd382deac58a451e6ec127eca12ec6ddafafc9222",
+    "source/imagen/AffineDescriptor.java": "b3953397769ce2e46ac570727515c2bd9fa79f9a2db36e44fffbbe8a2507d8a8",
+    "source/imagen/AffineDescriptor.java.original": "b8e50fa89d1c7ed6816f663874ac41a9f74600bd89ffa6d06453a8c329d515eb",
+    "patches/imagen-mask.patch": "8024a21663035b7de7ce6521442ab555651d1864bf44c6c3940ac657c8753504"
   },
   "source_archives": [
     {

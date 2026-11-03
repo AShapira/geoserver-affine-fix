@@ -18,6 +18,18 @@ package org.geotools.renderer.lite.gridcoverage2d;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.image.RenderedImage;
+import java.awt.image.renderable.ParameterBlock;
+import java.util.HashMap;
+import java.util.Map;
+import org.eclipse.imagen.PlanarImage;
+import org.eclipse.imagen.ROI;
+import org.eclipse.imagen.ROIShape;
+import org.eclipse.imagen.ImageN;
+import org.eclipse.imagen.media.range.NoDataContainer;
+import org.eclipse.imagen.media.rlookup.RangeLookupTable;
+import org.geotools.coverage.util.CoverageUtilities;
+import org.geotools.image.ImageWorker;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -383,7 +395,38 @@ public class GridCoverageReaderHelper {
         // The reader already selected the source window. A model-space crop here
         // quantizes its ROI on rotated source pixels before they are enlarged.
         // Preserve those pixels for the subsequent rendering steps.
-        if (preserveRotatedGridPixels) return coverage;
+        if (!isNotEmpty(cropEnvelope)) return null;
+        if (preserveRotatedGridPixels) {
+            // Keep a source-grid validity mask. In particular, NoData must not be
+            // replaced by a background value that is also a valid styled value.
+            PlanarImage image = PlanarImage.wrapRenderedImage(coverage.getRenderedImage());
+            ROI roi = CoverageUtilities.getROIProperty(coverage);
+            if (roi == null) roi = new ROI(new ROIShape(image.getBounds()).getAsImage());
+            NoDataContainer container =
+                    CoverageUtilities.getNoDataProperty(coverage);
+            if (container != null) {
+                RangeLookupTable.Builder<Byte, Byte> builder =
+                        new RangeLookupTable.Builder<>();
+                builder.add(container.getAsRange(), (byte) 0);
+                ParameterBlock pb = new ParameterBlock();
+                pb.addSource(image).add(builder.build()).add((byte) 1);
+                RenderedImage valid = ImageN.create("RLookup", pb);
+                if (image.getSampleModel().getNumBands() > 1) {
+                    double[][] sum = new double[1][image.getSampleModel().getNumBands() + 1];
+                    java.util.Arrays.fill(sum[0], 1);
+                    sum[0][sum[0].length - 1] = 0;
+                    valid = new ImageWorker(valid).bandCombine(sum).getRenderedImage();
+                }
+                roi = roi.intersect(new ROI(valid, 1));
+            }
+            Map<String, Object> properties = new HashMap<>();
+            if (coverage.getProperties() != null) properties.putAll(coverage.getProperties());
+            CoverageUtilities.setROIProperty(properties, roi);
+            image.setProperty("ROI", roi);
+            return new GridCoverageFactory().create(coverage.getName(), image,
+                    coverage.getGridGeometry(), coverage.getSampleDimensions(),
+                    new GridCoverage2D[] {coverage}, properties);
+        }
         if (isNotEmpty(cropEnvelope)) {
             final ParameterValueGroup param =
                     PROCESSOR.getOperation("CoverageCrop").getParameters();

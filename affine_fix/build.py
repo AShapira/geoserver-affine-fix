@@ -61,33 +61,39 @@ def main():
             if digest(data) != spec['sha256']:
                 raise RuntimeError('Image library checksum mismatch: ' + jar)
             originals[jar] = data
-        files = {Path(spec['source']).name: ROOT / spec['source'] for spec in lock['libraries'].values()}
+        sources = [name for spec in lock['libraries'].values() for name in [spec['source'], *spec.get('additional_sources', [])]]
+        files = {Path(name).name: ROOT / name for name in sources}
         files['AffineScanlineRegression.java'] = ROOT / 'tests/java/AffineScanlineRegression.java'
         call(engine, 'exec', container, 'mkdir', '-p', '/tmp/affine-build/classes', '/tmp/affine-build/tests')
         call(engine, 'exec', '-i', container, 'tar', '-xf', '-', '-C', '/tmp/affine-build', data=archive(files))
         call(engine, 'exec', container, 'javac', '--release', str(lock['java_release']), '-proc:none',
              '-cp', lib + '/*', '-d', '/tmp/affine-build/classes',
-             *['/tmp/affine-build/' + Path(spec['source']).name for spec in lock['libraries'].values()])
+             *['/tmp/affine-build/' + Path(name).name for name in sources])
         call(engine, 'exec', container, 'javac', '--release', str(lock['java_release']), '-proc:none',
              '-cp', lib + '/*', '-d', '/tmp/affine-build/tests', '/tmp/affine-build/AffineScanlineRegression.java')
         test = 'org.eclipse.imagen.media.affine.AffineScanlineRegression'
         baseline = call(engine, 'exec', container, 'java', '-cp', '/tmp/affine-build/tests:' + lib + '/*', test, check=False)
         if baseline.returncode == 0 or b'Expected [0,2) but got RangeInt[0, 3]' not in baseline.stderr:
             raise RuntimeError('Official library did not fail the expected regression')
+        call(engine, 'exec', container, 'javac', '--release', str(lock['java_release']), '-proc:none',
+             '-cp', '/tmp/affine-build/classes:' + lib + '/*', '-d', '/tmp/affine-build/tests', '/tmp/affine-build/AffineScanlineRegression.java')
         corrected = call(engine, 'exec', container, 'java', '-cp',
                          '/tmp/affine-build/tests:/tmp/affine-build/classes:' + lib + '/*', test)
         data = call(engine, 'exec', container, 'tar', '-cf', '-', '-C', '/tmp/affine-build/classes', '.').stdout
         with tarfile.open(fileobj=io.BytesIO(data)) as tar:
             classes = {m.name.removeprefix('./'): tar.extractfile(m).read() for m in tar.getmembers() if m.isfile()}
-        if set(classes) != {spec['class'] for spec in lock['libraries'].values()}:
+        if set(classes) != {name for spec in lock['libraries'].values() for name in [spec['class'], *spec.get('additional_classes', [])]}:
             raise RuntimeError('Unexpected compiler output: ' + repr(list(classes)))
         args.output.mkdir(parents=True, exist_ok=True)
         results = {}
         for jar, spec in lock['libraries'].items():
-            data = replace_class(originals[jar], spec['class'], classes[spec['class']])
+            entries = [spec['class'], *spec.get('additional_classes', [])]
+            data = originals[jar]
+            for entry in entries:
+                data = replace_class(data, entry, classes[entry])
             (args.output / jar).write_bytes(data)
             results[jar] = {'original_sha256': digest(originals[jar]), 'patched_sha256': digest(data),
-                            'changed_entries': [spec['class']], 'bytes': len(data)}
+                            'changed_entries': entries, 'bytes': len(data)}
         write_json(args.output / 'build.json', {
             'image': lock['image'], 'geoserver': lock['geoserver'], 'custom_image_built': False,
             'java': call(engine, 'exec', container, 'javac', '-version').stdout.decode().strip(),

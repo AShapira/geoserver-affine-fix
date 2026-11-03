@@ -1,0 +1,20 @@
+--- a/modules/affine/src/main/java/org/eclipse/imagen/media/affine/AffineDescriptor.java
++++ b/modules/affine/src/main/java/org/eclipse/imagen/media/affine/AffineDescriptor.java
+@@ -99,9 +99,17 @@
+                 ParameterBlock paramBlock = new ParameterBlock();
+                 paramBlock.add(transform);
+                 paramBlock.add(interp);
++                paramBlock.add(new double[] {0});
++                paramBlock.add(null); // no recursive ROI
++                paramBlock.add(false); // iterator access
++                paramBlock.add(true); // write zero outside the mask, including binary rasters
+                 RenderingHints localHints = new RenderingHints(Collections.emptyMap());
+                 localHints.putAll(op.getRenderingHints());
+                 localHints.remove(ImageN.KEY_IMAGE_LAYOUT);
++                // A validity mask is false outside its domain. The color image's
++                // copy/reflect extension must not extend valid mask samples.
++                localHints.put(ImageN.KEY_BORDER_EXTENDER,
++                        org.eclipse.imagen.BorderExtender.createInstance(org.eclipse.imagen.BorderExtender.BORDER_ZERO));
+                 ImageLayout il = new ImageLayout();
+                 Rectangle dstBounds = op.getBounds();
+                 il.setMinX(dstBounds.x);

@@ -144,6 +144,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,default=Path('.runs/typed-3.0.2'))
     parser.add_argument('--replicates',type=int,default=3)
+    parser.add_argument('--port',type=int,default=18116)
     parser.add_argument('--quality-only',action='store_true',help='Run one validity replicate without performance timing')
     parser.add_argument('--variants',nargs='+',choices=('stock','both'),default=['stock','both'])
     parser.add_argument('--patch',type=Path,help='Reuse a previously built candidate directory')
@@ -163,7 +164,7 @@ def main():
             runner.current_replicate=rep
             for variant in [v for v in (('stock','both') if rep%2==0 else ('both','stock')) if v in args.variants]:
                 root=args.root/f'replicate-{rep}'/variant
-                state=lab.up(argparse.Namespace(root=root,fixtures=args.root/'fixtures',engine='podman',connection=None,port=18116+(variant=='both'),pull=False,patch=patch if variant=='both' else None,components='both',extra_fixtures=[Path(e['path']) for e in entries]))
+                state=lab.up(argparse.Namespace(root=root,fixtures=args.root/'fixtures',engine='podman',connection=None,port=args.port+(variant=='both'),pull=False,patch=patch if variant=='both' else None,components='both',extra_fixtures=[Path(e['path']) for e in entries]))
                 runner.states[variant]=state;runner.cgroups[variant]=bm.cgroup_path(state)
                 s=probe.session('admin',state['password_file']);runner.sessions[variant]=s;runner.select(variant)
                 probe.snapshot(root/'catalog',s);probe.publish(root/'catalog',s)

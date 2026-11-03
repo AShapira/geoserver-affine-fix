@@ -25,3 +25,5 @@ The builder changes exactly one class in each JAR, verifies all other archive
 entries are unchanged, and keeps generated binaries outside Git. Distribute the
 matching upstream source archives and these modifications with any derived
 binaries, respecting the [license scope](../LICENSING.md).
+
+On the mask research branch, `AffineDescriptor.java` comes from the same locked ImageN 0.9.3 archive. Its AffinePropertyGenerator explicitly initializes out-of-domain mask pixels to zero. `patches/imagen-mask.patch` records that change. The builder verifies the complete declared class replacement set, including the property generator.
